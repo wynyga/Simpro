@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class PaintGlassWallpaper extends Model
+{
+    protected $table = 'paint_glass_wallpaper';
+
+    protected static function booted()
+    {
+        static::creating(function ($paintGlassWallpaper) {
+            $lastRecord = self::orderBy('id', 'desc')->first();
+            $lastId = $lastRecord ? $lastRecord->id : 0;
+            $newId = $lastId + 1;
+
+            $paintGlassWallpaper->kode = 'PGW100-' . str_pad($newId, 2, '0', STR_PAD_LEFT);
+        });
+    }
+}

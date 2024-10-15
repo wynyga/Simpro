@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Lighting extends Model
+{
+    protected $table = 'lighting';
+
+    protected static function booted()
+    {
+        static::creating(function ($lighting) {
+            $lastRecord = self::orderBy('id', 'desc')->first();
+            $lastId = $lastRecord ? $lastRecord->id : 0;
+            $newId = $lastId + 1;
+
+            $lighting->kode = 'LIGH140-' . str_pad($newId, 2, '0', STR_PAD_LEFT);
+        });
+    }
+}
+

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('roof_ceiling_tile', function (Blueprint $table) {
             $table->id();
-            $table->string('kode')->virtualAs("CONCAT('RCT80-', LPAD(id, 2, '0'))");
+            $table->string('kode')->nullable();
             $table->string('jenis_tenaga_peralatan');
             $table->string('uty');
             $table->string('satuan');

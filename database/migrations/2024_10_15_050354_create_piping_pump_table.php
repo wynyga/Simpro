@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('piping_pump', function (Blueprint $table) {
             $table->id();
-            $table->string('kode')->virtualAs("CONCAT('PIPP130-', LPAD(id, 2, '0'))");
+            $table->string('kode')->nullable();
             $table->string('jenis_tenaga_peralatan');
             $table->string('uty');
             $table->string('satuan');
