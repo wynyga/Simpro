@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sanitary', function (Blueprint $table) {
             $table->id();
             $table->string('kode')->nullable();
-            $table->string('jenis_tenaga_peralatan');
+            $table->string('nama_barang');
             $table->string('uty');
             $table->string('satuan');
             $table->decimal('harga_satuan', 18, 2);
