@@ -35,19 +35,16 @@ class LaporanMingguanController extends Controller
         $code = LaporanMingguan::generateCode($request->minggu_ke, $request->tahun_ke);
     
         // Tentukan uraian dan code_account
-        list($uraian, $codeAccount) = $this->getUraianAndCodeAccount($request);
-    
-        // Pastikan bahwa nilai $uraian dan $codeAccount adalah string, bukan array
-        if (is_array($uraian) || is_array($codeAccount)) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan pada input data');
-        }
+        list($uraian, $kategori, $sub_kategori, $codeAccount) = $this->getUraianKategoriSubKategoriAndCodeAccount($request);
     
         // Simpan data transaksi
         LaporanMingguan::create([
             'minggu_ke' => $request->minggu_ke,
             'tahun_ke' => $request->tahun_ke,
             'code' => $code,
-            'uraian' => $uraian,  // Uraian berdasarkan pilihan user
+            'uraian' => $uraian,  // Gabungan Uraian > Kategori > Sub_Kategori
+            'kategori' => $kategori,  // Kategori
+            'sub_kategori' => $sub_kategori,  // Sub_Kategori
             'code_account' => $codeAccount,  // Kode Account berdasarkan uraian
             'total' => $request->jumlah_transaksi,
             'kategori' => $request->kategori,
@@ -57,43 +54,84 @@ class LaporanMingguanController extends Controller
     }
     
 
-    private function getUraianAndCodeAccount(Request $request)
+    // Method untuk menentukan Uraian, Kategori, Sub_Kategori, dan Code Account
+    private function getUraianKategoriSubKategoriAndCodeAccount(Request $request)
     {
         $mingguSebelumnya = $request->minggu_ke - 1;
         $tahun = $request->tahun_ke;
-    
-        // Tentukan uraian dan code_account berdasarkan pilihan user
+
+        // Tentukan uraian, kategori, sub_kategori, dan code_account berdasarkan pilihan user
         switch ($request->kas_project_choice) {
             case 'saldo_sisa':
-                return ["Saldo sisa Kas Proyek Minggu sebelumnya", "M{$mingguSebelumnya}{$tahun}"];
+                return [
+                    "Saldo sisa Kas Proyek Minggu sebelumnya", 
+                    null,  // Tidak ada kategori
+                    null,  // Tidak ada sub_kategori
+                    "M{$mingguSebelumnya}{$tahun}"
+                ];
             case 'penerimaan_kas':
                 switch ($request->penerimaan_kas_choice) {
                     case 'operasional_proyek':
                         if ($request->operasional_proyek_choice === 'booking_fee') {
-                            return ["Penerimaan Booking Fee", "KI0101M{$request->minggu_ke}{$tahun}"];
+                            return [
+                                "Penerimaan Booking Fee", 
+                                "Penerimaan dari Operasional Proyek",  // Kategori
+                                null,  // Tidak ada sub_kategori
+                                "KI0101M{$request->minggu_ke}{$tahun}"
+                            ];
                         } elseif ($request->operasional_proyek_choice === 'down_payment') {
-                            return ["Penerimaan dari Down Payment", "KI0201M{$request->minggu_ke}{$tahun}"];
+                            return [
+                                "Penerimaan dari Down Payment", 
+                                "Penerimaan dari Operasional Proyek",  // Kategori
+                                null,  // Tidak ada sub_kategori
+                                "KI0201M{$request->minggu_ke}{$tahun}"
+                            ];
                         }
                         break;
                     case 'dana_tunai_lainnya':
                         switch ($request->dana_tunai_choice) {
                             case 'kelebihan_tanah':
-                                return ["Biaya Kelebihan Tanah", "KI0301M{$request->minggu_ke}{$tahun}"];
+                                return [
+                                    "Biaya Kelebihan Tanah", 
+                                    "Penerimaan dana Tuni lainnya",  // Kategori
+                                    null,  // Tidak ada sub_kategori
+                                    "KI0301M{$request->minggu_ke}{$tahun}"
+                                ];
                             case 'penambahan_spek':
-                                return ["Biaya Penambahan Spek bangunan", "KI0302M{$request->minggu_ke}{$tahun}"];
+                                return [
+                                    "Biaya Penambahan Spek bangunan", 
+                                    "Penerimaan dana Tuni lainnya",  // Kategori
+                                    null,  // Tidak ada sub_kategori
+                                    "KI0302M{$request->minggu_ke}{$tahun}"
+                                ];
                             case 'selisih_kpr':
-                                return ["Biaya Selisih KPR", "KI0303M{$request->minggu_ke}{$tahun}"];
+                                return [
+                                    "Biaya Selisih KPR", 
+                                    "Penerimaan dana Tuni lainnya",  // Kategori
+                                    null,  // Tidak ada sub_kategori
+                                    "KI0303M{$request->minggu_ke}{$tahun}"
+                                ];
                         }
                         break;
                     case 'penerimaan_kpr':
-                        return ["Penerimaan KPR", "KI0401M{$request->minggu_ke}{$tahun}"];
+                        return [
+                            "Penerimaan KPR", 
+                            null,  // Tidak ada kategori
+                            null,  // Tidak ada sub_kategori
+                            "KI0401M{$request->minggu_ke}{$tahun}"
+                        ];
                     case 'share_capital':
-                        return ["Share Capital Ordinary (Kantor Pusat / Modal Perseroan)", "KI0501M{$request->minggu_ke}{$tahun}"];
+                        return [
+                            "Share Capital Ordinary (Kantor Pusat / Modal Perseroan)", 
+                            null,  // Tidak ada kategori
+                            null,  // Tidak ada sub_kategori
+                            "KI0501M{$request->minggu_ke}{$tahun}"
+                        ];
                 }
                 break;
         }
-    
-        return [null, null];  // Return null if no match
+
+        return [null, null, null, null];  // Return null if no match
     }
 }
 
