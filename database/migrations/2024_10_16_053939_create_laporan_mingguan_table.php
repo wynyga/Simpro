@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('minggu_ke');  // Minggu ke
             $table->integer('tahun_ke');   // Tahun ke
             $table->string('code', 10);    // Kode kombinasi Minggu dan Tahun, contoh: M624
-            $table->string('jenis_biaya')->nullable();
+            $table->string('jenis_biaya');
             $table->string('uraian');      // Uraian atau deskripsi dari laporan
             $table->string('kategori')->nullable(); // Kategori (misalnya KAS PROJECT, KAS KELUAR, dll.)
             $table->string('sub_kategori')->nullable();

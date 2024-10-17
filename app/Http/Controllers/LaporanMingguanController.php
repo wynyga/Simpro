@@ -41,7 +41,7 @@ class LaporanMingguanController extends Controller
     
         // Tentukan uraian, kategori, sub_kategori, code_account, dan jenis_biaya
         list($uraian, $kategori, $sub_kategori, $code_account) = $this->getUraianKategoriSubKategoriAndCodeAccount($request);
-    
+        //dd($uraian, $kategori, $sub_kategori, $code_account);
         // Simpan data transaksi
         LaporanMingguan::create([
             'minggu_ke' => $request->minggu_ke,
@@ -66,7 +66,7 @@ class LaporanMingguanController extends Controller
     {
         $mingguSebelumnya = $request->minggu_ke - 1;
         $tahun = $request->tahun_ke;
-
+    
         // Tentukan uraian, kategori, sub_kategori, dan code_account berdasarkan pilihan user
         switch ($request->jenis_biaya){
             case 'KAS PROJECT / KAS MASUK MINGGU INI':
@@ -76,7 +76,7 @@ class LaporanMingguanController extends Controller
                             "Saldo sisa Kas Proyek Minggu sebelumnya", 
                             null,  // Tidak ada kategori
                             null,  // Tidak ada sub_kategori
-                            "M{$mingguSebelumnya}{$tahun}"
+                            "M{$mingguSebelumnya}{$tahun}"  // Code Account
                         ];
                     case 'penerimaan_kas':
                         switch ($request->kategori) {
@@ -85,15 +85,15 @@ class LaporanMingguanController extends Controller
                                     return [
                                         "Penerimaan Booking Fee", 
                                         "Penerimaan dari Operasional Proyek",  // Kategori
-                                        null,  // Tidak ada sub_kategori
-                                        "KI0101M{$request->minggu_ke}{$tahun}"
+                                        "Booking Fee",  // Sub Kategori
+                                        "KI0101M{$request->minggu_ke}{$tahun}"  // Code Account
                                     ];
                                 } elseif ($request->sub_kategori === 'down_payment') {
                                     return [
                                         "Penerimaan dari Down Payment", 
                                         "Penerimaan dari Operasional Proyek",  // Kategori
-                                        null,  // Tidak ada sub_kategori
-                                        "KI0201M{$request->minggu_ke}{$tahun}"
+                                        "Down Payment",  // Sub Kategori
+                                        "KI0201M{$request->minggu_ke}{$tahun}"  // Code Account
                                     ];
                                 }
                                 break;
@@ -103,46 +103,31 @@ class LaporanMingguanController extends Controller
                                         return [
                                             "Biaya Kelebihan Tanah", 
                                             "Penerimaan dana Tuni lainnya",  // Kategori
-                                            null,  // Tidak ada sub_kategori
-                                            "KI0301M{$request->minggu_ke}{$tahun}"
+                                            "Kelebihan Tanah",  // Sub Kategori
+                                            "KI0301M{$request->minggu_ke}{$tahun}"  // Code Account
                                         ];
                                     case 'penambahan_spek':
                                         return [
                                             "Biaya Penambahan Spek bangunan", 
                                             "Penerimaan dana Tuni lainnya",  // Kategori
-                                            null,  // Tidak ada sub_kategori
-                                            "KI0302M{$request->minggu_ke}{$tahun}"
+                                            "Penambahan Spek",  // Sub Kategori
+                                            "KI0302M{$request->minggu_ke}{$tahun}"  // Code Account
                                         ];
                                     case 'selisih_kpr':
                                         return [
                                             "Biaya Selisih KPR", 
                                             "Penerimaan dana Tuni lainnya",  // Kategori
-                                            null,  // Tidak ada sub_kategori
-                                            "KI0303M{$request->minggu_ke}{$tahun}"
+                                            "Selisih KPR",  // Sub Kategori
+                                            "KI0303M{$request->minggu_ke}{$tahun}"  // Code Account
                                         ];
                                 }
                                 break;
-                            case 'penerimaan_kpr':
-                                return [
-                                    "Penerimaan KPR", 
-                                    null,  // Tidak ada kategori
-                                    null,  // Tidak ada sub_kategori
-                                    "KI0401M{$request->minggu_ke}{$tahun}"
-                                ];
-                            case 'share_capital':
-                                return [
-                                    "Share Capital Ordinary (Kantor Pusat / Modal Perseroan)", 
-                                    null,  // Tidak ada kategori
-                                    null,  // Tidak ada sub_kategori
-                                    "KI0501M{$request->minggu_ke}{$tahun}"
-                                ];
                         }
-                        break;
                 }
         }
-
-
+    
         return [null, null, null, null];  // Return null if no match
     }
+    
 }
 

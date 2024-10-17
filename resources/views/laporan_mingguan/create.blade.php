@@ -9,76 +9,48 @@
 <body>
     <h1>Input Laporan Mingguan</h1>
 
-    <form action="{{ route('laporan_mingguan.store') }}" method="POST">
-        @csrf
+<form action="{{ route('laporan_mingguan.store') }}" method="POST">
+    @csrf
 
-        <label>Minggu Ke:</label>
-        <input type="number" name="minggu_ke" required><br>
+    <label>Minggu Ke:</label>
+    <input type="number" name="minggu_ke" required><br>
 
-        <label>Tahun Ke:</label>
-        <input type="number" name="tahun_ke" required><br>
+    <label>Tahun Ke:</label>
+    <input type="number" name="tahun_ke" required><br>
 
-        <label>Jenis Biaya:</label>
-        <select name="jenis_biaya" id="jenis-biaya-select" required>
-            <option value="">-- Pilih Jenis Biaya --</option>
-            <option value="KAS PROJECT / KAS MASUK MINGGU INI">KAS PROJECT / KAS MASUK MINGGU INI</option>
-        </select><br>
+    <label>Jenis Biaya:</label>
+    <select name="jenis_biaya" required>
+        <option value="">-- Pilih Jenis Biaya --</option>
+        <option value="KAS PROJECT / KAS MASUK MINGGU INI">KAS PROJECT / KAS MASUK MINGGU INI</option>
+    </select><br>
 
-        <!-- Bagian Uraian -->
-        <div id="uraian-section" style="display: none;">
-            <h3>Uraian</h3>
-            <label>Pilihan Uraian:</label>
-            <select id="uraian-choices" name="uraian">
-                <option value="">-- Pilih Uraian --</option>
-                <option value="saldo_sisa">Saldo sisa Kas Proyek Minggu sebelumnya</option>
-                <option value="penerimaan_kas">Penerimaan Kas Minggu Ini</option>
-            </select><br>
-        </div>
+    <label>Uraian:</label>
+    <select name="uraian" required>
+        <option value="saldo_sisa">Saldo sisa Kas Proyek Minggu sebelumnya</option>
+        <option value="penerimaan_kas">Penerimaan Kas Minggu Ini</option>
+    </select><br>
 
-        <!-- Bagian Penerimaan Kas -->
-        <div id="kategori-section" style="display: none;">
-            <h4>Kategori</h4>
-            <label>Pilihan Kategori:</label>
-            <select id="kategori-choices" name="kategori">
-                <option value="">-- Pilih Kategori --</option>
-                <option value="operasional_proyek">Penerimaan dari Operasional Proyek</option>
-                <option value="dana_tunai_lainnya">Penerimaan dana Tuni lainnya</option>
-                <option value="penerimaan_kpr">Penerimaan KPR</option>
-                <option value="share_capital">Share Capital Ordinary</option>
-            </select><br>
-        </div>
+    <label>Kategori:</label>
+    <select name="kategori" required>
+        <option value="operasional_proyek">Penerimaan dari Operasional Proyek</option>
+        <option value="dana_tunai_lainnya">Penerimaan dana Tuni lainnya</option>
+    </select><br>
 
-        <!-- Bagian Penerimaan dari Operasional Proyek -->
-        <div id="operasional-proyek-section" style="display: none;">
-            <h4>Sub Kategori: Penerimaan dari Operasional Proyek</h4>
-            <select id="operasional-proyek-choices" name="sub_kategori" class="sub-kategori-input">
-                <option value="">-- Pilih Sub Kategori --</option>
-                <option value="booking_fee">Penerimaan Booking Fee</option>
-                <option value="down_payment">Penerimaan dari Down Payment</option>
-            </select><br>
-        </div>
+    <label>Sub Kategori:</label>
+    <select name="sub_kategori" required>
+        <option value="booking_fee">Penerimaan Booking Fee</option>
+        <option value="down_payment">Penerimaan dari Down Payment</option>
+    </select><br>
 
-        <!-- Bagian Penerimaan dana Tuni lainnya -->
-        <div id="dana-tunai-section" style="display: none;">
-            <h4>Sub Kategori: Penerimaan dana Tuni lainnya</h4>
-            <select id="dana-tunai-choices" name="sub_kategori" class="sub-kategori-input">
-                <option value="kelebihan_tanah">Biaya Kelebihan Tanah</option>
-                <option value="penambahan_spek">Biaya Penambahan Spek Bangunan</option>
-                <option value="selisih_kpr">Biaya Selisih KPR</option>
-            </select><br>
-        </div>
+    <label>Jumlah (RP):</label>
+    <input type="number" name="total" step="0.01" required><br>
 
-        <!-- Bagian input akhir -->
-        <div id="final-input-section" style="display: none;">
-            <label>Jumlah (RP):</label>
-            <input type="number" step="0.01" name="total" required><br>
+    <label>Deskripsi:</label>
+    <input type="text" name="deskripsi" required><br>
 
-            <label>Keterangan:</label>
-            <input type="text" name="deskripsi"><br>
-        </div>
+    <button type="submit">Simpan</button>
+</form>
 
-        <button type="submit" id="submit-button" style="display: none;">Simpan</button>
-    </form>
 
     <script>
         $(document).ready(function() {
