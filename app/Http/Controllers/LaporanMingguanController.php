@@ -67,7 +67,6 @@ class LaporanMingguanController extends Controller
         $mingguSebelumnya = $request->minggu_ke - 1;
         $mingguIni = $request->minggu_ke;
         $tahun = $request->tahun_ke;
-        $kodeMinggu = "M{$mingguIni}{$tahun}";
     
         // Tentukan uraian, kategori, sub_kategori, dan code_account berdasarkan pilihan user
         switch ($request->jenis_biaya){
@@ -127,14 +126,14 @@ class LaporanMingguanController extends Controller
                             case 'penerimaan_kpr':
                                 return[
                                     "Penerimaan KPR",
-                                    "null",
+                                    null,
                                     null,
                                     "KI0401M{$request->minggu_ke}{$tahun}"
                                 ];
                             case 'share_capital':
                                 return[
                                     "Share Capital Ordinary (Kantor Pusat / Modal Perseroan)",
-                                    "null",
+                                    null,
                                     null,
                                     "KI0501M{$request->minggu_ke}{$tahun}"
                                 ];
@@ -143,125 +142,171 @@ class LaporanMingguanController extends Controller
                 }
             break;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //     case 'KAS KELUAR MINGGU INI':
-        //         switch ($request->uraian) {
-        //             case 'pembiayaan_project':
-        //                 switch ($request->kategori) {
-        //                     case 'biaya_tanah':
-        //                         return [
-        //                             "Pembiayaan Project", 
-        //                             "Biaya Tanah dan Making Tanah", 
-        //                             "KO0101{$kodeMinggu}",  // Kode Akun
-        //                             "KO0101M{$mingguIni}{$tahun}" // Code Account
-        //                         ];
-        //                     case 'biaya_prasarana':
-        //                         return [
-        //                             "Pembiayaan Project", 
-        //                             "Biaya Prasarana Jalan, Drainase, Listrik, air dll", 
-        //                             "KO0102{$kodeMinggu}",  
-        //                             "KO0102M{$mingguIni}{$tahun}"
-        //                         ];
-        //                     case 'biaya_sarana':
-        //                         return [
-        //                             "Pembiayaan Project", 
-        //                             "Biaya Sarana bangunan; (Biaya KPR, IMB, Listrik, PDAM, AJB, Sertifikat)", 
-        //                             "KO0103{$kodeMinggu}",  
-        //                             "KO0103M{$mingguIni}{$tahun}"
-        //                         ];
-        //                     case 'biaya_konstuksi':
-        //                         return[
-        //                             "Pembiayaan Project",
-        //                             "Biaya Konstuksi Bangunan",
-        //                             "KO0103{$kodeMinggu}",  
-        //                             "KO0103M{$mingguIni}{$tahun}"
-        //                         ];
-        //                     case 'biaya_marketing':
-        //                         return[
-        //                             "Pembiayaan Project",
-        //                             "Biaya Marketing (Iklan, Brosur, Marketing Fee, dll)",
-        //                             "KO0103{$kodeMinggu}",  
-        //                             "KO0103M{$mingguIni}{$tahun}"
-        //                         ];
-        //                     case 'pajak_bayar':
-        //                         return[
-        //                             "Pembiayaan Project",
-        //                             "Biaya Marketing (Iklan, Brosur, Marketing Fee, dll)",
-        //                             "KO0103{$kodeMinggu}",  
-        //                             "KO0103M{$mingguIni}{$tahun}"                                    
-        //                         ];
+            case 'KAS KELUAR MINGGU INI':
+                switch ($request->uraian) {
+                    case 'pembiayaan_project':
+                        switch ($request->kategori) {
+                            case 'biaya_tanah':
+                                return [
+                                    "Pembiayaan Project", 
+                                    "Biaya Tanah dan Making Tanah", 
+                                    null,  // Kode Akun
+                                    "KO0101M{$request->minggu_ke}{$tahun}" // Code Account
+                                ];
+                            case 'biaya_prasarana':
+                                return [
+                                    "Pembiayaan Project", 
+                                    "Biaya Prasarana Jalan, Drainase, Listrik, air dll", 
+                                    null,  
+                                    "KO0102M{$request->minggu_ke}{$tahun}"
+                                ];
+                            case 'biaya_sarana':
+                                return [
+                                    "Pembiayaan Project", 
+                                    "Biaya Sarana bangunan; (Biaya KPR, IMB, Listrik, PDAM, AJB, Sertifikat)", 
+                                    null,  
+                                    "KO0103M{$request->minggu_ke}{$tahun}"
+                                ];
+                            case 'biaya_konstuksi':
+                                return[
+                                    "Pembiayaan Project",
+                                    "Biaya Konstuksi Bangunan",
+                                    null,  
+                                    "KO0104M{$request->minggu_ke}{$tahun}"
+                                ];
+                            case 'biaya_marketing':
+                                return[
+                                    "Pembiayaan Project",
+                                    "Biaya Marketing (Iklan, Brosur, Marketing Fee, dll)",
+                                    null,  
+                                    "KO0105M{$request->minggu_ke}{$tahun}"
+                                ];
+                            case 'biaya_pajak':
+                                return[
+                                    "Pembiayaan Project",
+                                    "Pajak Bayar Dimuka ( PNBP, BPHTB, PPh Pasal 23,PPh Pasal 21 dan PPN )",
+                                    null,  
+                                    "KO0106M{$request->minggu_ke}{$tahun}"                                    
+                                ];
+                            case 'biaya_lainnya':
+                                return[
+                                    "Pembiayaan Project",
+                                    "Biaya Lainnya yang berhubungan dengan proyek",
+                                    null,  
+                                    "KO0107M{$request->minggu_ke}{$tahun}"                                    
+                                ];   
+                            case 'upah_buruh':
+                                return[
+                                    "Pembiayaan Project",
+                                    "Upah Buruh Kerja Harian Lepas",
+                                    null,  
+                                    "KO0108M{$request->minggu_ke}{$tahun}"                                    
+                                ];                                                                
+                        }
+                        break;
+    
+                    case 'pembiayaan_personalia':
+                        switch ($request->kategori) {
+                            case 'biaya_personalia':
+                                return [
+                                    "Pembiayaan Personalia, Administrasi dan Operasional Kantor", 
+                                    "Biaya Personalia", 
+                                    null,  
+                                    "KO0201M{$request->minggu_ke}{$tahun}"
+                                ];
+                            case 'biaya_operasional':
+                                return [
+                                    "Pembiayaan Personalia, Administrasi dan Operasional Kantor", 
+                                    "Biaya Operasional Kantor", 
+                                    null,  
+                                    "KO0202M{$request->minggu_ke}{$tahun}"
+                                ];
+                            case 'pengadaan_asset':
+                                return [
+                                    "Pembiayaan Personalia, Administrasi dan Operasional Kantor", 
+                                    "Pengadaan Asset Kantor / Proyek", 
+                                    null,  
+                                    "KO0203M{$request->minggu_ke}{$tahun}"
+                                ];
+                            case 'biaya_lain':
+                                return [
+                                    "Pembiayaan Personalia, Administrasi dan Operasional Kantor", 
+                                    "Biaya Lain - lain yang berhubungan dgn operasional", 
+                                    null,  
+                                    "KO0204M{$request->minggu_ke}{$tahun}"
+                                ];   
+                        }
+                        break;
+    
+                    case 'biaya_pinjaman':
+                        switch ($request->kategori) {
+                            case 'biaya_administrasi_pinjaman':
+                                return [
+                                    "Biaya Pinjaman / Pengembalian Pinjaman", 
+                                    "Biaya Administrasi Pinjaman (Notaris, Adm, Aprisal dll)", 
+                                    null,  
+                                    "KO0301M{$request->minggu_ke}{$tahun}"
+                                ];
+                            case 'pembayaran_bunga':
+                                return [
+                                    "Biaya Pinjaman / Pengembalian Pinjaman", 
+                                    "Pembayaran Bunga Pinjaman 12,5 % per Tahun", 
+                                    null,  
+                                    "KO0302M{$request->minggu_ke}{$tahun}"
+                                ];
+                            case 'pengembalian_pokok':
+                                return [
+                                    "Biaya Pinjaman / Pengembalian Pinjaman", 
+                                    "Pengembalian Pokok Pinjaman Bank (Pot. KPR)", 
+                                    null,  
+                                    "KO0303M{$request->minggu_ke}{$tahun}"
+                                ];   
+                            case 'pengembalian_pinjaman':
+                                return [
+                                    "Biaya Pinjaman / Pengembalian Pinjaman", 
+                                    "Pengembalian Pinjaman Pihak Ketiga", 
+                                    null,  
+                                    "KO0304M{$request->minggu_ke}{$tahun}"
+                                ];     
+                            case 'biaya_pengembalian':
+                                return [
+                                    "Biaya Pinjaman / Pengembalian Pinjaman", 
+                                    "Biaya Pengembalian Uang Muka", 
+                                    null,  
+                                    "KO0305M{$request->minggu_ke}{$tahun}"
+                                ];                      
                             
-        //                 }
-        //                 break;
+                        }
+                        break;
     
-        //             case 'pembiayaan_personalia':
-        //                 switch ($request->kategori) {
-        //                     case 'biaya_personalia':
-        //                         return [
-        //                             "Pembiayaan Personalia, Administrasi dan Operasional Kantor", 
-        //                             "Biaya Personalia", 
-        //                             "KO0201{$kodeMinggu}",  
-        //                             "KO0201M{$mingguIni}{$tahun}"
-        //                         ];
-        //                     case 'biaya_operasional':
-        //                         return [
-        //                             "Pembiayaan Personalia, Administrasi dan Operasional Kantor", 
-        //                             "Biaya Operasional Kantor", 
-        //                             "KO0202{$kodeMinggu}",  
-        //                             "KO0202M{$mingguIni}{$tahun}"
-        //                         ];
-        //                     // Tambahkan logika untuk kategori lainnya (pengadaan aset, biaya lain-lain)
-        //                 }
-        //                 break;
+                    case 'setor_kantor_pusat':
+                        return [
+                            "Setor ke Kantor Pusat", 
+                            null,  // Tidak ada kategori
+                            null,  
+                            "KO0401M{$request->minggu_ke}{$tahun}"
+                        ];
     
-        //             case 'biaya_pinjaman':
-        //                 switch ($request->kategori) {
-        //                     case 'biaya_administrasi_pinjaman':
-        //                         return [
-        //                             "Biaya Pinjaman / Pengembalian Pinjaman", 
-        //                             "Biaya Administrasi Pinjaman (Notaris, Adm, Aprisal dll)", 
-        //                             "KO0301{$kodeMinggu}",  
-        //                             "KO0301M{$mingguIni}{$tahun}"
-        //                         ];
-        //                     case 'pembayaran_bunga':
-        //                         return [
-        //                             "Biaya Pinjaman / Pengembalian Pinjaman", 
-        //                             "Pembayaran Bunga Pinjaman 12,5 % per Tahun", 
-        //                             "KO0302{$kodeMinggu}",  
-        //                             "KO0302M{$mingguIni}{$tahun}"
-        //                         ];
-        //                     // Tambahkan logika untuk kategori lainnya (pengembalian pinjaman, uang muka)
-        //                 }
-        //                 break;
+                    case 'bahan_material_proyek':
+                        return [
+                            "Bahan / Material Proyek Telah dibayarkan minggu ini", 
+                            null,  
+                            null,  
+                            "M{$request->minggu_ke}{$tahun}"
+                        ];
     
-        //             case 'setor_kantor_pusat':
-        //                 return [
-        //                     "Setor ke Kantor Pusat", 
-        //                     null,  // Tidak ada kategori
-        //                     "KO0401{$kodeMinggu}",  
-        //                     "KO0401M{$mingguIni}{$tahun}"
-        //                 ];
+                    case 'pembayaran_material_jatuh_tempo':
+                        $mingguDepan = $mingguIni + 1;  // Minggu berikutnya
+                        return [
+                            "Pembayaran Material / Bahan Jatuh Tempo (Minggu Depan)", 
+                            null,  
+                            null,
+                            "M{$mingguDepan}{$tahun}"
+                        ];
     
-        //             case 'bahan_material_proyek':
-        //                 return [
-        //                     "Bahan / Material Proyek Telah dibayarkan minggu ini", 
-        //                     null,  
-        //                     "KO0501{$kodeMinggu}",  
-        //                     "KO0501M{$mingguIni}{$tahun}"
-        //                 ];
-    
-        //             case 'pembayaran_material_jatuh_tempo':
-        //                 $mingguDepan = $mingguIni + 1;  // Minggu berikutnya
-        //                 return [
-        //                     "Pembayaran Material / Bahan Jatuh Tempo (Minggu Depan)", 
-        //                     null,  
-        //                     "KO0601M{$mingguDepan}{$tahun}",  
-        //                     "KO0601M{$mingguDepan}{$tahun}"
-        //                 ];
-    
-        //             // Tambahkan logika untuk uraian lainnya jika diperlukan
-        //         }
-        //         break;
-        // 
+                    // Tambahkan logika untuk uraian lainnya jika diperlukan
+                }
+                break;
         }
     
         return [null, null, null, null];  // Return null if no match
