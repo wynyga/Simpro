@@ -306,7 +306,72 @@ class LaporanMingguanController extends Controller
     
                     // Tambahkan logika untuk uraian lainnya jika diperlukan
                 }
-                break;
+            break;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            case 'SISA KAS PROJECT MINGGU INI':
+                return[
+                    "Sisa Kas Project Minggu Ini",
+                    null,
+                    null,
+                    null,
+                ];
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            case 'HUTANG MATERIAL DAN RENCANA KEBUTUHAN':
+                switch ($request->uraian) {
+                    case 'jumlah_hutang':
+                        return [
+                            "Jumlah Hutang Bahan / Material Proyek ke Vendor",  // Uraian
+                            null,                                              // Tidak ada kategori
+                            null,                                              // Tidak ada sub_kategori
+                            "M{$request->minggu_ke}{$tahun}"                    // Code Account
+                        ];
+                    
+                    case 'pembayaran_jatuh_tempo_1_minggu':
+                        $mingguDepan = $mingguIni + 1;
+                        return [
+                            "Pembayaran Bahan/Material Proyek Jatuh Tempo (1 Minggu Berikut)",  // Uraian
+                            null,  // Tidak ada kategori
+                            null,  // Tidak ada sub_kategori
+                            "M{$mingguDepan}{$tahun}"  // Code Account untuk 1 minggu ke depan
+                        ];
+                    
+                    case 'pembayaran_jatuh_tempo_2_minggu':
+                        $mingguDepan = $mingguIni + 2;
+                        return [
+                            "Pembayaran Bahan/Material Proyek Jatuh Tempo (2 Minggu Berikut)",  // Uraian
+                            null,  // Tidak ada kategori
+                            null,  // Tidak ada sub_kategori
+                            "M{$mingguDepan}{$tahun}"  // Code Account untuk 2 minggu ke depan
+                        ];
+
+                    case 'pembayaran_jatuh_tempo_3_minggu':
+                        $mingguDepan = $mingguIni + 3;
+                        return [
+                            "Pembayaran Bahan/Material Proyek Jatuh Tempo (3 Minggu Berikut)",  // Uraian
+                            null,  // Tidak ada kategori
+                            null,  // Tidak ada sub_kategori
+                            "M{$mingguDepan}{$tahun}"  // Code Account untuk 3 minggu ke depan
+                        ];
+
+                    case 'pembayaran_jatuh_tempo_bulan':
+                        return [
+                            "Pembayaran Bahan/Material Proyek Jatuh Tempo (Bulan Berikut)",  // Uraian
+                            null,  // Tidak ada kategori
+                            null,  // Tidak ada sub_kategori
+                            "M10{$tahun}"  // Code Account untuk bulan berikutnya (asumsi bulan adalah ke-10 dari contoh)
+                        ];
+
+                    case 'rencana_pembelian_minggu_depan':
+                        $mingguDepan = $mingguIni + 1;
+                        return [
+                            "Rencana Pembelian Bahan Proyek (Minggu Berikut)",  // Uraian
+                            null,  // Tidak ada kategori
+                            null,  // Tidak ada sub_kategori
+                            "M{$mingguDepan}{$tahun}"  // Code Account untuk 1 minggu ke depan
+                        ];
+                }
+            break;
+
         }
     
         return [null, null, null, null];  // Return null if no match
