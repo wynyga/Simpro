@@ -102,7 +102,7 @@ class LaporanMingguanController extends Controller
                                     case 'kelebihan_tanah':
                                         return [
                                             "Biaya Kelebihan Tanah", 
-                                            "Penerimaan dana Tuni lainnya",  // Kategori
+                                            "Penerimaan dana Tunai lainnya",  // Kategori
                                             "Kelebihan Tanah",  // Sub Kategori
                                             "KI0301M{$request->minggu_ke}{$tahun}"  // Code Account
                                         ];
@@ -128,6 +128,7 @@ class LaporanMingguanController extends Controller
     
         return [null, null, null, null];  // Return null if no match
     }
+    
     
 }
 
