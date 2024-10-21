@@ -6,7 +6,7 @@ use App\Http\Controllers\GudangInController;
 use App\Http\Controllers\GudangOutController;
 use App\Http\Controllers\TransaksiKasController;
 use App\Http\Controllers\LaporanMingguanController;
-
+use App\Http\Controllers\TransaksiController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,3 +31,5 @@ Route::post('/transaksi-kas', [TransaksiKasController::class, 'store']);
 Route::get('/laporan-mingguan', [LaporanMingguanController::class, 'index'])->name('laporan_mingguan.index');
 Route::get('/laporan-mingguan/create', [LaporanMingguanController::class, 'create'])->name('laporan_mingguan.create');
 Route::post('/laporan-mingguan', [LaporanMingguanController::class, 'store'])->name('laporan_mingguan.store');
+
+Route::resource('transaksi', TransaksiController::class);
