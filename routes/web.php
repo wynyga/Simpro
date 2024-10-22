@@ -7,6 +7,10 @@ use App\Http\Controllers\GudangOutController;
 use App\Http\Controllers\TransaksiKasController;
 use App\Http\Controllers\LaporanMingguanController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\BlokUnitController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PerumahanController;
+use App\Http\Controllers\TipeRumahController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,4 +36,11 @@ Route::get('/laporan-mingguan', [LaporanMingguanController::class, 'index'])->na
 Route::get('/laporan-mingguan/create', [LaporanMingguanController::class, 'create'])->name('laporan_mingguan.create');
 Route::post('/laporan-mingguan', [LaporanMingguanController::class, 'store'])->name('laporan_mingguan.store');
 
-Route::resource('transaksi', TransaksiController::class);
+Route::resource('/transaksi', TransaksiController::class);
+
+Route::resource('blokunit', BlokUnitController::class);
+Route::resource('user', UserController::class);
+
+Route::resource('perumahan', PerumahanController::class);
+
+Route::resource('tipe_rumah', TipeRumahController::class);
