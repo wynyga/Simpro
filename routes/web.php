@@ -29,12 +29,19 @@ Route::post('/gudang-out', [GudangOutController::class, 'store']);
 // Route untuk mendapatkan kode barang berdasarkan jenis peralatan
 Route::get('/get-stock-codes/{type}', [StockController::class, 'getStockCodes']);
 
+// Route untuk transaksi Kas
 Route::get('/transaksi-kas', [TransaksiKasController::class, 'index']);
 Route::post('/transaksi-kas', [TransaksiKasController::class, 'store']);
 
+//Route untuk laporan mingguan
 Route::get('/laporan-mingguan', [LaporanMingguanController::class, 'index'])->name('laporan_mingguan.index');
 Route::get('/laporan-mingguan/create', [LaporanMingguanController::class, 'create'])->name('laporan_mingguan.create');
 Route::post('/laporan-mingguan', [LaporanMingguanController::class, 'store'])->name('laporan_mingguan.store');
+Route::get('/laporan-mingguan/summary', [LaporanMingguanController::class, 'showSummary'])->name('laporan_mingguan.summary');
+Route::get('/laporan-mingguan/summary/jenis-biaya', [LaporanMingguanController::class, 'showSummaryPerJenisBiaya'])->name('laporan_mingguan.summary_per_jenis_biaya');
+Route::get('/laporan-mingguan/summary/uraian', [LaporanMingguanController::class, 'showSummaryPerUraian'])->name('laporan_mingguan.summary_per_uraian');
+Route::get('/laporan-mingguan/summary/kategori', [LaporanMingguanController::class, 'showSummaryPerKategori'])->name('laporan_mingguan.summary_per_kategori');
+
 
 Route::resource('/transaksi', TransaksiController::class);
 

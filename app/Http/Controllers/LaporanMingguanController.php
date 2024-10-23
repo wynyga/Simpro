@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\LaporanMingguan;
+use DB;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class LaporanMingguanController extends Controller
 {
@@ -58,6 +60,76 @@ class LaporanMingguanController extends Controller
     
         return redirect()->route('laporan_mingguan.index')->with('success', 'Laporan Mingguan berhasil disimpan');
     }
+
+    // Method untuk mendapatkan summary total per jenis biaya
+    public function getSummaryPerJenisBiaya()
+    {
+        // Mengambil total per jenis biaya
+        $summary = LaporanMingguan::select('jenis_biaya', FacadesDB::raw('SUM(total) as total_keuangan'))
+                    ->groupBy('jenis_biaya')
+                    ->get();
+
+        return $summary;
+    }
+
+    public function getSummaryPerUraian()
+    {
+        // Mengambil total per uraian di dalam jenis biaya
+        $summary = LaporanMingguan::select('jenis_biaya', 'uraian', FacadesDB::raw('SUM(total) as total_keuangan'))
+                    ->groupBy('jenis_biaya', 'uraian')
+                    ->get();
+
+        return $summary;
+    }
+
+    public function getSummaryPerKategori()
+    {
+        // Mengambil total per kategori di dalam uraian
+        $summary = LaporanMingguan::select('jenis_biaya', 'uraian', 'kategori', FacadesDB::raw('SUM(total) as total_keuangan'))
+                    ->groupBy('jenis_biaya', 'uraian', 'kategori')
+                    ->get();
+
+        return $summary;
+    }
+
+    public function showSummary()
+    {
+        // Mendapatkan ringkasan total per jenis biaya
+        $summaryJenisBiaya = $this->getSummaryPerJenisBiaya();
+
+        // Mengirim data ke view 'summary'
+        return view('summary', compact('summaryJenisBiaya'));
+    }
+
+
+    public function showSummaryPerJenisBiaya()
+    {
+        // Mendapatkan ringkasan total per jenis biaya
+        $summaryJenisBiaya = $this->getSummaryPerJenisBiaya();
+    
+        // Kirim data ke view
+        return view('laporan_mingguan.summary_per_jenis_biaya', compact('summaryJenisBiaya'));
+    }
+    
+    public function showSummaryPerUraian()
+    {
+        // Mendapatkan ringkasan total per uraian
+        $summaryUraian = $this->getSummaryPerUraian();
+    
+        // Kirim data ke view
+        return view('laporan_mingguan.summary_per_uraian', compact('summaryUraian'));
+    }
+    
+    public function showSummaryPerKategori()
+    {
+        // Mendapatkan ringkasan total per kategori
+        $summaryKategori = $this->getSummaryPerKategori();
+    
+        // Kirim data ke view
+        return view('laporan_mingguan.summary_per_kategori', compact('summaryKategori'));
+    }
+    
+
     
 
     // Method untuk menentukan Uraian, Kategori, Sub_Kategori, dan Code Account
