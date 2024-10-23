@@ -42,12 +42,9 @@ Route::get('/laporan-mingguan/summary/jenis-biaya', [LaporanMingguanController::
 Route::get('/laporan-mingguan/summary/uraian', [LaporanMingguanController::class, 'showSummaryPerUraian'])->name('laporan_mingguan.summary_per_uraian');
 Route::get('/laporan-mingguan/summary/kategori', [LaporanMingguanController::class, 'showSummaryPerKategori'])->name('laporan_mingguan.summary_per_kategori');
 
-
-Route::resource('/transaksi', TransaksiController::class);
-
-Route::resource('blokunit', BlokUnitController::class);
-Route::resource('user', UserController::class);
-
-Route::resource('perumahan', PerumahanController::class);
-
-Route::resource('tipe_rumah', TipeRumahController::class);
+//Route untuk penjualan
+Route::resource('/penjualan/transaksi', TransaksiController::class);
+Route::resource('/penjualan/blokunit', BlokUnitController::class);
+Route::resource('/penjualan/user', UserController::class);
+Route::resource('/penjualan/perumahan', PerumahanController::class);
+Route::resource('/penjualan/tipe_rumah', TipeRumahController::class);

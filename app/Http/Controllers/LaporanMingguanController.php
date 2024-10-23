@@ -96,9 +96,11 @@ class LaporanMingguanController extends Controller
     {
         // Mendapatkan ringkasan total per jenis biaya
         $summaryJenisBiaya = $this->getSummaryPerJenisBiaya();
-
-        // Mengirim data ke view 'summary'
-        return view('summary', compact('summaryJenisBiaya'));
+        $summaryUraian = $this->getSummaryPerUraian();
+        $summaryKategori = $this->getSummaryPerKategori();
+    
+        // Kirim data ke view
+        return view('laporan_mingguan.summary', compact('summaryJenisBiaya', 'summaryUraian', 'summaryKategori'));
     }
 
 
