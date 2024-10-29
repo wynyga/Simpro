@@ -46,5 +46,5 @@ Route::get('/laporan-mingguan/summary/kategori', [LaporanMingguanController::cla
 Route::resource('/penjualan/transaksi', TransaksiController::class);
 Route::resource('/penjualan/blokunit', BlokUnitController::class);
 Route::resource('/penjualan/user', UserController::class);
-Route::resource('/penjualan/perumahan', PerumahanController::class);
 Route::resource('/penjualan/tipe_rumah', TipeRumahController::class);
+Route::resource('/penjualan/perumahan', PerumahanController::class);
