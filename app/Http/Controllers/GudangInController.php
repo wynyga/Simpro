@@ -27,7 +27,12 @@ class GudangInController extends Controller
         $gudangIn->keterangan = $request->keterangan;
         $gudangIn->save();
 
-        return redirect('/gudang-in')->with('success', 'Data Gudang In berhasil disimpan.');
+        //return redirect('/gudang-in')->with('success', 'Data Gudang In berhasil disimpan.');
+        // Mengembalikan respon dalam format JSON
+        return response()->json([
+            'message' => 'Data Gudang In berhasil disimpan.',
+            'data' => $gudangIn
+        ], 201);  // 201 status code untuk berhasil membuat data baru
     }
 }
 
