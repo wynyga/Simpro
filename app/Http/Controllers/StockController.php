@@ -23,39 +23,7 @@ class StockController extends Controller
 {
     public function index()
     {
-        //Untuk Pengujian melalui HTML
-        //return view('stock');
-
-        //Untuk Pengujian melalui Postman
-        try {
-            $allStocks = [
-                'day_work' => DayWork::all(),
-                'equipment' => Equipment::all(),
-                'tools' => Tools::all(),
-                'land_stone_sand' => LandStoneSand::all(),
-                'cement' => Cement::all(),
-                'rebar' => Rebar::all(),
-                'wood' => Wood::all(),
-                'roof_ceiling_tile' => RoofCeilingTile::all(),
-                'keramik_floor' => KeramikFloor::all(),
-                'paint_glass_wallpaper' => PaintGlassWallpaper::all(),
-                'others' => Others::all(),
-                'oil_chemical_perekat' => OilChemicalPerekat::all(),
-                'sanitary' => Sanitary::all(),
-                'piping_pump' => PipingPump::all(),
-                'lighting' => Lighting::all()
-            ];
-    
-            return response()->json([
-                'status' => 'success',
-                'data' => $allStocks
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ], 500);
-        }
+        return view('stock');
     }
 
     public function store(Request $request)
