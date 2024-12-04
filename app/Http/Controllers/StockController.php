@@ -23,7 +23,11 @@ class StockController extends Controller
 {
     public function index()
     {
-        return view('stock');
+        //Untuk Pengujian melalui HTML
+        //return view('stock');
+
+        //Untuk Pengujian melalui Postman
+        
     }
 
     public function store(Request $request)
