@@ -113,15 +113,17 @@ class StockController extends Controller
         // Simpan data
         $stock->save();
 
-        //Uji melalui HTML
-        //return redirect('/stock')->with('success', 'Data stock berhasil disimpan.');
-
-        //Uji melalui Postman
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data stock berhasil disimpan.',
-            'data' => $stock
-        ], 201);
+        if ($request->wantsJson()) {
+            // Jika request datang dari API (misalnya Postman), kembalikan response JSON
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data stock berhasil disimpan.',
+                'data' => $stock
+            ], 201);
+        } else {
+            // Jika request datang dari browser, kembalikan redirect
+            return redirect('/stock')->with('success', 'Data stock berhasil disimpan.');
+        }
     }
     
 
