@@ -182,11 +182,7 @@ class StockController extends Controller
                 break;
         }
 
-        //return response()->json($codes);
-        return response()->json([
-            'status' => 'success',
-            'data' => $codes
-        ]);
+        return response()->json($codes);
     }
 }
 
