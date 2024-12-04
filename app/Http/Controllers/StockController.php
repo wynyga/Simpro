@@ -27,7 +27,28 @@ class StockController extends Controller
         //return view('stock');
 
         //Untuk Pengujian melalui Postman
-        
+        $allStocks = [
+            'day_work' => DayWork::all(),
+            'equipment' => Equipment::all(),
+            'tools' => Tools::all(),
+            'land_stone_sand' => LandStoneSand::all(),
+            'cement' => Cement::all(),
+            'rebar' => Rebar::all(),
+            'wood' => Wood::all(),
+            'roof_ceiling_tile' => RoofCeilingTile::all(),
+            'keramik_floor' => KeramikFloor::all(),
+            'paint_glass_wallpaper' => PaintGlassWallpaper::all(),
+            'others' => Others::all(),
+            'oil_chemical_perekat' => OilChemicalPerekat::all(),
+            'sanitary' => Sanitary::all(),
+            'piping_pump' => PipingPump::all(),
+            'lighting' => Lighting::all()
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $allStocks
+        ]);
     }
 
     public function store(Request $request)
@@ -116,8 +137,16 @@ class StockController extends Controller
     
         // Simpan data
         $stock->save();
-    
-        return redirect('/stock')->with('success', 'Data stock berhasil disimpan.');
+
+        //Uji melalui HTML
+        //return redirect('/stock')->with('success', 'Data stock berhasil disimpan.');
+
+        //Uji melalui Postman
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data stock berhasil disimpan.',
+            'data' => $stock
+        ], 201);
     }
     
 
@@ -176,7 +205,11 @@ class StockController extends Controller
                 break;
         }
 
-        return response()->json($codes);
+        //return response()->json($codes);
+        return response()->json([
+            'status' => 'success',
+            'data' => $codes
+        ]);
     }
 }
 

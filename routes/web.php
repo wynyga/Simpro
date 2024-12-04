@@ -47,3 +47,9 @@ Route::resource('/penjualan/blokunit', BlokUnitController::class);
 Route::resource('/penjualan/user', UserController::class);
 Route::resource('/penjualan/tipe_rumah', TipeRumahController::class);
 Route::resource('/penjualan/perumahan', PerumahanController::class);
+
+Route::get('/testing', function(){
+    return response()->json([
+        "message"=>"Get method berhasil"
+    ]);
+});
