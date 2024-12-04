@@ -24,7 +24,7 @@ class StockController extends Controller
     public function index()
     {
         //Untuk Pengujian melalui HTML
-        //return view('stock');
+        return view('stock');
 
         //Untuk Pengujian melalui Postman
         
