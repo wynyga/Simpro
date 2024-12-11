@@ -25,17 +25,22 @@ class GudangOutController extends Controller
         $gudangOut->keterangan = $request->keterangan;
         $gudangOut->save();
 
-        if($request->wantsJson())
-        {
-            return response()->json([
-                'message'=>'Data Gudang Out berhasil disimpan',
-                'data'=>$gudangOut
-            ],201);
-        }
-        else
-        {
-            return redirect('/gudang-out')->with('success', 'Data Gudang Out berhasil disimpan.');
-         }
+        return response()->json([
+            'message'=>'Data Gudang Out berhasil disimpan',
+            'data'=>$gudangOut
+        ],201);
+
+        // if($request->wantsJson())
+        // {
+        //     return response()->json([
+        //         'message'=>'Data Gudang Out berhasil disimpan',
+        //         'data'=>$gudangOut
+        //     ],201);
+        // }
+        // else
+        // {
+        //     return redirect('/gudang-out')->with('success', 'Data Gudang Out berhasil disimpan.');
+        //  }
     }
 }
 

@@ -15,7 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::get('/stock', [StockController::class, 'index']);
 Route::post('/stock', [StockController::class, 'store']);
 
@@ -26,7 +25,7 @@ Route::get('/gudang-out', [GudangOutController::class, 'index']);
 Route::post('/gudang-out', [GudangOutController::class, 'store']);
 
 // Route untuk mendapatkan kode barang berdasarkan jenis peralatan
-Route::get('/get-stock-codes/{type}', [StockController::class, 'getStockCodes']);
+Route::get('/get-stock-codes/{type}', [StockController::class, 'getStockCodes']); //http://simpro.test/get-stock-codes/day_work
 
 // Route untuk transaksi Kas
 Route::get('/transaksi-kas', [TransaksiKasController::class, 'index']);

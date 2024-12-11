@@ -27,17 +27,23 @@ class GudangInController extends Controller
         $gudangIn->keterangan = $request->keterangan;
         $gudangIn->save();
 
-        if ($request->wantsJson())
-        {
-            return response()->json([
-                'message' => 'Data Gudang In berhasil disimpan.',
-                'data' => $gudangIn
-            ], 201);  
-        }
-        else
-        {
-            return redirect('/gudang-in')->with('success', 'Data Gudang In berhasil disimpan.');
-        }
+
+        return response()->json([
+            'message' => 'Data Gudang In berhasil disimpan.',
+            'data' => $gudangIn
+        ], 201);  
+
+        // if ($request->wantsJson())
+        // {
+        //     return response()->json([
+        //         'message' => 'Data Gudang In berhasil disimpan.',
+        //         'data' => $gudangIn
+        //     ], 201);  
+        // }
+        // else
+        // {
+        //     return redirect('/gudang-in')->with('success', 'Data Gudang In berhasil disimpan.');
+        // }
     }
 }
 
