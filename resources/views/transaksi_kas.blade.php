@@ -2,6 +2,39 @@
 <html>
 <head>
     <title>Transaksi KAS</title>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchData();
+
+        async function fetchData() {
+            try {
+                const response = await fetch('/api/transaksi-kas');
+                const data = await response.json();
+                
+                // Menampilkan saldo kas
+                document.getElementById('totalCashIn').innerText = Rp. ${parseFloat(data.totalCashIn).toFixed(2)};
+                document.getElementById('totalCashOut').innerText = Rp. ${parseFloat(data.totalCashOut).toFixed(2)};
+                document.getElementById('saldoKas').innerText = Rp. ${parseFloat(data.saldoKas).toFixed(2)};
+                
+                // Menampilkan riwayat transaksi
+                const tbody = document.getElementById('transaksiKasTable');
+                tbody.innerHTML = '';
+                data.transaksiKas.forEach(transaksi => {
+                    const tr = <tr>
+                        <td>${transaksi.tanggal}</td>
+                        <td>${transaksi.keterangan_transaksi}</td>
+                        <td>${transaksi.kode}</td>
+                        <td>Rp. ${parseFloat(transaksi.jumlah).toFixed(2)}</td>
+                        <td>${transaksi.keterangan_objek_transaksi}</td>
+                    </tr>;
+                    tbody.innerHTML += tr;
+                });
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            }
+        }
+    });
+    </script>
 </head>
 <body>
     <h1>Input Transaksi KAS</h1>
@@ -32,8 +65,8 @@
     <hr>
 
     <h2>Saldo Kas</h2>
-    <p>Total Cash In: Rp. {{ number_format($totalCashIn, 2) }}</p>
-    <p>Total Cash Out: Rp. {{ number_format($totalCashOut, 2) }}</p>
+    <p>Total Cash In: Rp. {{ number_format($totalCashIn) }}</p>
+    <p>Total Cash Out: Rp. {{ number_format($totalCashOut) }}</p>
     <p>Saldo Kas: Rp. {{ number_format($saldoKas, 2) }}</p>
 
     <hr>

@@ -30,6 +30,8 @@ Route::post('/gudang-out', [GudangOutController::class, 'store']);
 // Route untuk transaksi Kas
 Route::get('/transaksi-kas', [TransaksiKasController::class, 'index']);
 Route::post('/transaksi-kas', [TransaksiKasController::class, 'store']);
+Route::get('/api/transaksi-kas', [TransaksiKasController::class, 'getTransaksiKasData']);
+
 
 //Route untuk laporan mingguan
 Route::get('/laporan-mingguan', [LaporanMingguanController::class, 'index'])->name('laporan_mingguan.index');
