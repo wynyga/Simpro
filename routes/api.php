@@ -21,7 +21,7 @@ Route::post('/stock', [StockController::class, 'store']);
 // Route untuk mendapatkan kode barang berdasarkan jenis peralatan
 Route::get('/get-stock-codes/{type}', [StockController::class, 'getStockCodes']);
 
-Route::get('/gudang-in', [GudangInController::class, 'index']);
+// Route::get('/gudang-in', [GudangInController::class, 'index']);
 Route::post('/gudang-in', [GudangInController::class, 'store']);
 
 Route::get('/gudang-out', [GudangOutController::class, 'index']);
