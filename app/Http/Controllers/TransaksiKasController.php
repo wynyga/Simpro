@@ -7,8 +7,11 @@ use App\Models\TransaksiKas;
 
 class TransaksiKasController extends Controller
 {
+    /**
+     * Menampilkan indeks data transaksi kas dengan output JSON.
+     */
     public function index()
-    {   
+    {
         // Menghitung total Cash In (Kode 101)
         $totalCashIn = TransaksiKas::where('kode', '101')->sum('jumlah');
 
@@ -18,19 +21,10 @@ class TransaksiKasController extends Controller
         // Menghitung saldo kas (Cash In - Cash Out)
         $saldoKas = $totalCashIn - $totalCashOut;
 
-        // Mengambil semua data transaksi untuk ditampilkan di halaman
-        $transaksiKas = TransaksiKas::all();
-        // return view('transaksi_kas');
-         return view('transaksi_kas', compact('totalCashIn', 'totalCashOut', 'saldoKas', 'transaksiKas'));
-    }
-
-    public function getTransaksiKasData()
-    {
-        $totalCashIn = TransaksiKas::where('kode', '101')->sum('jumlah');
-        $totalCashOut = TransaksiKas::where('kode', '102')->sum('jumlah');
-        $saldoKas = $totalCashIn - $totalCashOut;
+        // Mengambil semua data transaksi untuk ditampilkan
         $transaksiKas = TransaksiKas::all();
 
+        // Mengembalikan data sebagai JSON
         return response()->json([
             'totalCashIn' => $totalCashIn,
             'totalCashOut' => $totalCashOut,
@@ -39,33 +33,27 @@ class TransaksiKasController extends Controller
         ]);
     }
 
+    /**
+     * Menyimpan transaksi kas baru dengan output JSON.
+     */
     public function store(Request $request)
     {
-        // Validasi request
-        $request->validate([
+        // Validasi input
+        $validated = $request->validate([
             'tanggal' => 'required|date',
-            'keterangan_transaksi' => 'required|string|max:255',
-            'kode' => 'required|in:101,102',
+            'keterangan_transaksi' => 'required|string',
+            'kode' => 'required|in:101,102', // Hanya menerima kode 101 atau 102
             'jumlah' => 'required|numeric',
-            'keterangan_objek_transaksi' => 'nullable|string|max:255'
+            'keterangan_objek_transaksi' => 'nullable|string'
         ]);
 
         // Simpan transaksi baru
-        $transaksiKas = TransaksiKas::create([
-            'tanggal' => $request->input('tanggal'),
-            'keterangan_transaksi' => $request->input('keterangan_transaksi'),
-            'kode' => $request->input('kode'),
-            'jumlah' => $request->input('jumlah'),
-            'keterangan_objek_transaksi' => $request->input('keterangan_objek_transaksi')
-        ]);
+        $transaksi = TransaksiKas::create($validated);
 
-        // Redirect ke halaman transaksi kas dengan pesan sukses
-        // return redirect('/transaksi-kas')->with('success', 'Transaksi KAS berhasil disimpan.');
+        // Mengembalikan respons JSON
         return response()->json([
             'message' => 'Transaksi KAS berhasil disimpan.',
-            'data' => $transaksiKas
+            'data' => $transaksi
         ], 201);
     }
 }
-
-
