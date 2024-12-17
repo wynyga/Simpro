@@ -1,136 +1,125 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Models\DayWork; 
-use App\Models\Equipment;
-use App\Models\Tools;
-use App\Models\LandStoneSand;
-use App\Models\Cement;
-use App\Models\Rebar;
-use App\Models\Wood;
-use App\Models\RoofCeilingTile;
-use App\Models\KeramikFloor;
-use App\Models\PaintGlassWallpaper;
-use App\Models\Others;
-use App\Models\OilChemicalPerekat;
-use App\Models\Sanitary;
-use App\Models\PipingPump;
-use App\Models\Lighting;
+use App\Models\{
+    DayWork, Equipment, Tools, LandStoneSand, Cement, Rebar, Wood, RoofCeilingTile, KeramikFloor,
+    PaintGlassWallpaper, Others, OilChemicalPerekat, Sanitary, PipingPump, Lighting
+};
+use App\Http\Resources\{
+    DayWorkResource,EquipmentsResource,ToolsResource,LandStoneSandResource,CementResource,
+    RebarResource,WoodResource,RoofCeilingTileResource,KeramikFloorResource,PaintGlassWallpaperResource,
+    OthersResource,OilChemicalPerekatResource,SanitaryResource,PipingPumpResource,LightingResource
+};
 
 class StockController extends Controller
 {
     public function index()
     {
-        return view('stock');
+        $dayWorks = DayWorkResource::collection(DayWork::all());
+        $equipments = EquipmentsResource::collection(Equipment::all());
+        $tools = ToolsResource::collection(Tools::all());
+        $landStoneSands = LandStoneSandResource::collection(LandStoneSand::all());
+        $cements = CementResource::collection(Cement::all());
+        $rebars = RebarResource::collection(Rebar::all());
+        $woods = WoodResource::collection(Wood::all());
+        $roofCeilingTiles = RoofCeilingTileResource::collection(RoofCeilingTile::all());
+        $keramikFloors = KeramikFloorResource::collection(KeramikFloor::all());
+        $paintGlassWallpapers = PaintGlassWallpaperResource::collection(PaintGlassWallpaper::all());
+        $others = OthersResource::collection(Others::all());
+        $oilChemicalPerekats = OilChemicalPerekatResource::collection(OilChemicalPerekat::all());
+        $sanitaries = SanitaryResource::collection(Sanitary::all());
+        $pipingPumps = PipingPumpResource::collection(PipingPump::all());
+        $lightings = LightingResource::collection(Lighting::all());
+        
+        $data = [
+            'day_works' => $dayWorks,
+            'equipments' => $equipments,
+            'tools' => $tools,
+            'land_stone_sands' => $landStoneSands,
+            'cements' => $cements,
+            'rebars' => $rebars,
+            'woods' => $woods,
+            'roof_ceiling_tiles' => $roofCeilingTiles,
+            'keramik_floors' => $keramikFloors,
+            'paint_glass_wallpapers' => $paintGlassWallpapers,
+            'others' => $others,
+            'oil_chemical_perekats' => $oilChemicalPerekats,
+            'sanitaries' => $sanitaries,
+            'piping_pumps' => $pipingPumps,
+            'lightings' => $lightings,
+        ];
+        
+
+        // Mengembalikan semua data sebagai JSON
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data retrieved successfully',
+            'data' => $data
+        ]);
+
+        // return view('stock');
+
     }
 
     public function store(Request $request)
     {
-        // Tentukan jenis peralatan dari input form
-        $jenisPeralatan = $request->input('jenis_peralatan');
-        $prefix = '';
-    
-        // Buat instance model yang sesuai dengan jenis peralatan
-        switch ($jenisPeralatan) {
-            case 'day_work':
-                $stock = new DayWork();
-                $prefix = 'MDW10-';
-                break;
-            case 'equipment':
-                $stock = new Equipment();
-                $prefix = 'EQP20-';
-                break;
-            case 'tools':
-                $stock = new Tools();
-                $prefix = 'EQT30-';
-                break;
-            case 'land_stone_sand':
-                $stock = new LandStoneSand();
-                $prefix = 'LSS40-';
-                break;
-            case 'cement':
-                $stock = new Cement();
-                $prefix = 'CEM50-';
-                break;
-            case 'rebar':
-                $stock = new Rebar();
-                $prefix = 'REB30-';
-                break;
-            case 'wood':
-                $stock = new Wood();
-                $prefix = 'WOD70-';
-                break;
-            case 'roof_ceiling_tile':
-                $stock = new RoofCeilingTile();
-                $prefix = 'RCT80-';
-                break;
-            case 'keramik_floor':
-                $stock = new KeramikFloor();
-                $prefix = 'KERM90-';
-                break;
-            case 'paint_glass_wallpaper':
-                $stock = new PaintGlassWallpaper();
-                $prefix = 'PGW100-';
-                break;
-            case 'others':
-                $stock = new Others();
-                $prefix = 'OTH110-';
-                break;
-            case 'oil_chemical_perekat':
-                $stock = new OilChemicalPerekat();
-                $prefix = 'OCP110-';
-                break;
-            case 'sanitary':
-                $stock = new Sanitary();
-                $prefix = 'SANI120-';
-                break;
-            case 'piping_pump':
-                $stock = new PipingPump();
-                $prefix = 'PIPP130-';
-                break;
-            case 'lighting':
-                $stock = new Lighting();
-                $prefix = 'LIGH140-';
-                break;
-            default:
-                return redirect('/stock')->with('error', 'Jenis peralatan tidak valid.');
+        $validator = Validator::make($request->all(), [
+            'jenis_peralatan' => 'required|string|in:day_work,equipment,tools,land_stone_sand,cement,rebar,wood,roof_ceiling_tile,keramik_floor,paint_glass_wallpaper,others,oil_chemical_perekat,sanitary,piping_pump,lighting',
+            'nama_barang' => 'required',
+            'uty' => 'required',
+            'satuan' => 'required',
+            'harga_satuan' => 'required|numeric',
+            'stock_bahan' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
-    
-        // Generate kode barang otomatis (misalnya berdasarkan ID terakhir)
-        $lastStock = $stock->orderBy('id', 'desc')->first();
-        $newId = $lastStock ? $lastStock->id + 1 : 1;
-        $stock->kode = $prefix . str_pad($newId, 2, '0', STR_PAD_LEFT);
-    
-        // Isi data dari form
-        $stock->nama_barang = $request->nama_barang;
-        $stock->uty = $request->uty;
-        $stock->satuan = $request->satuan;
-        $stock->harga_satuan = $request->harga_satuan;
-        $stock->stock_bahan = $request->stock_bahan;
-    
-        // Simpan data
-        $stock->save();
 
-        return response()->json([
-             'status' => 'success',
-             'message' => 'Data stock berhasil disimpan.',
-             'data' => $stock
-        ], 201);
+        try {
+            $modelMap = [
+                'day_work' => DayWork::class,
+                'equipment' => Equipment::class,
+                'tools' => Tools::class,
+                'land_stone_sand' => LandStoneSand::class,
+                'cement' => Cement::class,
+                'rebar' => Rebar::class,
+                'wood' => Wood::class,
+                'roof_ceiling_tile' => RoofCeilingTile::class,
+                'keramik_floor' => KeramikFloor::class,
+                'paint_glass_wallpaper' => PaintGlassWallpaper::class,
+                'others' => Others::class,
+                'oil_chemical_perekat' => OilChemicalPerekat::class,
+                'sanitary' => Sanitary::class,
+                'piping_pump' => PipingPump::class,
+                'lighting' => Lighting::class,
+            ];
+            
 
-        // if ($request->wantsJson()) {
-        //     // Jika request datang dari API (misalnya Postman), kembalikan response JSON
-        //     return response()->json([
-        //         'status' => 'success',
-        //         'message' => 'Data stock berhasil disimpan.',
-        //         'data' => $stock
-        //     ], 201);
-        // } else {
-        //     // Jika request datang dari browser, kembalikan redirect
-        //     return redirect('/stock')->with('success', 'Data stock berhasil disimpan.');
-        // }
+            $modelClass = $modelMap[$request->jenis_peralatan];
+            $stock = new $modelClass;
+
+            // Logic to generate code
+            $prefix = $stock->getPrefix(); // Assume getPrefix method is defined in models
+            $lastId = $modelClass::max('id') + 1;
+            $stock->kode = $prefix . str_pad($lastId, 2, '0', STR_PAD_LEFT);
+
+            // Fill stock data
+            $stock->fill($request->only(['nama_barang', 'uty', 'satuan', 'harga_satuan', 'stock_bahan']));
+            $stock->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data stock berhasil disimpan.',
+                'data' => $stock
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
+
     
 
     public function getStockCodes($type)

@@ -7,7 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class RoofCeilingTile extends Model
 {
     protected $table = 'roof_ceiling_tile';
-
+    protected $fillable = [
+        'nama_barang',
+        'uty',
+        'satuan',
+        'harga_satuan',
+        'stock_bahan',
+    ];
     protected static function booted()
     {
         static::creating(function ($roofCeilingTile) {
@@ -17,6 +23,10 @@ class RoofCeilingTile extends Model
 
             $roofCeilingTile->kode = 'RCT80-' . str_pad($newId, 2, '0', STR_PAD_LEFT);
         });
+    }
+    public function getPrefix()
+    {
+        return 'RCT80-';
     }
 }
 

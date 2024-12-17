@@ -7,7 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Wood extends Model
 {
     protected $table = 'wood';
-
+    protected $fillable = [
+        'nama_barang',
+        'uty',
+        'satuan',
+        'harga_satuan',
+        'stock_bahan',
+    ];
     protected static function booted()
     {
         static::creating(function ($wood) {
@@ -17,5 +23,9 @@ class Wood extends Model
 
             $wood->kode = 'WOD70-' . str_pad($newId, 2, '0', STR_PAD_LEFT);
         });
+    }
+    public function getPrefix()
+    {
+        return 'WOD70-';
     }
 }

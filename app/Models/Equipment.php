@@ -7,7 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Equipment extends Model
 {
     protected $table = 'equipment';
-    
+    protected $fillable = [
+        'nama_barang',
+        'uty',
+        'satuan',
+        'harga_satuan',
+        'stock_bahan',
+    ];    
     protected static function booted()
     {
         static::creating(function ($equipment) {
@@ -18,5 +24,9 @@ class Equipment extends Model
             
             $equipment->kode = 'EQP20-' . str_pad($newId, 2, '0', STR_PAD_LEFT);
         });
+    }
+    public function getPrefix()
+    {
+        return 'EQP20-';
     }
 }

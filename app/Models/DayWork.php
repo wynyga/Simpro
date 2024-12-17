@@ -7,7 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class DayWork extends Model
 {
     protected $table = 'day_work';
-    
+    protected $fillable = [
+        'nama_barang',
+        'uty',
+        'satuan',
+        'harga_satuan',
+        'stock_bahan',
+    ];
     protected static function booted()
     {
         static::creating(function ($dayWork) {
@@ -18,6 +24,11 @@ class DayWork extends Model
             
             $dayWork->kode = 'MDW10-' . str_pad($newId, 2, '0', STR_PAD_LEFT);
         });
+    }
+
+    public function getPrefix()
+    {
+        return 'MDW10-';
     }
 }
 
