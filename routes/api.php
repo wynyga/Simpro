@@ -24,14 +24,13 @@ Route::get('/get-stock-codes/{type}', [StockController::class, 'getStockCodes'])
 // Route::get('/gudang-in', [GudangInController::class, 'index']);
 Route::post('/gudang-in', [GudangInController::class, 'store']);
 
-Route::get('/gudang-out', [GudangOutController::class, 'index']);
+// Route::get('/gudang-out', [GudangOutController::class, 'index']);
 Route::post('/gudang-out', [GudangOutController::class, 'store']);
 
 // Route untuk transaksi Kas
 Route::get('/transaksi-kas', [TransaksiKasController::class, 'index']);
 Route::post('/transaksi-kas', [TransaksiKasController::class, 'store']);
 Route::get('/api/transaksi-kas', [TransaksiKasController::class, 'getTransaksiKasData']);
-
 
 //Route untuk laporan mingguan
 Route::get('/laporan-mingguan', [LaporanMingguanController::class, 'index'])->name('laporan_mingguan.index');
