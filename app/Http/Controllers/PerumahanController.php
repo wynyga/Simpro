@@ -9,14 +9,15 @@ class PerumahanController extends Controller
 {
     public function index()
     {
-        $perumahans = Perumahan::all();  // Mengambil semua data perumahan
-        return view('perumahan.index', compact('perumahans'));  // Mengirim data ke view
+        $perumahans = Perumahan::all(); 
+        return response()->json($perumahans);
+        //return view('perumahan.index', compact('perumahans'));  // Mengirim data ke view
     }
     
-    public function create()
-    {
-        return view('perumahan.create');
-    }
+    // public function create()
+    // {
+    //     return view('perumahan.create');
+    // }
 
     public function store(Request $request)
     {
@@ -26,7 +27,11 @@ class PerumahanController extends Controller
             'tanggal_harga' => 'required|date',
         ]);
 
-        Perumahan::create($data);
-        return redirect()->route('perumahan.index')->with('success', 'Perumahan berhasil ditambahkan.');
+        $perumahan = Perumahan::create($data);
+        return response()->json([
+            'messages'=>'Perumahan berhasil ditambahkan',
+            'data'=>$perumahan
+        ]);
+        //return redirect()->route('perumahan.index')->with('success', 'Perumahan berhasil ditambahkan.');
     }
 }

@@ -41,12 +41,26 @@ Route::get('/laporan-mingguan/summary/jenis-biaya', [LaporanMingguanController::
 Route::get('/laporan-mingguan/summary/uraian', [LaporanMingguanController::class, 'showSummaryPerUraian'])->name('laporan_mingguan.summary_per_uraian');
 Route::get('/laporan-mingguan/summary/kategori', [LaporanMingguanController::class, 'showSummaryPerKategori'])->name('laporan_mingguan.summary_per_kategori');
 
+//Route API Penjualan
+Route::get('/penjualan/perumahan', [PerumahanController::class, 'index']);
+Route::post('/penjualan/perumahan', [PerumahanController::class, 'store']);
+Route::get('/penjualan/tipe_rumah', [TipeRumahController::class, 'index']);
+Route::get('/penjualan/tipe_rumah/create', [TipeRumahController::class, 'create']);
+Route::post('/penjualan/tipe_rumah', [TipeRumahController::class, 'store']);
+Route::get('/users', [UserController::class, 'index']);
+Route::post('/users', [UserController::class, 'store']);
+Route::prefix('blokunit')->group(function () {
+    Route::get('/', [BlokUnitController::class, 'index'])->name('blokunit.index');
+    Route::get('/create', [BlokUnitController::class, 'create'])->name('blokunit.create');
+    Route::post('/store', [BlokUnitController::class, 'store'])->name('blokunit.store');
+});
 //Route untuk penjualan
-Route::resource('/penjualan/transaksi', TransaksiController::class);
-Route::resource('/penjualan/blokunit', BlokUnitController::class);
-Route::resource('/penjualan/user', UserController::class);
-Route::resource('/penjualan/tipe_rumah', TipeRumahController::class);
-Route::resource('/penjualan/perumahan', PerumahanController::class);
+ Route::resource('/penjualan/transaksi', TransaksiController::class);
+ Route::resource('/penjualan/blokunit', BlokUnitController::class);
+// Route::resource('/penjualan/user', UserController::class);
+// Route::resource('/penjualan/tipe_rumah', TipeRumahController::class);
+// Route::resource('/penjualan/perumahan', PerumahanController::class);
+
 
 Route::get('/testing', function(){
     return response()->json([

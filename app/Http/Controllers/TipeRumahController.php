@@ -11,18 +11,26 @@ class TipeRumahController extends Controller
     public function index()
     {
         $tipe_rumahs = TipeRumah::with('perumahan')->get();
-        return view('tipe_rumah.index',compact('tipe_rumahs'));
+        return response()->json($tipe_rumahs);
+        // return view('tipe_rumah.index',compact('tipe_rumahs'));
     }
 
     public function create()
     {
         $perumahans = Perumahan::all();  // Mengambil semua data perumahan
-        return view('tipe_rumah.create', compact('perumahans'));
+        return response()->json($perumahans); 
+        //return view('tipe_rumah.create', compact('perumahans'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
+        if (!Perumahan::find($request->id_perumahan)) {
+            return response()->json([
+                'message' => 'Nama perumahan tidak valid'
+            ], 404);
+        }
+
+        $validated = $request->validate([
             'id_perumahan' => 'required|exists:perumahan,id',
             'tipe_rumah' => 'required|string|max:255',
             'luas_bangunan' => 'required|numeric',
@@ -32,7 +40,11 @@ class TipeRumahController extends Controller
             'penambahan_bangunan' => 'required|numeric',
         ]);
 
-        TipeRumah::create($data);
-        return redirect()->route('tipe_rumah.index')->with('success', 'Tipe rumah berhasil ditambahkan.');
+        $tipeRumah = TipeRumah::create($validated);
+        return response()->json([
+            'message' => 'Tipe rumah berhasil ditambahkan',
+            'data' => $tipeRumah
+        ], 201);
+        //return redirect()->route('tipe_rumah.index')->with('success', 'Tipe rumah berhasil ditambahkan.');
     }
 }

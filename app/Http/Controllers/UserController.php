@@ -10,23 +10,29 @@ class UserController extends Controller
     public function index()
     {
         $users = UserPerumahan::all();  // Mengambil semua data user
-        return view('user.index', compact('users'));  // Mengirim data ke view
+        return response()->json($users);
+        // return view('user.index', compact('users'));  // Mengirim data ke view
     }
 
-    public function create()
-    {
-        return view('user.create');
-    }
+    // public function create()
+    // {
+    //     return view('user.create');
+    // }
 
     public function store(Request $request)
     {
+        
         $data = $request->validate([
-            'nama_user' => 'required',
-            'alamat_user' => 'required',
-            'no_telepon' => 'required',
+            'nama_user' => 'required|string|max:255',
+            'alamat_user' => 'required|string|max:255',
+            'no_telepon' => 'required|digits_between:10,15',
         ]);
-
-        UserPerumahan::create($data);  // Menyimpan data user ke database
-        return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');
+    
+        $user = UserPerumahan::create($data);
+        return response()->json([
+            'message' => 'User berhasil ditambahkan',
+            'data' => $user
+        ], 201);
     }
+    
 }
