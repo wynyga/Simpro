@@ -12,24 +12,17 @@ class TipeRumahController extends Controller
     {
         $tipe_rumahs = TipeRumah::with('perumahan')->get();
         return response()->json($tipe_rumahs);
-        // return view('tipe_rumah.index',compact('tipe_rumahs'));
     }
 
     public function create()
     {
-        $perumahans = Perumahan::all();  // Mengambil semua data perumahan
-        return response()->json($perumahans); 
-        //return view('tipe_rumah.create', compact('perumahans'));
+        $perumahans = Perumahan::all();
+        return response()->json($perumahans);
     }
 
     public function store(Request $request)
     {
-        if (!Perumahan::find($request->id_perumahan)) {
-            return response()->json([
-                'message' => 'Nama perumahan tidak valid'
-            ], 404);
-        }
-
+        // Validasi input dengan pesan error khusus
         $validated = $request->validate([
             'id_perumahan' => 'required|exists:perumahan,id',
             'tipe_rumah' => 'required|string|max:255',
@@ -38,13 +31,27 @@ class TipeRumahController extends Controller
             'harga_standar_tengah' => 'required|numeric',
             'harga_standar_sudut' => 'required|numeric',
             'penambahan_bangunan' => 'required|numeric',
+        ], [
+            'id_perumahan.exists' => 'Nama Perumahan tidak ada'  // Pesan khusus untuk validasi id_perumahan
         ]);
-
+    
+        // Cek apakah kombinasi tipe rumah dan id perumahan sudah ada
+        $exists = TipeRumah::where('tipe_rumah', $request->tipe_rumah)
+                           ->where('id_perumahan', $request->id_perumahan)
+                           ->exists();
+        if ($exists) {
+            return response()->json([
+                'message' => 'Nama tipe perumahan telah ada'
+            ], 409);
+        }
+    
+        // Jika semua validasi lolos, buat tipe rumah baru
         $tipeRumah = TipeRumah::create($validated);
         return response()->json([
             'message' => 'Tipe rumah berhasil ditambahkan',
             'data' => $tipeRumah
         ], 201);
-        //return redirect()->route('tipe_rumah.index')->with('success', 'Tipe rumah berhasil ditambahkan.');
     }
+    
+    
 }

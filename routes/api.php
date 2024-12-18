@@ -54,9 +54,16 @@ Route::prefix('blokunit')->group(function () {
     Route::get('/create', [BlokUnitController::class, 'create'])->name('blokunit.create');
     Route::post('/store', [BlokUnitController::class, 'store'])->name('blokunit.store');
 });
+Route::get('/transaksi', [TransaksiController::class, 'index']);
+Route::get('/transaksi/create', [TransaksiController::class, 'create']);
+Route::post('/transaksi', [TransaksiController::class, 'store']);
+Route::get('/transaksi/{id}/edit', [TransaksiController::class, 'edit']);
+Route::put('/transaksi/{id}', [TransaksiController::class, 'update']);
+Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy']);
+
 //Route untuk penjualan
- Route::resource('/penjualan/transaksi', TransaksiController::class);
- Route::resource('/penjualan/blokunit', BlokUnitController::class);
+// Route::resource('/penjualan/transaksi', TransaksiController::class);
+//Route::resource('/penjualan/blokunit', BlokUnitController::class);
 // Route::resource('/penjualan/user', UserController::class);
 // Route::resource('/penjualan/tipe_rumah', TipeRumahController::class);
 // Route::resource('/penjualan/perumahan', PerumahanController::class);

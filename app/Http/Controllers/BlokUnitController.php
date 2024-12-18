@@ -31,16 +31,18 @@ class BlokUnitController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'blok' => 'required',
-            'unit' => 'required',
+        $validated = $request->validate([
+            'blok' => 'required|string|max:255',
+            'unit' => 'required|string|max:255',
             'id_tipe_rumah' => 'required|exists:tipe_rumah,id',
         ]);
-
-        $blok_unit=BlokUnit::create($data);  // Menyimpan data ke database
+    
+        // Jika tipe rumah ada, simpan data blok unit
+        $blok_unit = BlokUnit::create($validated);
         return response()->json([
-            'message'=>'Blok berhasil ditambahkan',
-            'data'=>$blok_unit
-        ],201);
+            'message' => 'Blok berhasil ditambahkan',
+            'data' => $blok_unit
+        ], 201);
     }
+    
 }
