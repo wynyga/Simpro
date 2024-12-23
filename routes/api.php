@@ -10,6 +10,19 @@ use App\Http\Controllers\BlokUnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PerumahanController;
 use App\Http\Controllers\TipeRumahController;
+use App\Http\Controllers\API\AuthController;
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
+    Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
+    Route::post('/profile', [AuthController::class, 'profile'])->middleware('auth:api');
+});
+
 
 Route::get('/', function () {
     return view('welcome');
