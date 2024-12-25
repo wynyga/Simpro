@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     // Menampilkan daftar transaksi
     public function index()
     {

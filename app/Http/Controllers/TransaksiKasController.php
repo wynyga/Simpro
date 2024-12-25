@@ -7,6 +7,11 @@ use App\Models\TransaksiKas;
 
 class TransaksiKasController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Menampilkan indeks data transaksi kas dengan output JSON.
      */
