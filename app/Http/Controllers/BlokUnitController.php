@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class BlokUnitController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     // Menampilkan daftar blok unit
     public function index()
     {

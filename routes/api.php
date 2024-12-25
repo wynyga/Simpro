@@ -56,7 +56,7 @@ Route::get('/laporan-mingguan/summary/kategori', [LaporanMingguanController::cla
 
 //Route API Penjualan
 Route::get('/penjualan/perumahan', [PerumahanController::class, 'index']);
-Route::post('/penjualan/perumahan', [PerumahanController::class, 'store']);
+Route::post('/penjualan/perumahan', [PerumahanController::class, 'store'])->middleware('role');
 Route::get('/penjualan/tipe_rumah', [TipeRumahController::class, 'index']);
 Route::get('/penjualan/tipe_rumah/create', [TipeRumahController::class, 'create']);
 Route::post('/penjualan/tipe_rumah', [TipeRumahController::class, 'store']);
