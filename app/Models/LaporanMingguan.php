@@ -16,9 +16,9 @@ class LaporanMingguan extends Model
         'uraian',
         'kategori',
         'sub_kategori',
+        'sub_subkategori',
         'code_account',
-        'total',
-        'deskripsi'
+        'total'
     ];
 
     // Method untuk generate kode laporan berdasarkan minggu dan tahun

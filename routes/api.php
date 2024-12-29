@@ -48,7 +48,7 @@ Route::get('/api/transaksi-kas', [TransaksiKasController::class, 'getTransaksiKa
 //Route untuk laporan mingguan
 Route::get('/laporan-mingguan', [LaporanMingguanController::class, 'index'])->name('laporan_mingguan.index');
 Route::get('/laporan-mingguan/create', [LaporanMingguanController::class, 'create'])->name('laporan_mingguan.create');
-Route::post('/laporan-mingguan', [LaporanMingguanController::class, 'store'])->name('laporan_mingguan.store');
+Route::post('/laporan-mingguan', [LaporanMingguanController::class, 'store']);
 Route::get('/laporan-mingguan/summary', [LaporanMingguanController::class, 'showSummary'])->name('laporan_mingguan.summary');
 Route::get('/laporan-mingguan/summary/jenis-biaya', [LaporanMingguanController::class, 'showSummaryPerJenisBiaya'])->name('laporan_mingguan.summary_per_jenis_biaya');
 Route::get('/laporan-mingguan/summary/uraian', [LaporanMingguanController::class, 'showSummaryPerUraian'])->name('laporan_mingguan.summary_per_uraian');
@@ -56,7 +56,8 @@ Route::get('/laporan-mingguan/summary/kategori', [LaporanMingguanController::cla
 
 //Route API Penjualan
 Route::get('/penjualan/perumahan', [PerumahanController::class, 'index']);
-Route::post('/penjualan/perumahan', [PerumahanController::class, 'store'])->middleware('role');
+Route::post('/penjualan/perumahan', [PerumahanController::class, 'store']);
+// Route::post('/penjualan/perumahan', [PerumahanController::class, 'store'])->middleware('role');
 Route::get('/penjualan/tipe_rumah', [TipeRumahController::class, 'index']);
 Route::get('/penjualan/tipe_rumah/create', [TipeRumahController::class, 'create']);
 Route::post('/penjualan/tipe_rumah', [TipeRumahController::class, 'store']);
