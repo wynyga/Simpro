@@ -11,9 +11,30 @@ class GudangInController extends Controller
     {
         $this->middleware('auth');
     }
+
+    public function index()
+    {
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;  // Menggunakan perumahan_id dari profil user
+    
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+    
+        $gudangIns = GudangIn::where('perumahan_id', $perumahanId)->get();
+        return response()->json($gudangIns);
+    }
+     
     
     public function store(Request $request)
     {
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;  // Menggunakan perumahan_id dari profil user
+    
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+
         // Validasi input
         $validated = $request->validate([
             'kode_barang' => 'required',
@@ -28,8 +49,7 @@ class GudangInController extends Controller
         ]);
 
         // Mendapatkan model stok yang sesuai dari StockHelper
-        $stockModel = StockHelper::getModelFromCode($request->kode_barang);
-
+        $stockModel = StockHelper::getModelFromCode($request->kode_barang, $perumahanId);
         if (!$stockModel) {
             return response()->json([
                 'message' => 'Barang tidak ditemukan di stok.',
@@ -38,6 +58,7 @@ class GudangInController extends Controller
 
         // Menyimpan data ke Gudang In
         $gudangIn = new GudangIn($validated);
+        $gudangIn->perumahan_id = $perumahanId; 
         $gudangIn->nama_barang = $stockModel->nama_barang; // Mengambil nama barang dari model stok
         $gudangIn->save();
 

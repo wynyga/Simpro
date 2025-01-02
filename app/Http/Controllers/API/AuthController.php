@@ -74,8 +74,15 @@ class AuthController extends BaseController
      */
     public function logout()
     {
-        auth()->logout();
-        
+        $user = auth()->user(); // Mendapatkan user yang terautentikasi
+    
+        if ($user) {
+            $user->perumahan_id = null; // Mengatur perumahan_id kembali ke null
+            $user->save(); // Menyimpan perubahan
+        }
+    
+        auth()->logout(); // Invalidasi token
+    
         return $this->sendResponse([], 'Successfully logged out.');
     }
   

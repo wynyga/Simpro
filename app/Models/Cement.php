@@ -13,6 +13,7 @@ class Cement extends Model
         'satuan',
         'harga_satuan',
         'stock_bahan',
+        'perumahan_id'
     ];
     protected static function booted()
     {
@@ -27,6 +28,12 @@ class Cement extends Model
     public function getPrefix()
     {
         return 'CEM50-';
+    }
+
+    // Relasi balik ke Perumahan
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
 }
 

@@ -13,6 +13,7 @@ class OilChemicalPerekat extends Model
         'satuan',
         'harga_satuan',
         'stock_bahan',
+        'perumahan_id'
     ];
     protected static function booted()
     {
@@ -28,5 +29,12 @@ class OilChemicalPerekat extends Model
     {
         return 'OCP110-';
     }
+
+    // Relasi balik ke Perumahan
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
+    }
+
 }
 

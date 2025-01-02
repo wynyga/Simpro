@@ -13,6 +13,7 @@ class Equipment extends Model
         'satuan',
         'harga_satuan',
         'stock_bahan',
+        'perumahan_id'
     ];    
     protected static function booted()
     {
@@ -29,4 +30,11 @@ class Equipment extends Model
     {
         return 'EQP20-';
     }
+
+    // Relasi balik ke Perumahan
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
+    }
+
 }

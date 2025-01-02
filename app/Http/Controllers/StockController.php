@@ -21,22 +21,29 @@ class StockController extends Controller
     }
 
     public function index()
-    {
-        $dayWorks = DayWorkResource::collection(DayWork::all());
-        $equipments = EquipmentsResource::collection(Equipment::all());
-        $tools = ToolsResource::collection(Tools::all());
-        $landStoneSands = LandStoneSandResource::collection(LandStoneSand::all());
-        $cements = CementResource::collection(Cement::all());
-        $rebars = RebarResource::collection(Rebar::all());
-        $woods = WoodResource::collection(Wood::all());
-        $roofCeilingTiles = RoofCeilingTileResource::collection(RoofCeilingTile::all());
-        $keramikFloors = KeramikFloorResource::collection(KeramikFloor::all());
-        $paintGlassWallpapers = PaintGlassWallpaperResource::collection(PaintGlassWallpaper::all());
-        $others = OthersResource::collection(Others::all());
-        $oilChemicalPerekats = OilChemicalPerekatResource::collection(OilChemicalPerekat::all());
-        $sanitaries = SanitaryResource::collection(Sanitary::all());
-        $pipingPumps = PipingPumpResource::collection(PipingPump::all());
-        $lightings = LightingResource::collection(Lighting::all());
+    {   
+        $user = auth()->user(); // Mendapatkan user yang sedang login
+        $perumahanId = $user->perumahan_id; // Mendapatkan perumahan_id dari user
+    
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+
+        $dayWorks = DayWorkResource::collection(DayWork::where('perumahan_id', $perumahanId)->get());
+        $equipments = EquipmentsResource::collection(Equipment::where('perumahan_id', $perumahanId)->get());
+        $tools = ToolsResource::collection(Tools::where('perumahan_id', $perumahanId)->get());
+        $landStoneSands = LandStoneSandResource::collection(LandStoneSand::where('perumahan_id', $perumahanId)->get());
+        $cements = CementResource::collection(Cement::where('perumahan_id', $perumahanId)->get());
+        $rebars = RebarResource::collection(Rebar::where('perumahan_id', $perumahanId)->get());
+        $woods = WoodResource::collection(Wood::where('perumahan_id', $perumahanId)->get());
+        $roofCeilingTiles = RoofCeilingTileResource::collection(RoofCeilingTile::where('perumahan_id', $perumahanId)->get());
+        $keramikFloors = KeramikFloorResource::collection(KeramikFloor::where('perumahan_id', $perumahanId)->get());
+        $paintGlassWallpapers = PaintGlassWallpaperResource::collection(PaintGlassWallpaper::where('perumahan_id', $perumahanId)->get());
+        $others = OthersResource::collection(Others::where('perumahan_id', $perumahanId)->get());
+        $oilChemicalPerekats = OilChemicalPerekatResource::collection(OilChemicalPerekat::where('perumahan_id', $perumahanId)->get());
+        $sanitaries = SanitaryResource::collection(Sanitary::where('perumahan_id', $perumahanId)->get());
+        $pipingPumps = PipingPumpResource::collection(PipingPump::where('perumahan_id', $perumahanId)->get());
+        $lightings = LightingResource::collection(Lighting::where('perumahan_id', $perumahanId)->get());
         
         $data = [
             'day_works' => $dayWorks,
@@ -70,6 +77,13 @@ class StockController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
+        if (empty($perumahanId)) {
+            // Log atau handle kasus ketika perumahan_id tidak ditemukan
+            return response()->json(['error' => 'perumahan_id is required'], 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'jenis_peralatan' => 'required|string|in:day_work,equipment,tools,land_stone_sand,cement,rebar,wood,roof_ceiling_tile,keramik_floor,paint_glass_wallpaper,others,oil_chemical_perekat,sanitary,piping_pump,lighting',
             'nama_barang' => 'required',
@@ -101,6 +115,9 @@ class StockController extends Controller
                 'piping_pump' => PipingPump::class,
                 'lighting' => Lighting::class,
             ];
+            if (!array_key_exists($request->jenis_peralatan, $modelMap)) {
+                return response()->json(['error' => 'Jenis peralatan tidak valid'], 400);
+            }
             
 
             $modelClass = $modelMap[$request->jenis_peralatan];
@@ -113,6 +130,7 @@ class StockController extends Controller
 
             // Fill stock data
             $stock->fill($request->only(['nama_barang', 'uty', 'satuan', 'harga_satuan', 'stock_bahan']));
+            $stock->perumahan_id = $perumahanId; 
             $stock->save();
 
             return response()->json([

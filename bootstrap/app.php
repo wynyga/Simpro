@@ -6,6 +6,8 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use App\Http\Middleware\EnsureUserIsManager;
+use App\Http\Middleware\EnsurePerumahanIdIsSet;
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -15,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'role' => EnsureUserIsManager::class
+            'role' => EnsureUserIsManager::class,
+            'perumahan.set' => EnsurePerumahanIdIsSet::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

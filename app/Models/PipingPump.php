@@ -13,6 +13,7 @@ class PipingPump extends Model
         'satuan',
         'harga_satuan',
         'stock_bahan',
+        'perumahan_id'
     ];
     protected static function booted()
     {
@@ -28,5 +29,12 @@ class PipingPump extends Model
     {
         return 'PIPP130-';
     }
+
+    // Relasi balik ke Perumahan
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
+    }
+
 }
 

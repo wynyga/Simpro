@@ -13,6 +13,7 @@ class Sanitary extends Model
         'satuan',
         'harga_satuan',
         'stock_bahan',
+        'perumahan_id'
     ];
     protected static function booted()
     {
@@ -28,4 +29,11 @@ class Sanitary extends Model
     {
         return 'SANI120-';
     }
+
+    // Relasi balik ke Perumahan
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
+    }
+
 }

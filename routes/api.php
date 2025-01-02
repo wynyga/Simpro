@@ -23,11 +23,9 @@ Route::group([
     Route::post('/profile', [AuthController::class, 'profile'])->middleware('auth:api');
 });
 
-
 Route::get('/', function () {
     return view('welcome');
 });
-
 
 Route::get('/stock', [StockController::class, 'index']);
 Route::post('/stock', [StockController::class, 'store']);
@@ -54,7 +52,8 @@ Route::get('/laporan-mingguan/summary/jenis-biaya', [LaporanMingguanController::
 Route::get('/laporan-mingguan/summary/uraian', [LaporanMingguanController::class, 'showSummaryPerUraian'])->name('laporan_mingguan.summary_per_uraian');
 Route::get('/laporan-mingguan/summary/kategori', [LaporanMingguanController::class, 'showSummaryPerKategori'])->name('laporan_mingguan.summary_per_kategori');
 
-//Route API Penjualan
+//Route API Penjualan   
+Route::post('/perumahan/select', [PerumahanController::class, 'selectPerumahan']);
 Route::get('/penjualan/perumahan', [PerumahanController::class, 'index']);
 Route::post('/penjualan/perumahan', [PerumahanController::class, 'store']);
 // Route::post('/penjualan/perumahan', [PerumahanController::class, 'store'])->middleware('role');
