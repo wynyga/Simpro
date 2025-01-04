@@ -15,38 +15,54 @@ class TipeRumahController extends Controller
     
     public function index()
     {
-        $tipe_rumahs = TipeRumah::with('perumahan')->get();
+        $user = auth()->user();
+        if (!$user->perumahan_id) {
+            return response()->json(['error' => 'Access Denied: No perumahan assigned to user.'], 403);
+        }
+    
+        $tipe_rumahs = TipeRumah::where('perumahan_id', $user->perumahan_id)
+                                ->with('perumahan')
+                                ->get();
         return response()->json($tipe_rumahs);
     }
+    
 
     public function create()
     {
-        $perumahans = Perumahan::all();
+        $user = auth()->user();
+        if (!$user->perumahan_id) {
+            return response()->json(['error' => 'Access Denied: No perumahan assigned to user.'], 403);
+        }
+    
+        $perumahans = Perumahan::where('id', $user->perumahan_id)->get();
         return response()->json($perumahans);
     }
+    
 
     public function store(Request $request)
     {
-        // Validasi input dengan pesan error khusus
+        $user = auth()->user();
+    
+        // Validasi input tanpa perumahan_id dalam body request
         $validated = $request->validate([
-            'id_perumahan' => 'required|exists:perumahan,id',
             'tipe_rumah' => 'required|string|max:255',
             'luas_bangunan' => 'required|numeric',
             'luas_kavling' => 'required|numeric',
             'harga_standar_tengah' => 'required|numeric',
             'harga_standar_sudut' => 'required|numeric',
             'penambahan_bangunan' => 'required|numeric',
-        ], [
-            'id_perumahan.exists' => 'Nama Perumahan tidak ada'  // Pesan khusus untuk validasi id_perumahan
         ]);
     
-        // Cek apakah kombinasi tipe rumah dan id perumahan sudah ada
+        // Tambahkan perumahan_id dari pengguna terotentikasi
+        $validated['perumahan_id'] = $user->perumahan_id;
+    
+        // Cek apakah kombinasi tipe rumah dan perumahan_id sudah ada
         $exists = TipeRumah::where('tipe_rumah', $request->tipe_rumah)
-                           ->where('id_perumahan', $request->id_perumahan)
+                           ->where('perumahan_id', $user->perumahan_id)
                            ->exists();
         if ($exists) {
             return response()->json([
-                'message' => 'Nama tipe perumahan telah ada'
+                'message' => 'Nama tipe rumah telah ada'
             ], 409);
         }
     
@@ -58,5 +74,46 @@ class TipeRumahController extends Controller
         ], 201);
     }
     
+
+    public function update(Request $request, $id)
+    {
+        $user = auth()->user();
+        $tipeRumah = TipeRumah::findOrFail($id);
     
+        if ($tipeRumah->perumahan_id != $user->perumahan_id) {
+            return response()->json(['error' => 'Unauthorized: You cannot update data in another perumahan.'], 403);
+        }
+    
+        $validated = $request->validate([
+            'tipe_rumah' => 'required|string|max:255',
+            'luas_bangunan' => 'required|numeric',
+            'luas_kavling' => 'required|numeric',
+            'harga_standar_tengah' => 'required|numeric',
+            'harga_standar_sudut' => 'required|numeric',
+            'penambahan_bangunan' => 'required|numeric',
+        ]);
+    
+        // Update data yang sudah ada
+        $tipeRumah->update($validated);
+    
+        return response()->json([
+            'message' => 'Tipe rumah berhasil diupdate',
+            'data' => $tipeRumah
+        ], 200);
+    }
+    
+
+    public function destroy($id)
+    {
+        $user = auth()->user();
+        $tipeRumah = TipeRumah::findOrFail($id);
+        if ($tipeRumah->perumahan_id != $user->perumahan_id) {
+            return response()->json(['error' => 'Unauthorized: You cannot delete data in another perumahan.'], 403);
+        }
+        $tipeRumah->delete();
+
+        return response()->json([
+            'message' => 'Tipe rumah berhasil dihapus'
+        ], 204);
+    } 
 }

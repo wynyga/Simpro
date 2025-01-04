@@ -11,7 +11,7 @@ class TipeRumah extends Model
     protected $table = 'tipe_rumah';
 
     protected $fillable = [
-        'id_perumahan',
+        'perumahan_id',
         'tipe_rumah',
         'luas_bangunan',
         'luas_kavling',
@@ -20,15 +20,14 @@ class TipeRumah extends Model
         'penambahan_bangunan'
     ];
 
-    // Relasi ke perumahan
-    public function perumahan()
-    {
-        return $this->belongsTo(Perumahan::class, 'id_perumahan');
-    }
-
     // Relasi ke blok_unit
     public function blokUnit()
     {
         return $this->hasMany(BlokUnit::class, 'id_tipe_rumah');
+    }
+
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
 }

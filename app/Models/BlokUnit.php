@@ -15,7 +15,8 @@ class BlokUnit extends Model
         'id_tipe_rumah',
         'blok',
         'unit',
-        'status'
+        'status',
+        'perumahan_id'
     ];
 
     // Relasi ke tipe_rumah
@@ -28,5 +29,10 @@ class BlokUnit extends Model
     public function transaksi()
     {
         return $this->hasMany(Transaksi::class, 'id_blok_unit');
+    }
+
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
 }

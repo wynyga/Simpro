@@ -90,6 +90,21 @@ return new class extends Migration
         Schema::table('transaksi_kas', function (Blueprint $table) {
             $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
         });
+
+        //Tabel blok_unit
+        Schema::table('blok_unit', function (Blueprint $table) {
+            $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
+        });  
+        
+        //Tabel user_perumahan
+        Schema::table('user_perumahan', function (Blueprint $table) {
+            $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
+        });  
+        
+        //Tabel transaksi
+        Schema::table('transaksi', function (Blueprint $table) {
+            $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
+        });        
     }
 
     /**
@@ -116,5 +131,21 @@ return new class extends Migration
             $table->dropForeign(['perumahan_id']);
             $table->dropColumn('perumahan_id');
         });
+        
+        Schema::table('blok_unit', function (Blueprint $table) {
+            $table->dropForeign(['perumahan_id']);
+            $table->dropColumn('perumahan_id');
+        });
+        
+        Schema::table('user_perumahan', function (Blueprint $table) {
+            $table->dropForeign(['perumahan_id']);
+            $table->dropColumn('perumahan_id');
+        });
+        
+        Schema::table('transaksi', function (Blueprint $table) {
+            $table->dropForeign(['perumahan_id']);
+            $table->dropColumn('perumahan_id');
+        });
+        
     }
 };

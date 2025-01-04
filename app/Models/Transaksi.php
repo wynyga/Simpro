@@ -21,6 +21,7 @@ class Transaksi extends Model
         'kpr_disetujui',
         'minimum_dp',
         'kewajiban_hutang',
+        'perumahan_id'
     ];
 
     // Relasi ke user_perumahan
@@ -33,5 +34,10 @@ class Transaksi extends Model
     public function blokUnit()
     {
         return $this->belongsTo(BlokUnit::class, 'id_blok_unit');
+    }
+
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
 }
