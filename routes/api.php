@@ -41,13 +41,8 @@ Route::prefix('/gudang')->group(function () {
 Route::prefix('/transaksi')->group(function () {
     Route::get('/kas', [TransaksiKasController::class, 'index']);
     Route::post('/kas', [TransaksiKasController::class, 'store']);
-    Route::get('/kas/data', [TransaksiKasController::class, 'getTransaksiKasData']);
-    Route::get('/', [TransaksiController::class, 'index']);
-    Route::get('/create', [TransaksiController::class, 'create']);
-    Route::post('/', [TransaksiController::class, 'store']);
-    Route::get('/{id}/edit', [TransaksiController::class, 'edit']);
-    Route::put('/{id}', [TransaksiController::class, 'update']);
-    Route::delete('/{id}', [TransaksiController::class, 'destroy']);
+    Route::put('/{id}', [TransaksiController::class, 'update']); //Coming Soon
+    Route::delete('/{id}', [TransaksiController::class, 'destroy']); //Coming Soon
 });
 
 // Weekly Report Routes
@@ -75,6 +70,12 @@ Route::prefix('/penjualan')->group(function () {
     Route::post('/tipe_rumah', [TipeRumahController::class, 'store']);
     Route::put('/tipe_rumah/{id}', [TipeRumahController::class, 'update']);
     Route::delete('/tipe_rumah/{id}', [TipeRumahController::class, 'destroy']);
+
+    Route::get('/transaksi',[TransaksiController::class,'index']);
+    Route::post('/transaksi',[TransaksiController::class,'store']);
+    Route::patch('/transaksi/{id}',[TransaksiController::class,'update']);
+    Route::delete('/transaksi/{id}',[TransaksiController::class,'destroy']);
+    Route::get('/transaksi/create',[TransaksiController::class,'create']);
 });
 
 // User and Blok Unit Management
