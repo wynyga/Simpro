@@ -7,16 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('blok', function (Blueprint $table) {
+        Schema::create('unit', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
-            $table->string('nama_blok');
+            $table->foreignId('blok_id')->constrained('blok')->onDelete('cascade');
+            $table->foreignId('tipe_rumah_id')->constrained('tipe_rumah')->onDelete('cascade');
+            $table->string('nomor_unit');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('blok');
+        Schema::dropIfExists('unit');
     }
 };

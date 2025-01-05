@@ -9,10 +9,11 @@ use App\Http\Controllers\{
     TransaksiKasController,
     LaporanMingguanController,
     TransaksiController,
-    BlokUnitController,
+    BlokController,
     UserController,
     PerumahanController,
-    TipeRumahController
+    TipeRumahController,
+    UnitController
 };
 
 // Authentication Routes
@@ -64,18 +65,41 @@ Route::prefix('perumahan')->group(function () {
 });
 
 // Tipe Rumah Routes
-Route::prefix('/penjualan')->group(function () {
-    Route::get('/tipe_rumah', [TipeRumahController::class, 'index']);
-    Route::get('/tipe_rumah/create', [TipeRumahController::class, 'create']);
-    Route::post('/tipe_rumah', [TipeRumahController::class, 'store']);
-    Route::put('/tipe_rumah/{id}', [TipeRumahController::class, 'update']);
-    Route::delete('/tipe_rumah/{id}', [TipeRumahController::class, 'destroy']);
+Route::prefix('penjualan')->group(function () {
+    Route::prefix('/tipe_rumah')->group(function () {
+        Route::get('/', [TipeRumahController::class, 'index']);
+        Route::get('/create', [TipeRumahController::class, 'create']);
+        Route::post('/', [TipeRumahController::class, 'store']);
+        Route::put('/{id}', [TipeRumahController::class, 'update']);
+        Route::delete('/{id}', [TipeRumahController::class, 'destroy']);
+    });
 
-    Route::get('/transaksi',[TransaksiController::class,'index']);
-    Route::post('/transaksi',[TransaksiController::class,'store']);
-    Route::patch('/transaksi/{id}',[TransaksiController::class,'update']);
-    Route::delete('/transaksi/{id}',[TransaksiController::class,'destroy']);
-    Route::get('/transaksi/create',[TransaksiController::class,'create']);
+    // Blok Routes
+    Route::prefix('/blok')->group(function () {
+        Route::get('/', [BlokController::class, 'index'])->name('blok.index');
+        Route::post('/store', [BlokController::class, 'store'])->name('blok.store');
+        Route::get('/{id}', [BlokController::class, 'show'])->name('blok.show');
+        Route::put('/{id}', [BlokController::class, 'update'])->name('blok.update');
+        Route::delete('/{id}', [BlokController::class, 'destroy'])->name('blok.destroy');
+    });
+
+    // Unit Routes
+    Route::prefix('/unit')->group(function () {
+        Route::get('/', [UnitController::class, 'index'])->name('unit.index');
+        Route::post('/store', [UnitController::class, 'store'])->name('unit.store');
+        Route::get('/{id}', [UnitController::class, 'show'])->name('unit.show');
+        Route::put('/{id}', [UnitController::class, 'update'])->name('unit.update'); //Hanya bisa nomor UNIT
+        Route::delete('/{id}', [UnitController::class, 'destroy'])->name('unit.destroy');
+    });
+
+    // Nested prefix for Transaksi management
+    Route::prefix('transaksi')->group(function () {
+        Route::get('/', [TransaksiController::class, 'index']);
+        Route::get('/create', [TransaksiController::class, 'create']);
+        Route::post('/', [TransaksiController::class, 'store']);
+        Route::patch('/{id}', [TransaksiController::class, 'update']);
+        Route::delete('/{id}', [TransaksiController::class, 'destroy']);
+    });
 });
 
 // User and Blok Unit Management
@@ -83,11 +107,7 @@ Route::prefix('/users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::post('/', [UserController::class, 'store']);
 });
-Route::prefix('/blokunit')->group(function () {
-    Route::get('/', [BlokUnitController::class, 'index'])->name('blokunit.index');
-    Route::get('/create', [BlokUnitController::class, 'create'])->name('blokunit.create');
-    Route::post('/store', [BlokUnitController::class, 'store'])->name('blokunit.store');
-});
+
 
 // Testing route
 Route::get('/testing', function () {

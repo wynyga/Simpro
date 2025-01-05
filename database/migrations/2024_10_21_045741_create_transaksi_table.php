@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('transaksi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_blok_unit')->constrained('blok_unit')->onDelete('cascade');
+            $table->foreignId('id_unit')->constrained('unit')->onDelete('cascade');  // Updated to reference the 'unit' table
             $table->foreignId('id_user')->constrained('user_perumahan')->onDelete('cascade');
             $table->decimal('harga_jual_standar', 15, 2);
             $table->decimal('kelebihan_tanah', 15, 2)->nullable();
@@ -27,6 +27,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down()
     {
         Schema::dropIfExists('transaksi');

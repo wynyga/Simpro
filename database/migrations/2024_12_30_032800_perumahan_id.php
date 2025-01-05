@@ -90,11 +90,6 @@ return new class extends Migration
         Schema::table('transaksi_kas', function (Blueprint $table) {
             $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
         });
-
-        //Tabel blok_unit
-        Schema::table('blok_unit', function (Blueprint $table) {
-            $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
-        });  
         
         //Tabel user_perumahan
         Schema::table('user_perumahan', function (Blueprint $table) {

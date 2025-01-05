@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\Auth;
 // use App\Http\Controllers\PerumahanController;
 // use App\Http\Controllers\TipeRumahController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
 // Route::get('/stock', [StockController::class, 'index']);
 // Route::post('/stock', [StockController::class, 'store']);
