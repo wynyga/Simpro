@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class PaintGlassWallpaper extends Model
 {
     protected $table = 'paint_glass_wallpaper';
-
+    protected $fillable = [
+        'nama_barang',
+        'uty',
+        'satuan',
+        'harga_satuan',
+        'stock_bahan',
+        'perumahan_id'
+    ];
     protected static function booted()
     {
         static::creating(function ($paintGlassWallpaper) {
@@ -18,4 +25,15 @@ class PaintGlassWallpaper extends Model
             $paintGlassWallpaper->kode = 'PGW100-' . str_pad($newId, 2, '0', STR_PAD_LEFT);
         });
     }
+    public function getPrefix()
+    {
+        return 'PGW100-';
+    }
+
+    // Relasi balik ke Perumahan
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
+    }
+
 }

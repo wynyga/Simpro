@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nama_perumahan');
             $table->string('lokasi');
-            $table->date('tanggal_harga');
             $table->timestamps();
         });
     }

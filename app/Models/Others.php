@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Others extends Model
 {
     protected $table = 'others';
-
+    protected $fillable = [
+        'nama_barang',
+        'uty',
+        'satuan',
+        'harga_satuan',
+        'stock_bahan',
+        'perumahan_id'
+    ];
     protected static function booted()
     {
         static::creating(function ($others) {
@@ -17,6 +24,16 @@ class Others extends Model
 
             $others->kode = 'OTH110-' . str_pad($newId, 2, '0', STR_PAD_LEFT);
         });
+    }
+    public function getPrefix()
+    {
+        return 'OTH110-';
+    }
+
+    // Relasi balik ke Perumahan
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
 }
 

@@ -34,7 +34,8 @@ class GudangIn extends Model
         'satuan',
         'harga_satuan',
         'jumlah_harga',
-        'keterangan'
+        'keterangan',
+        'perumahan_id'
     ];
 
     protected static function booted()

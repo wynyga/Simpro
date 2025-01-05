@@ -71,47 +71,73 @@
     </form>
 
     <script>
-        $(document).ready(function() {
-            $('#jenis_peralatan').change(function() {
-                var jenisPeralatan = $(this).val();
-                $('#kode_barang').empty().append('<option value="">-- Pilih Kode Barang --</option>');
-                $('#nama_barang').val('');
-    
-                if (jenisPeralatan) {
-                    $.ajax({
-                        url: '/get-stock-codes/' + jenisPeralatan,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            $.each(data, function(index, value) {
-                                $('#kode_barang').append('<option value="' + value.kode + '">' + value.kode + '</option>');
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(xhr.responseText);
-                        }
-                    });
-                }
-            });
-    
-            $('#kode_barang').change(function() {
-                var selectedKode = $(this).val();
-    
-                // Cari nama barang berdasarkan pilihan kode barang
+    $(document).ready(function() {
+        $('#jenis_peralatan').change(function() {
+            var jenisPeralatan = $(this).val();
+            $('#kode_barang').empty().append('<option value="">-- Pilih Kode Barang --</option>');
+            $('#nama_barang').val('');
+            
+            if (jenisPeralatan) {
                 $.ajax({
-                    url: '/get-stock-codes/' + $('#jenis_peralatan').val(),
+                    url: '/get-stock-codes/' + jenisPeralatan,
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
                         $.each(data, function(index, value) {
-                            if (value.kode === selectedKode) {
-                                $('#nama_barang').val(value.nama_barang);
-                            }
+                            $('#kode_barang').append('<option value="' + value.kode + '">' + value.kode + '</option>');
                         });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
                     }
                 });
+            }
+        });
+
+        $('#kode_barang').change(function() {
+            var selectedKode = $(this).val();
+
+            $.ajax({
+                url: '/get-stock-codes/' + $('#jenis_peralatan').val(),
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $.each(data, function(index, value) {
+                        if (value.kode === selectedKode) {
+                            $('#nama_barang').val(value.nama_barang);
+                        }
+                    });
+                }
             });
         });
+
+        // Menambahkan event listener untuk menangkap data form saat submit
+        $('form').submit(function(event) {
+            event.preventDefault(); // Mencegah form dari submit otomatis
+
+            // Mengambil semua data form
+            var formData = {
+                jenis_peralatan: $('#jenis_peralatan').val(),
+                kode_barang: $('#kode_barang').val(),
+                nama_barang: $('#nama_barang').val(),
+                pengirim: $('input[name="pengirim"]').val(),
+                no_nota: $('input[name="no_nota"]').val(),
+                tanggal_barang_masuk: $('input[name="tanggal_barang_masuk"]').val(),
+                jumlah: $('input[name="jumlah"]').val(),
+                satuan: $('input[name="satuan"]').val(),
+                harga_satuan: $('input[name="harga_satuan"]').val(),
+                jumlah_harga: $('input[name="jumlah_harga"]').val(),
+                keterangan: $('textarea[name="keterangan"]').val()
+            };
+
+            // Menampilkan data form di console
+            console.log('Form Data:', formData);
+
+            // Menyelesaikan pengiriman form setelah log data
+            this.submit();
+        });
+    });
+
     </script>
     
 </body>

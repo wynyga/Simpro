@@ -9,11 +9,17 @@ use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     // Menampilkan daftar transaksi
     public function index()
     {
         $transaksi = Transaksi::with('blokUnit', 'userPerumahan')->get();
-        return view('transaksi.index', compact('transaksi'));
+        return response()->json($transaksi);  // Mengembalikan data sebagai JSON
+        // return view('transaksi.index', compact('transaksi'));
     }
 
     // Menampilkan form untuk menambahkan transaksi baru
@@ -21,7 +27,8 @@ class TransaksiController extends Controller
     {
         $blok_units = BlokUnit::all();
         $users = UserPerumahan::all();
-        return view('transaksi.create', compact('blok_units', 'users'));
+        return response()->json(['blok_units' => $blok_units, 'users' => $users]);
+        // return view('transaksi.create', compact('blok_units', 'users'));
     }
 
     // Menyimpan transaksi baru ke database
@@ -42,18 +49,20 @@ class TransaksiController extends Controller
         ]);
 
         // Membuat transaksi baru
-        Transaksi::create($data);
-
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
+        $transaksi=Transaksi::create($data);
+        return response()->json([
+            'message' => 'Transaksi berhasil ditambahkan',
+            'data' => $transaksi
+        ], 201);
+        //return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
     }
 
     // Menampilkan form edit transaksi
     public function edit($id)
     {
-        $transaksi = Transaksi::findOrFail($id);
-        $blok_units = BlokUnit::all();
-        $users = UserPerumahan::all();
-        return view('transaksi.edit', compact('transaksi', 'blok_units', 'users'));
+        $transaksi = Transaksi::with('blokUnit', 'userPerumahan')->findOrFail($id);
+        return response()->json($transaksi);
+        //return view('transaksi.edit', compact('transaksi', 'blok_units', 'users'));
     }
 
     // Memperbarui transaksi yang ada
@@ -77,8 +86,11 @@ class TransaksiController extends Controller
 
         // Mengupdate transaksi
         $transaksi->update($data);
-
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
+        return response()->json([
+            'message' => 'Transaksi berhasil diperbarui',
+            'data' => $transaksi
+        ], 200);
+        //return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
     }
 
     // Menghapus transaksi dari database
@@ -86,7 +98,9 @@ class TransaksiController extends Controller
     {
         $transaksi = Transaksi::findOrFail($id);
         $transaksi->delete();
-
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
+        return response()->json([
+            'message' => 'Transaksi berhasil dihapus'
+        ], 200);
+        //return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
     }
 }

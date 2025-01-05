@@ -15,11 +15,17 @@ class UserPerumahan extends Model
         'nama_user',
         'alamat_user',
         'no_telepon',
+        'perumahan_id'
     ];
 
     // Relasi ke transaksi
     public function transaksi()
     {
         return $this->hasMany(Transaksi::class, 'id_user');
+    }
+
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
 }

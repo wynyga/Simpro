@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Rebar extends Model
 {
     protected $table = 'rebar';
-
+    protected $fillable = [
+        'nama_barang',
+        'uty',
+        'satuan',
+        'harga_satuan',
+        'stock_bahan',
+        'perumahan_id'
+    ];
     protected static function booted()
     {
         static::creating(function ($rebar) {
@@ -18,5 +25,16 @@ class Rebar extends Model
             $rebar->kode = 'REB30-' . str_pad($newId, 2, '0', STR_PAD_LEFT);
         });
     }
+    public function getPrefix()
+    {
+        return 'REB30-';
+    }
+
+    // Relasi balik ke Perumahan
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class, 'perumahan_id');
+    }
+
 }
 
