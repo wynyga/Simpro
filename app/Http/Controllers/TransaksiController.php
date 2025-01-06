@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaksi;
-use App\Models\BlokUnit;
+use App\Models\Unit;
 use App\Models\UserPerumahan;
 use Illuminate\Http\Request;
 
@@ -14,30 +14,31 @@ class TransaksiController extends Controller
         $this->middleware('auth');
     }
     
-    // Menampilkan daftar transaksi
     public function index()
     {
-        $transaksi = Transaksi::with('blokUnit', 'userPerumahan')->get();
-        return response()->json($transaksi);  // Mengembalikan data sebagai JSON
-        // return view('transaksi.index', compact('transaksi'));
+        $user = auth()->user();
+        $transaksi = Transaksi::with('unit.blok', 'unit.tipeRumah', 'userPerumahan')
+                              ->where('perumahan_id', $user->perumahan_id)
+                              ->get();
+        return response()->json($transaksi);
     }
 
-    // Menampilkan form untuk menambahkan transaksi baru
     public function create()
     {
-        $blok_units = BlokUnit::all();
-        $users = UserPerumahan::all();
-        return response()->json(['blok_units' => $blok_units, 'users' => $users]);
-        // return view('transaksi.create', compact('blok_units', 'users'));
+        $user = auth()->user();
+        $unit = Unit::with('blok', 'tipeRumah')->whereHas('blok', function ($query) use ($user) {
+            $query->where('perumahan_id', $user->perumahan_id);
+        })->get();
+        $users = UserPerumahan::where('perumahan_id', $user->perumahan_id)->get();
+        return response()->json(['unit' => $unit, 'users' => $users]);
     }
 
-    // Menyimpan transaksi baru ke database
     public function store(Request $request)
     {
-        // Validasi input
+        $user = auth()->user();
         $data = $request->validate([
-            'id_blok_unit' => 'required|exists:blok_unit,id',
-            'id_user' => 'required|exists:user_perumahan,id',
+            'unit_id' => 'required|exists:unit,id',
+            'user_id' => 'required|exists:user_perumahan,id',
             'harga_jual_standar' => 'required|numeric',
             'kelebihan_tanah' => 'nullable|numeric',
             'penambahan_luas_bangunan' => 'nullable|numeric',
@@ -48,32 +49,32 @@ class TransaksiController extends Controller
             'kewajiban_hutang' => 'nullable|numeric',
         ]);
 
-        // Membuat transaksi baru
-        $transaksi=Transaksi::create($data);
-        return response()->json([
-            'message' => 'Transaksi berhasil ditambahkan',
-            'data' => $transaksi
-        ], 201);
-        //return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
+        $data['perumahan_id'] = $user->perumahan_id;
+        
+        $transaksi = Transaksi::create($data);
+        return response()->json(['message' => 'Transaksi berhasil ditambahkan', 'data' => $transaksi], 201);
     }
 
-    // Menampilkan form edit transaksi
     public function edit($id)
     {
-        $transaksi = Transaksi::with('blokUnit', 'userPerumahan')->findOrFail($id);
+        $user = auth()->user();
+        $transaksi = Transaksi::with('unit.blok', 'unit.tipeRumah', 'userPerumahan')
+                              ->where('id', $id)
+                              ->where('perumahan_id', $user->perumahan_id)
+                              ->firstOrFail();
         return response()->json($transaksi);
-        //return view('transaksi.edit', compact('transaksi', 'blok_units', 'users'));
     }
 
-    // Memperbarui transaksi yang ada
     public function update(Request $request, $id)
     {
-        $transaksi = Transaksi::findOrFail($id);
+        $user = auth()->user();
+        $transaksi = Transaksi::where('id', $id)
+                              ->where('perumahan_id', $user->perumahan_id)
+                              ->firstOrFail();
 
-        // Validasi input
-        $data = $request->validate([
-            'id_blok_unit' => 'required|exists:blok_unit,id',
-            'id_user' => 'required|exists:user_perumahan,id',
+        $validated = $request->validate([
+            'unit_id' => 'required|exists:unit,id',
+            'user_id' => 'required|exists:user_perumahan,id',
             'harga_jual_standar' => 'required|numeric',
             'kelebihan_tanah' => 'nullable|numeric',
             'penambahan_luas_bangunan' => 'nullable|numeric',
@@ -84,23 +85,17 @@ class TransaksiController extends Controller
             'kewajiban_hutang' => 'nullable|numeric',
         ]);
 
-        // Mengupdate transaksi
-        $transaksi->update($data);
-        return response()->json([
-            'message' => 'Transaksi berhasil diperbarui',
-            'data' => $transaksi
-        ], 200);
-        //return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
+        $transaksi->update($validated);
+        return response()->json(['message' => 'Transaksi berhasil diperbarui', 'data' => $transaksi], 200);
     }
 
-    // Menghapus transaksi dari database
     public function destroy($id)
     {
-        $transaksi = Transaksi::findOrFail($id);
+        $user = auth()->user();
+        $transaksi = Transaksi::where('id', $id)
+                              ->where('perumahan_id', $user->perumahan_id)
+                              ->firstOrFail();
         $transaksi->delete();
-        return response()->json([
-            'message' => 'Transaksi berhasil dihapus'
-        ], 200);
-        //return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
+        return response()->json(['message' => 'Transaksi berhasil dihapus'], 204);
     }
 }

@@ -9,11 +9,11 @@ use App\Http\Controllers\{
     TransaksiKasController,
     LaporanMingguanController,
     TransaksiController,
-    BlokController,
     UserController,
     PerumahanController,
     TipeRumahController,
-    UnitController
+    UnitController,
+    BlokController
 };
 
 // Authentication Routes
@@ -96,7 +96,7 @@ Route::prefix('penjualan')->group(function () {
     Route::prefix('transaksi')->group(function () {
         Route::get('/', [TransaksiController::class, 'index']);
         Route::get('/create', [TransaksiController::class, 'create']);
-        Route::post('/', [TransaksiController::class, 'store']);
+        Route::post('/store', [TransaksiController::class, 'store']);
         Route::patch('/{id}', [TransaksiController::class, 'update']);
         Route::delete('/{id}', [TransaksiController::class, 'destroy']);
     });
@@ -106,6 +106,8 @@ Route::prefix('penjualan')->group(function () {
 Route::prefix('/users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::post('/', [UserController::class, 'store']);
+    Route::put('/{id}',[UserController::class, 'update']);
+    Route::delete('/{id}',[UserController::class, 'destroy']);
 });
 
 

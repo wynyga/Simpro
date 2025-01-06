@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('transaksi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_unit')->constrained('unit')->onDelete('cascade');  // Updated to reference the 'unit' table
-            $table->foreignId('id_user')->constrained('user_perumahan')->onDelete('cascade');
+            $table->foreignId('unit_id')->constrained('unit')->onDelete('cascade'); // Ensure 'units' table is correctly referenced
+            $table->foreignId('user_id')->constrained('user_perumahan')->onDelete('cascade');
             $table->decimal('harga_jual_standar', 15, 2);
             $table->decimal('kelebihan_tanah', 15, 2)->nullable();
             $table->decimal('penambahan_luas_bangunan', 15, 2)->nullable();

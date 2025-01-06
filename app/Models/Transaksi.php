@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Transaksi extends Model
 {
     use HasFactory;
+
     protected $table = 'transaksi';
 
     protected $fillable = [
-        'id_blok_unit',
-        'id_user',
+        'unit_id',  // Updated to reflect new structure
+        'user_id',
         'harga_jual_standar',
         'kelebihan_tanah',
         'penambahan_luas_bangunan',
@@ -21,21 +22,22 @@ class Transaksi extends Model
         'kpr_disetujui',
         'minimum_dp',
         'kewajiban_hutang',
-        'perumahan_id'
+        'perumahan_id'  // Ensure this is maintained if still relevant
     ];
 
-    // Relasi ke user_perumahan
+    // Relationship to Unit
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'unit_id');
+    }
+
+    // Relationship to UserPerumahan
     public function userPerumahan()
     {
-        return $this->belongsTo(UserPerumahan::class, 'id_user');
+        return $this->belongsTo(UserPerumahan::class, 'user_id');
     }
 
-    // Relasi ke blok_unit
-    public function blokUnit()
-    {
-        return $this->belongsTo(BlokUnit::class, 'id_blok_unit');
-    }
-
+    // Optional: Relationship to Perumahan if you have a separate Perumahan entity
     public function perumahan()
     {
         return $this->belongsTo(Perumahan::class, 'perumahan_id');
