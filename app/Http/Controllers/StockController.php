@@ -143,8 +143,104 @@ class StockController extends Controller
         }
     }
 
-    
+    public function update(Request $request, $id)
+    {
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
 
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'perumahan_id is required'], 403);
+        }
+
+        $jenis_peralatan = $request->input('jenis_peralatan');
+        $modelMap = [
+            'day_work' => DayWork::class,
+            'equipment' => Equipment::class,
+            'tools' => Tools::class,
+            'land_stone_sand' => LandStoneSand::class,
+            'cement' => Cement::class,
+            'rebar' => Rebar::class,
+            'wood' => Wood::class,
+            'roof_ceiling_tile' => RoofCeilingTile::class,
+            'keramik_floor' => KeramikFloor::class,
+            'paint_glass_wallpaper' => PaintGlassWallpaper::class,
+            'others' => Others::class,
+            'oil_chemical_perekat' => OilChemicalPerekat::class,
+            'sanitary' => Sanitary::class,
+            'piping_pump' => PipingPump::class,
+            'lighting' => Lighting::class,
+        ];
+
+        if (!array_key_exists($jenis_peralatan, $modelMap)) {
+            return response()->json(['error' => 'Jenis peralatan tidak valid'], 400);
+        }
+
+        $modelClass = $modelMap[$jenis_peralatan];
+        $stock = $modelClass::where('id', $id)->where('perumahan_id', $perumahanId)->first();
+
+        if (!$stock) {
+            return response()->json(['error' => 'Stock not found'], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'nama_barang' => 'required',
+            'uty' => 'required',
+            'satuan' => 'required',
+            'harga_satuan' => 'required|numeric',
+            'stock_bahan' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $stock->update($request->only(['nama_barang', 'uty', 'satuan', 'harga_satuan', 'stock_bahan']));
+        return response()->json([
+            'message' => 'Stock berhasil diperbarui',
+            'data' => $stock
+        ], 200);
+    }
+
+    public function destroy($id)
+    {
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
+        $jenis_peralatan = request()->input('jenis_peralatan');  // Assume jenis_peralatan is passed in the request
+
+        $modelMap = [
+            'day_work' => DayWork::class,
+            'equipment' => Equipment::class,
+            'tools' => Tools::class,
+            'land_stone_sand' => LandStoneSand::class,
+            'cement' => Cement::class,
+            'rebar' => Rebar::class,
+            'wood' => Wood::class,
+            'roof_ceiling_tile' => RoofCeilingTile::class,
+            'keramik_floor' => KeramikFloor::class,
+            'paint_glass_wallpaper' => PaintGlassWallpaper::class,
+            'others' => Others::class,
+            'oil_chemical_perekat' => OilChemicalPerekat::class,
+            'sanitary' => Sanitary::class,
+            'piping_pump' => PipingPump::class,
+            'lighting' => Lighting::class,
+        ];
+
+        if (!array_key_exists($jenis_peralatan, $modelMap)) {
+            return response()->json(['error' => 'Jenis peralatan tidak valid'], 400);
+        }
+
+        $modelClass = $modelMap[$jenis_peralatan];
+        $stock = $modelClass::where('id', $id)->where('perumahan_id', $perumahanId)->first();
+
+        if (!$stock) {
+            return response()->json(['error' => 'Stock not found'], 404);
+        }
+
+        $stock->delete();
+        return response()->json(['message' => 'Stock berhasil dihapus'], 204);
+    }
+
+    
     public function getStockCodes($type)
     {
         $codes = [];
