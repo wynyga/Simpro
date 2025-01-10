@@ -13,7 +13,8 @@ use App\Http\Controllers\{
     PerumahanController,
     TipeRumahController,
     UnitController,
-    BlokController
+    BlokController,
+    LaporanBulananController
 };
 
 // Authentication Routes
@@ -58,6 +59,10 @@ Route::prefix('/laporan-mingguan')->group(function () {
     Route::get('/summary/jenis-biaya', [LaporanMingguanController::class, 'showSummaryPerJenisBiaya'])->name('laporan_mingguan.summary_per_jenis_biaya');
     Route::get('/summary/uraian', [LaporanMingguanController::class, 'showSummaryPerUraian'])->name('laporan_mingguan.summary_per_uraian');
     Route::get('/summary/kategori', [LaporanMingguanController::class, 'showSummaryPerKategori'])->name('laporan_mingguan.summary_per_kategori');
+});
+
+Route::prefix('/laporan_bulanan')->group(function(){
+    Route::post('/create',[LaporanBulananController::class,'store']);
 });
 
 // Perumahan Routes

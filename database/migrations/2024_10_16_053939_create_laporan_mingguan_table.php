@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('kategori')->nullable(); // Kategori (misalnya KAS PROJECT, KAS KELUAR, dll.)
             $table->string('sub_kategori')->nullable();
             $table->string('sub_subkategori')->nullable();
-            $table->string('code_account')->nullable();;  // Kode account seperti KI0101M624, dll.
+            $table->string('code_account')->nullable();  // Kode account seperti KI0101M624, dll.
             $table->decimal('total', 18, 2)->nullable();  // Total nilai (RP)
             $table->string('deskripsi')->nullable();  // Kode account seperti KI0101M624, dll.
             $table->timestamps();
