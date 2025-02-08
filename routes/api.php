@@ -14,7 +14,8 @@ use App\Http\Controllers\{
     TipeRumahController,
     UnitController,
     BlokController,
-    LaporanBulananController
+    LaporanBulananController,
+    GudangController
 };
 
 // Authentication Routes
@@ -40,6 +41,7 @@ Route::prefix('/stock')->group(function () {
 Route::prefix('/gudang')->group(function () {
     Route::post('/in', [GudangInController::class, 'store']);
     Route::post('/out', [GudangOutController::class, 'store']);
+    Route::get('/all', [GudangController::class, 'index']); 
 });
 
 // Transaction Routes
@@ -61,8 +63,13 @@ Route::prefix('/laporan-mingguan')->group(function () {
     Route::get('/summary/kategori', [LaporanMingguanController::class, 'showSummaryPerKategori'])->name('laporan_mingguan.summary_per_kategori');
 });
 
+// Monthly Report Routes
 Route::prefix('/laporan_bulanan')->group(function(){
     Route::post('/create',[LaporanBulananController::class,'store']);
+    Route::post('/sub_kategori',[LaporanBulananController::class,'addSubCategory']);
+    Route::get('/details', [LaporanBulananController::class, 'getParentCodeDetails']);
+    Route::post('/kategori', [LaporanBulananController::class, 'enhanceCodeAccount']);
+
 });
 
 // Perumahan Routes
