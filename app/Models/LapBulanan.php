@@ -13,7 +13,8 @@ class LapBulanan extends Model
         'cost_structure_id',
         'bulan',
         'tahun',
-        'jumlah'
+        'jumlah',
+        'code_account'
     ];
 
     public function costStructure()
@@ -21,12 +22,15 @@ class LapBulanan extends Model
         return $this->belongsTo(CostStructure::class, 'cost_structure_id');
     }
 
-    // Generate Code Account Otomatis
-    public function getCodeAccountAttribute()
+    // Generate Code Account Sebelum Menyimpan
+    protected static function boot()
     {
-        $kodeBulan = str_pad($this->bulan, 2, '0', STR_PAD_LEFT);
-        $kodeTahun = substr($this->tahun, -2);
-        return $this->costStructure->costTee->cost_tee_code . 'B' . $kodeBulan . $kodeTahun;
+        parent::boot();
+        static::creating(function ($laporan) {
+            $kodeBulan = str_pad($laporan->bulan, 2, '0', STR_PAD_LEFT);
+            $kodeTahun = substr($laporan->tahun, -2);
+            $laporan->code_account = $laporan->costStructure->cost_tee_code . 'B' . $kodeBulan . $kodeTahun;
+        });
     }
 }
 

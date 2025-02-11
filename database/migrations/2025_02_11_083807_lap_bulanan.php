@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->integer('bulan'); // 1-12
             $table->integer('tahun'); // Tahun laporan
             $table->decimal('jumlah', 15, 2); // Total transaksi
+            $table->string('code_account')->unique();
             $table->timestamps();
         });
     }

@@ -51,14 +51,15 @@ class LapBulananController extends Controller
             'tahun' => 'required|integer',
             'jumlah' => 'required|numeric'
         ]);
-
+    
         $laporan = LapBulanan::create($validated);
-
+    
         return response()->json([
-            'message' => 'Laporan bulanan berhasil ditambahkan',
+            'message' => 'Laporan bulanan berhasil disimpan',
             'data' => $laporan
         ], 201);
     }
+    
 }
 
 
