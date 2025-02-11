@@ -153,6 +153,8 @@ Route::prefix('cost_structure')->group(function () {
 Route::prefix('lap_bulanan')->group(function () {
     Route::get('/', [LapBulananController::class, 'index']);
     Route::post('/create', [LapBulananController::class, 'store']);
+    Route::get('/kas_masuk/{bulan}/{tahun}', [LapBulananController::class, 'getKasMasuk']);
+
 });
 
 // Testing route
