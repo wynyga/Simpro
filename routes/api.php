@@ -57,26 +57,6 @@ Route::prefix('/transaksi')->group(function () {
     Route::delete('/{id}', [TransaksiController::class, 'destroy']); //Coming Soon
 });
 
-// Weekly Report Routes
-Route::prefix('/laporan-mingguan')->group(function () {
-    Route::get('/', [LaporanMingguanController::class, 'index'])->name('laporan_mingguan.index');
-    Route::get('/create', [LaporanMingguanController::class, 'create'])->name('laporan_mingguan.create');
-    Route::post('/', [LaporanMingguanController::class, 'store']);
-    Route::get('/summary', [LaporanMingguanController::class, 'showSummary'])->name('laporan_mingguan.summary');
-    Route::get('/summary/jenis-biaya', [LaporanMingguanController::class, 'showSummaryPerJenisBiaya'])->name('laporan_mingguan.summary_per_jenis_biaya');
-    Route::get('/summary/uraian', [LaporanMingguanController::class, 'showSummaryPerUraian'])->name('laporan_mingguan.summary_per_uraian');
-    Route::get('/summary/kategori', [LaporanMingguanController::class, 'showSummaryPerKategori'])->name('laporan_mingguan.summary_per_kategori');
-});
-
-// Monthly Report Routes
-Route::prefix('/laporan_bulanan')->group(function(){
-    Route::post('/create',[LaporanBulananController::class,'parent_code']);
-    Route::post('/sub_kategori',[LaporanBulananController::class,'addSubCategory']);
-    Route::get('/details', [LaporanBulananController::class, 'getParentCodeDetails']);
-    Route::post('/kategori', [LaporanBulananController::class, 'enhanceCodeAccount']);
-
-});
-
 // Perumahan Routes
 Route::prefix('perumahan')->group(function () {
     Route::get('/', [PerumahanController::class, 'index']);
