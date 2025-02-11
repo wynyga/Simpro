@@ -17,7 +17,10 @@ use App\Http\Controllers\{
     LaporanBulananController,
     GudangController,
     LapBulananController,
-    CostStructureController
+    CostStructureController,
+    CostCentreController,
+    CostElementController,
+    CostTeeController
 };
 
 // Authentication Routes
@@ -122,14 +125,35 @@ Route::prefix('penjualan')->group(function () {
 // User and Blok Unit Management
 Route::prefix('/users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
-    Route::post('/', [UserController::class, 'store']);
+    Route::post('/create', [UserController::class, 'store']);
     Route::put('/{id}',[UserController::class, 'update']);
     Route::delete('/{id}',[UserController::class, 'destroy']);
 });
 
-Route::get('/lap_bulanan', [LapBulananController::class, 'index']);
-Route::post('/lap_bulanan', [LapBulananController::class, 'store']);
-Route::post('/cost_structure', [CostStructureController::class, 'store']);
+Route::prefix('cost_center')->group(function () {
+    Route::get('/', [CostCentreController::class, 'index']);
+    Route::post('/create', [CostCentreController::class, 'store']);
+});
+
+Route::prefix('cost_element')->group(function () {
+    Route::get('/', [CostElementController::class, 'index']);
+    Route::post('/create', [CostElementController::class, 'store']);
+});
+
+Route::prefix('cost_tee')->group(function () {
+    Route::get('/', [CostTeeController::class, 'index']);
+    Route::post('/create', [CostTeeController::class, 'store']);
+});
+
+Route::prefix('cost_structure')->group(function () {
+    Route::get('/', [CostStructureController::class, 'index']);
+    Route::post('/create', [CostStructureController::class, 'store']);
+});
+
+Route::prefix('lap_bulanan')->group(function () {
+    Route::get('/', [LapBulananController::class, 'index']);
+    Route::post('/create', [LapBulananController::class, 'store']);
+});
 
 // Testing route
 Route::get('/testing', function () {

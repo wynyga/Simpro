@@ -7,13 +7,16 @@ use Illuminate\Http\Request;
 
 class CostStructureController extends Controller
 {
+    public function index()
+    {
+        return response()->json(CostStructure::with('costTee')->get());
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'cost_tree' => 'required|string|unique:cost_structures,cost_tree',
-            'cost_element' => 'required|string',
-            'cost_centre' => 'required|string',
-            'cost_code' => 'required|string',
+            'cost_tee_code' => 'required|string|exists:cost_tees,cost_tee_code',
+            'cost_code' => 'required|string|in:KASIN,KASOUT',
             'description' => 'required|string'
         ]);
 
@@ -25,4 +28,5 @@ class CostStructureController extends Controller
         ], 201);
     }
 }
+
 

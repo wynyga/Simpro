@@ -10,9 +10,9 @@ return new class extends Migration {
         Schema::create('lap_bulanan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cost_structure_id')->constrained('cost_structures')->onDelete('cascade');
-            $table->integer('bulan');         
-            $table->integer('tahun');         
-            $table->decimal('jumlah', 15, 2); 
+            $table->integer('bulan'); // 1-12
+            $table->integer('tahun'); // Tahun laporan
+            $table->decimal('jumlah', 15, 2); // Total transaksi
             $table->timestamps();
         });
     }
@@ -22,4 +22,5 @@ return new class extends Migration {
         Schema::dropIfExists('lap_bulanan');
     }
 };
+
 

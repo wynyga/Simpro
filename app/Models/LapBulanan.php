@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class LapBulanan extends Model
 {
-    use HasFactory;
-
     protected $table = 'lap_bulanan';
 
     protected $fillable = [
@@ -26,8 +24,9 @@ class LapBulanan extends Model
     // Generate Code Account Otomatis
     public function getCodeAccountAttribute()
     {
-        $kodeBulan = str_pad($this->bulan, 2, '0', STR_PAD_LEFT); // Format 2 digit (01-12)
-        $kodeTahun = substr($this->tahun, -2); // Ambil 2 digit terakhir tahun
-        return $this->costStructure->cost_tree . 'B' . $kodeBulan . $kodeTahun;
+        $kodeBulan = str_pad($this->bulan, 2, '0', STR_PAD_LEFT);
+        $kodeTahun = substr($this->tahun, -2);
+        return $this->costStructure->costTee->cost_tee_code . 'B' . $kodeBulan . $kodeTahun;
     }
 }
+

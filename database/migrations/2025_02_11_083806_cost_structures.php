@@ -9,12 +9,12 @@ return new class extends Migration {
     {
         Schema::create('cost_structures', function (Blueprint $table) {
             $table->id();
-            $table->string('cost_tree');      // Contoh: KI010101
-            $table->string('cost_element');   // Contoh: Penerimaan Booking Fee
-            $table->string('cost_centre');    // Contoh: KI010
-            $table->string('cost_code');      // Contoh: KASIN
-            $table->text('description');      // Contoh: ARUS KAS MASUK
+            $table->string('cost_tee_code'); // KO0100501
+            $table->string('cost_code'); // KASIN / KASOUT
+            $table->string('description'); // ARUS KAS MASUK / KELUAR
             $table->timestamps();
+
+            $table->foreign('cost_tee_code')->references('cost_tee_code')->on('cost_tees')->onDelete('cascade');
         });
     }
 
