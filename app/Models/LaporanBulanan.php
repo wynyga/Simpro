@@ -20,6 +20,7 @@ class LaporanBulanan extends Model
         'kategori',
         'sub_kategori',
         'code_account',
+        'sub_subkategori',
         'total',
         'deskripsi'
     ];

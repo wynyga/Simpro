@@ -15,7 +15,9 @@ use App\Http\Controllers\{
     UnitController,
     BlokController,
     LaporanBulananController,
-    GudangController
+    GudangController,
+    LapBulananController,
+    CostStructureController
 };
 
 // Authentication Routes
@@ -65,7 +67,7 @@ Route::prefix('/laporan-mingguan')->group(function () {
 
 // Monthly Report Routes
 Route::prefix('/laporan_bulanan')->group(function(){
-    Route::post('/create',[LaporanBulananController::class,'store']);
+    Route::post('/create',[LaporanBulananController::class,'parent_code']);
     Route::post('/sub_kategori',[LaporanBulananController::class,'addSubCategory']);
     Route::get('/details', [LaporanBulananController::class, 'getParentCodeDetails']);
     Route::post('/kategori', [LaporanBulananController::class, 'enhanceCodeAccount']);
@@ -125,6 +127,9 @@ Route::prefix('/users')->group(function () {
     Route::delete('/{id}',[UserController::class, 'destroy']);
 });
 
+Route::get('/lap_bulanan', [LapBulananController::class, 'index']);
+Route::post('/lap_bulanan', [LapBulananController::class, 'store']);
+Route::post('/cost_structure', [CostStructureController::class, 'store']);
 
 // Testing route
 Route::get('/testing', function () {
