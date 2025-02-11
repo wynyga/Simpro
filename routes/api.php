@@ -154,6 +154,9 @@ Route::prefix('lap_bulanan')->group(function () {
     Route::get('/', [LapBulananController::class, 'index']);
     Route::post('/create', [LapBulananController::class, 'store']);
     Route::get('/kas_masuk/{bulan}/{tahun}', [LapBulananController::class, 'getKasMasuk']);
+    Route::get('/kas_keluar/{bulan}/{tahun}', [LapBulananController::class, 'getKasKeluar']);
+    Route::get('/sisa_kas/{bulan}/{tahun}', [LapBulananController::class, 'getSisaKasProject']);
+    Route::get('/journal/{bulan}/{tahun}', [TransaksiKasController::class, 'getJournalSummary']);
 
 });
 

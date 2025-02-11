@@ -42,11 +42,45 @@ class TransaksiKasController extends Controller
             'transaksiKas' => $transaksiKas
         ]);
     }
+
+    public function getJournalSummary($bulan, $tahun)
+    {
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
+    
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+    
+        // 1️⃣ Ambil total transaksi KASIN dan KASOUT hingga bulan tertentu
+        $totalDebit = TransaksiKas::where('kode', '101') // KASIN
+            ->where('perumahan_id', $perumahanId)
+            ->whereYear('tanggal', '<=', $tahun)
+            ->whereMonth('tanggal', '<=', $bulan)
+            ->sum('jumlah');
+    
+        $totalKredit = TransaksiKas::where('kode', '102') // KASOUT
+            ->where('perumahan_id', $perumahanId)
+            ->whereYear('tanggal', '<=', $tahun)
+            ->whereMonth('tanggal', '<=', $bulan)
+            ->sum('jumlah');
+    
+        // 2️⃣ Hitung saldo (seharusnya sama dengan saldo kas terakhir)
+        $saldo = $totalDebit - $totalKredit;
+    
+        // 3️⃣ Format Response
+        return response()->json([
+            'sheet_balance' => [
+                'total_rp' => number_format($saldo, 2, ',', '.'),
+                'color' => $saldo >= 0 ? 'green' : 'red'
+            ],
+            'debit' => number_format($totalDebit, 2, ',', '.'),
+            'kredit' => number_format($totalKredit, 2, ',', '.'),
+            'saldo' => number_format($saldo, 2, ',', '.')
+        ]);
+    }
     
 
-    /**
-     * Menyimpan transaksi kas baru dengan output JSON.
-     */
     public function store(Request $request)
     {
         $user = auth()->user();

@@ -85,6 +85,69 @@ class LapBulananController extends Controller
     }
     
 
+    public function getKasKeluar($bulan, $tahun)
+    {
+        // 1️⃣ Hitung TOTAL Kas Keluar dari transaksi KASOUT untuk bulan & tahun yang diminta
+        $totalKasKeluar = LapBulanan::whereHas('costStructure', function ($query) {
+            $query->where('cost_code', 'KASOUT'); // Pastikan hanya mengambil Kas Keluar
+        })->where('bulan', $bulan)
+        ->where('tahun', $tahun)
+        ->sum('jumlah');
+
+        // 2️⃣ Ambil semua transaksi Kas Keluar yang terdaftar di laporan bulanan bulan ini
+        $laporanKasKeluar = LapBulanan::with('costStructure')
+            ->whereHas('costStructure', function ($query) {
+                $query->where('cost_code', 'KASOUT'); // Hanya transaksi Kas Keluar
+            })
+            ->where('bulan', $bulan)
+            ->where('tahun', $tahun)
+            ->get();
+
+        // 3️⃣ Formatkan Data untuk API Response
+        return response()->json([
+            'total_kas_keluar' => [
+                'total_rp' => number_format($totalKasKeluar, 2, ',', '.')
+            ],
+            'rincian_kas_keluar' => $laporanKasKeluar->map(function ($laporan) {
+                return [
+                    'id' => $laporan->id,
+                    'code_account' => $laporan->code_account,
+                    'kategori' => $laporan->costStructure->description,
+                    'jumlah' => number_format($laporan->jumlah, 2, ',', '.'),
+                    'created_at' => $laporan->created_at
+                ];
+            })
+        ]);
+    }
+
+    public function getSisaKasProject($bulan, $tahun)
+    {
+        // 1️⃣ Ambil Total Kas Masuk
+        $totalKasMasuk = LapBulanan::whereHas('costStructure', function ($query) {
+            $query->where('cost_code', 'KASIN'); // Hanya ambil Kas Masuk
+        })->where('bulan', $bulan)
+        ->where('tahun', $tahun)
+        ->sum('jumlah');
+
+        // 2️⃣ Ambil Total Kas Keluar
+        $totalKasKeluar = LapBulanan::whereHas('costStructure', function ($query) {
+            $query->where('cost_code', 'KASOUT'); // Hanya ambil Kas Keluar
+        })->where('bulan', $bulan)
+        ->where('tahun', $tahun)
+        ->sum('jumlah');
+
+        // 3️⃣ Hitung Sisa Kas
+        $sisaKas = $totalKasMasuk - $totalKasKeluar;
+
+        // 4️⃣ Format Data untuk API Response
+        return response()->json([
+            'sisa_kas_project' => [
+                'total_rp' => number_format($sisaKas, 2, ',', '.'),
+                'status' => $sisaKas < 0 ? 'DEFISIT' : 'SURPLUS',
+                'color' => $sisaKas < 0 ? 'red' : 'black'
+            ]
+        ]);
+    }
 
     public function store(Request $request)
     {
