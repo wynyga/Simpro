@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\{
     DayWork, Equipment, Tools, LandStoneSand, Cement, Rebar, Wood, RoofCeilingTile, KeramikFloor,
@@ -28,52 +29,48 @@ class StockController extends Controller
         if (empty($perumahanId)) {
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
-
-        $dayWorks = DayWorkResource::collection(DayWork::where('perumahan_id', $perumahanId)->get());
-        $equipments = EquipmentsResource::collection(Equipment::where('perumahan_id', $perumahanId)->get());
-        $tools = ToolsResource::collection(Tools::where('perumahan_id', $perumahanId)->get());
-        $landStoneSands = LandStoneSandResource::collection(LandStoneSand::where('perumahan_id', $perumahanId)->get());
-        $cements = CementResource::collection(Cement::where('perumahan_id', $perumahanId)->get());
-        $rebars = RebarResource::collection(Rebar::where('perumahan_id', $perumahanId)->get());
-        $woods = WoodResource::collection(Wood::where('perumahan_id', $perumahanId)->get());
-        $roofCeilingTiles = RoofCeilingTileResource::collection(RoofCeilingTile::where('perumahan_id', $perumahanId)->get());
-        $keramikFloors = KeramikFloorResource::collection(KeramikFloor::where('perumahan_id', $perumahanId)->get());
-        $paintGlassWallpapers = PaintGlassWallpaperResource::collection(PaintGlassWallpaper::where('perumahan_id', $perumahanId)->get());
-        $others = OthersResource::collection(Others::where('perumahan_id', $perumahanId)->get());
-        $oilChemicalPerekats = OilChemicalPerekatResource::collection(OilChemicalPerekat::where('perumahan_id', $perumahanId)->get());
-        $sanitaries = SanitaryResource::collection(Sanitary::where('perumahan_id', $perumahanId)->get());
-        $pipingPumps = PipingPumpResource::collection(PipingPump::where('perumahan_id', $perumahanId)->get());
-        $lightings = LightingResource::collection(Lighting::where('perumahan_id', $perumahanId)->get());
-        
-        $data = [
-            'day_works' => $dayWorks,
-            'equipments' => $equipments,
-            'tools' => $tools,
-            'land_stone_sands' => $landStoneSands,
-            'cements' => $cements,
-            'rebars' => $rebars,
-            'woods' => $woods,
-            'roof_ceiling_tiles' => $roofCeilingTiles,
-            'keramik_floors' => $keramikFloors,
-            'paint_glass_wallpapers' => $paintGlassWallpapers,
-            'others' => $others,
-            'oil_chemical_perekats' => $oilChemicalPerekats,
-            'sanitaries' => $sanitaries,
-            'piping_pumps' => $pipingPumps,
-            'lightings' => $lightings,
+    
+        $models = [
+            'day_works' => DayWork::class,
+            'equipments' => Equipment::class,
+            'tools' => Tools::class,
+            'land_stone_sands' => LandStoneSand::class,
+            'cements' => Cement::class,
+            'rebars' => Rebar::class,
+            'woods' => Wood::class,
+            'roof_ceiling_tiles' => RoofCeilingTile::class,
+            'keramik_floors' => KeramikFloor::class,
+            'paint_glass_wallpapers' => PaintGlassWallpaper::class,
+            'others' => Others::class,
+            'oil_chemical_perekats' => OilChemicalPerekat::class,
+            'sanitaries' => Sanitary::class,
+            'piping_pumps' => PipingPump::class,
+            'lightings' => Lighting::class
         ];
-        
-
+    
+        $data = [];
+    
+        foreach ($models as $key => $model) {
+            $data[$key] = $model::where('perumahan_id', $perumahanId)->get()->map(function ($item) {
+                return [
+                    'type' => $item->kode ?? null,
+                    'nama_barang' => $item->nama_barang,
+                    'uty' => $item->uty,
+                    'harga_satuan' => number_format($item->harga_satuan, 2, ',', '.'),
+                    'stock_bahan' => $item->stock_bahan,
+                    'total_price' => number_format($item->harga_satuan * $item->stock_bahan, 2, ',', '.') // Perbaikan disini
+                ];
+            });
+        }
+    
         // Mengembalikan semua data sebagai JSON
         return response()->json([
             'status' => 'success',
             'message' => 'Data retrieved successfully',
             'data' => $data
         ]);
-
-        // return view('stock');
-
     }
+    
 
     public function store(Request $request)
     {
@@ -240,63 +237,37 @@ class StockController extends Controller
         return response()->json(['message' => 'Stock berhasil dihapus'], 204);
     }
 
-    
-    public function getStockCodes($type)
+    public function getStockInventory()
     {
-        $codes = [];
-
-        switch ($type) {
-            case 'day_work':
-                $codes = DayWork::select('kode', 'nama_barang')->get();
-                break;
-            case 'equipment':
-                $codes = Equipment::select('kode', 'nama_barang')->get();
-                break;
-            case 'tools':
-                $codes = Tools::select('kode', 'nama_barang')->get();
-                break;
-            case 'land_stone_sand':
-                $codes = LandStoneSand::select('kode', 'nama_barang')->get();
-                break;
-            case 'cement':
-                $codes = Cement::select('kode', 'nama_barang')->get();
-                break;
-            case 'rebar':
-                $codes = Rebar::select('kode', 'nama_barang')->get();
-                break;
-            case 'wood':
-                $codes = Wood::select('kode', 'nama_barang')->get();
-                break;
-            case 'roof_ceiling_tile':
-                $codes = RoofCeilingTile::select('kode', 'nama_barang')->get();
-                break;
-            case 'keramik_floor':
-                $codes = KeramikFloor::select('kode', 'nama_barang')->get();
-                break;
-            case 'paint_glass_wallpaper':
-                $codes = PaintGlassWallpaper::select('kode', 'nama_barang')->get();
-                break;
-            case 'others':
-                $codes = Others::select('kode', 'nama_barang')->get();
-                break;
-            case 'oil_chemical_perekat':
-                $codes = OilChemicalPerekat::select('kode', 'nama_barang')->get();
-                break;
-            case 'sanitary':
-                $codes = Sanitary::select('kode', 'nama_barang')->get();
-                break;
-            case 'piping_pump':
-                $codes = PipingPump::select('kode', 'nama_barang')->get();
-                break;
-            case 'lighting':
-                $codes = Lighting::select('kode', 'nama_barang')->get();
-                break;
-            default:
-                $codes = [];
-                break;
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
+    
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
-
-        return response()->json($codes);
+    
+        // Mengambil total nilai bahan/material (harga_satuan * stock_bahan)
+        $totalStockValue = 0;
+    
+        $models = [
+            DayWork::class, Equipment::class, Tools::class, LandStoneSand::class, Cement::class,
+            Rebar::class, Wood::class, RoofCeilingTile::class, KeramikFloor::class, PaintGlassWallpaper::class,
+            Others::class, OilChemicalPerekat::class, Sanitary::class, PipingPump::class, Lighting::class
+        ];
+    
+        foreach ($models as $model) {
+            $totalStockValue += $model::where('perumahan_id', $perumahanId)
+                ->sum(\Illuminate\Support\Facades\DB::raw('harga_satuan * stock_bahan')); // Menghitung total_price langsung di database
+        }
+    
+        return response()->json([
+            'persediaan_bahan' => [
+                'code_account' => 'GD0102', // Sesuai dengan laporan bulanan
+                'total_rp' => number_format($totalStockValue, 2, ',', '.')
+            ]
+        ]);
     }
+    
+
 }
 

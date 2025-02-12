@@ -137,7 +137,7 @@ Route::prefix('lap_bulanan')->group(function () {
     Route::get('/kas_keluar/{bulan}/{tahun}', [LapBulananController::class, 'getKasKeluar']);
     Route::get('/sisa_kas/{bulan}/{tahun}', [LapBulananController::class, 'getSisaKasProject']);
     Route::get('/journal/{bulan}/{tahun}', [TransaksiKasController::class, 'getJournalSummary']);
-
+    Route::get('/inventory', [StockController::class, 'getStockInventory']);
 });
 
 // Testing route
