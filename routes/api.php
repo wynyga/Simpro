@@ -138,6 +138,8 @@ Route::prefix('lap_bulanan')->group(function () {
     Route::get('/sisa_kas/{bulan}/{tahun}', [LapBulananController::class, 'getSisaKasProject']);
     Route::get('/journal/{bulan}/{tahun}', [TransaksiKasController::class, 'getJournalSummary']);
     Route::get('/inventory', [StockController::class, 'getStockInventory']);
+    Route::get('/summary/{bulan}/{tahun}', [GudangOutController::class, 'getGudangOutSummary']);
+
 });
 
 // Testing route
