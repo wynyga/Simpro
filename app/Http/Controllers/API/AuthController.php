@@ -64,7 +64,7 @@ class AuthController extends BaseController
     {
         $success = auth()->user();
    
-        return $this->sendResponse($success, 'Refresh token return successfully.');
+        return $this->sendResponse($success, 'User profile retrieved successfully.');
     }
   
     /**
