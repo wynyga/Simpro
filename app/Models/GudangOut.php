@@ -28,6 +28,7 @@ class GudangOut extends Model
         'nama_barang',
         'tanggal',
         'peruntukan',
+        'status',
         'jumlah',
         'satuan',
         'jumlah_harga',

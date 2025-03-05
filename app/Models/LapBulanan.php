@@ -14,6 +14,7 @@ class LapBulanan extends Model
         'bulan',
         'tahun',
         'jumlah',
+        'status',
         'code_account'
     ];
 

@@ -13,6 +13,7 @@ class TransaksiKas extends Model
         'keterangan_transaksi',
         'kode',
         'jumlah',
+        'status',
         'keterangan_objek_transaksi',
         'perumahan_id'
     ];

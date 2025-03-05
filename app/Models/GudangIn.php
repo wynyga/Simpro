@@ -30,6 +30,7 @@ class GudangIn extends Model
         'pengirim',
         'no_nota',
         'tanggal_barang_masuk',
+        'status',
         'jumlah',
         'satuan',
         'harga_satuan',

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nama_barang');
             $table->date('tanggal');
             $table->string('peruntukan');
+            $table->string('status')->default('pending');
             $table->integer('jumlah');
             $table->string('satuan');
             $table->decimal('jumlah_harga', 18, 2);

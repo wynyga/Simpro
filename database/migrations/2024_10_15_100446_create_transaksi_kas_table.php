@@ -16,6 +16,7 @@ return new class extends Migration
             $table->date('tanggal');  // Tanggal transaksi
             $table->string('keterangan_transaksi');  // Keterangan transaksi
             $table->enum('kode', ['101', '102']);  // 101 untuk cash in, 102 untuk cash out
+            $table->string('status')->default('pending');
             $table->decimal('jumlah', 18, 2);  // Jumlah dalam Rupiah
             $table->text('keterangan_objek_transaksi')->nullable();  // Keterangan objek transaksi
             $table->timestamps();

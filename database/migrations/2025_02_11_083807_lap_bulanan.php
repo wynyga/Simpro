@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->foreignId('cost_structure_id')->constrained('cost_structures')->onDelete('cascade');
             $table->integer('bulan'); // 1-12
             $table->integer('tahun'); // Tahun laporan
+            $table->string('status')->default('pending');
             $table->decimal('jumlah', 15, 2); // Total transaksi
             $table->string('code_account')->unique();
             $table->timestamps();
