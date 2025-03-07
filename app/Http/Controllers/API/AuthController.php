@@ -62,8 +62,19 @@ class AuthController extends BaseController
      */
     public function profile()
     {
-        $success = auth()->user();
-   
+        // $success = auth()->user();
+        $user = auth()->user()->load('perumahan'); // Mengambil relasi perumahan
+    
+        $success = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->role,
+            'perumahan_id' => $user->perumahan_id,
+            'nama_perumahan' => $user->perumahan ? $user->perumahan->nama_perumahan : null, // Cek apakah relasi ada
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at,
+        ];
         return $this->sendResponse($success, 'User profile retrieved successfully.');
     }
   

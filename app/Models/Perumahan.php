@@ -122,4 +122,9 @@ class Perumahan extends Model
     {
         return $this->hasMany(TipeRumah::class, 'id_perumahan');
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'perumahan_id');
+    }
 }

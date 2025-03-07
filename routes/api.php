@@ -141,8 +141,8 @@ Route::prefix('lap_bulanan')->group(function () {
 });
 
 // Testing route
-Route::get('/testing', function () {
-    return response()->json([
-        "message" => "Get method berhasil"
-    ]);
-});
+// Route::get('/testing', function () {
+//     return response()->json([
+//         "message" => "Get method berhasil"
+//     ]);
+// });
