@@ -43,7 +43,11 @@ Route::prefix('/stock')->group(function () {
 // Gudang Routes
 Route::prefix('/gudang')->group(function () {
     Route::post('/in', [GudangInController::class, 'store']);
+    Route::post('/in/{id}/verify', [GudangInController::class, 'verify'])->middleware('role:Manager'); 
+    Route::post('/in/{id}/reject', [GudangInController::class, 'reject'])->middleware('role:Manager'); 
     Route::post('/out', [GudangOutController::class, 'store']);
+    Route::post('/out/{id}/verify', [GudangOutController::class, 'verify'])->middleware('role:Manager'); 
+    Route::post('/out/{id}/reject', [GudangOutController::class, 'reject'])->middleware('role:Manager'); 
     Route::get('/all', [GudangController::class, 'index']); 
 });
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\GudangIn;
-use App\Helpers\StockHelper; 
+use App\Helpers\StockHelper;
 
 class GudangInController extends Controller
 {
@@ -12,10 +12,11 @@ class GudangInController extends Controller
         $this->middleware('auth');
     }
 
+    // Menampilkan semua transaksi Gudang In berdasarkan perumahan_id pengguna
     public function index()
     {
         $user = auth()->user();
-        $perumahanId = $user->perumahan_id;  // Menggunakan perumahan_id dari profil user
+        $perumahanId = $user->perumahan_id;
     
         if (empty($perumahanId)) {
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
@@ -25,7 +26,7 @@ class GudangInController extends Controller
         return response()->json($gudangIns);
     }
      
-    
+    // Operator Menambahkan Data Gudang In (Status Awal: Pending)
     public function store(Request $request)
     {
         $user = auth()->user();
@@ -35,7 +36,7 @@ class GudangInController extends Controller
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
     
-        // Validasi input (hapus jumlah_harga karena akan dihitung otomatis)
+        // Validasi input
         $validated = $request->validate([
             'kode_barang' => 'required',
             'pengirim' => 'required',
@@ -45,43 +46,79 @@ class GudangInController extends Controller
             'keterangan' => 'nullable'
         ]);
     
-        // Mendapatkan model stok yang sesuai dari StockHelper
+        // Mendapatkan model stok berdasarkan kode barang
         $stockModel = StockHelper::getModelFromCode($request->kode_barang, $perumahanId);
         if (!$stockModel) {
             return response()->json([
                 'message' => 'Barang tidak ditemukan di stok.',
             ], 404);
         }
-    
-        // **Hitung jumlah_harga otomatis** (jumlah barang masuk × harga satuan)
+
+        // Hitung jumlah harga otomatis (jumlah barang masuk × harga satuan)
         $jumlahHarga = $request->jumlah * $stockModel->harga_satuan;
     
-        // **Gunakan satuan dari tabel stok**
-        $satuan = $stockModel->satuan;
-    
-        // Menyimpan data ke Gudang In
+        // Simpan data ke Gudang In dengan status 'pending'
         $gudangIn = new GudangIn();
         $gudangIn->perumahan_id = $perumahanId;
         $gudangIn->kode_barang = $request->kode_barang;
-        $gudangIn->nama_barang = $stockModel->nama_barang; // Mengambil nama barang dari model stok
+        $gudangIn->nama_barang = $stockModel->nama_barang;
         $gudangIn->pengirim = $request->pengirim;
         $gudangIn->no_nota = $request->no_nota;
         $gudangIn->tanggal_barang_masuk = $request->tanggal_barang_masuk;
         $gudangIn->jumlah = $request->jumlah;
-        $gudangIn->satuan = $satuan; // Menggunakan satuan dari stok
-        $gudangIn->harga_satuan = $stockModel->harga_satuan; // Harga satuan diambil dari stok
-        $gudangIn->jumlah_harga = $jumlahHarga; // Menggunakan hasil perhitungan otomatis
+        $gudangIn->satuan = $stockModel->satuan;
+        $gudangIn->harga_satuan = $stockModel->harga_satuan;
+        $gudangIn->jumlah_harga = $jumlahHarga;
         $gudangIn->keterangan = $request->keterangan;
+        $gudangIn->status = 'pending'; // Status awal "pending"
         $gudangIn->save();
-    
-        // Update stok (menambah jumlah stok)
-        $stockModel->stock_bahan += $request->jumlah;
-        $stockModel->save();
-    
+
         return response()->json([
-            'message' => 'Data Gudang In berhasil disimpan dan stok diperbarui.',
+            'message' => 'Data Gudang In berhasil disimpan dengan status pending. Menunggu verifikasi.',
             'data' => $gudangIn
         ], 201);
+    }                                            
+
+    // Project Manager Verifikasi Gudang In
+    public function verify(Request $request, $id)
+    {
+        $gudangIn = GudangIn::findOrFail($id);
+
+        if ($gudangIn->status !== 'pending') {
+            return response()->json(['message' => 'Transaksi ini sudah diverifikasi sebelumnya.'], 400);
+        }
+
+        $gudangIn->status = 'verified';
+        $gudangIn->save();
+
+        // Jika status diverifikasi, baru update stok
+        $stockModel = StockHelper::getModelFromCode($gudangIn->kode_barang, $gudangIn->perumahan_id);
+        if ($stockModel) {
+            $stockModel->stock_bahan += $gudangIn->jumlah;
+            $stockModel->save();
+        }
+
+        return response()->json([
+            'message' => 'Transaksi Gudang In telah diverifikasi dan stok diperbarui.',
+            'data' => $gudangIn
+        ]);
     }
-    
+
+    // Project Manager Menolak Transaksi Gudang In
+    public function reject(Request $request, $id)
+    {
+        $gudangIn = GudangIn::findOrFail($id);
+
+        if ($gudangIn->status !== 'pending') {
+            return response()->json(['message' => 'Transaksi ini sudah diproses sebelumnya.'], 400);
+        }
+
+        $gudangIn->status = 'rejected';
+        $gudangIn->save();
+
+        return response()->json([
+            'message' => 'Transaksi Gudang In ditolak.',
+            'data' => $gudangIn
+        ]);
+    }
 }

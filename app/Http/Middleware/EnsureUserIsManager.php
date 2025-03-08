@@ -11,7 +11,7 @@ class EnsureUserIsManager
     public function handle(Request $request, Closure $next)
     {
         // Periksa jika user login dan memiliki role manager
-        if (Auth::check() && Auth::user()->role === 'manager') {
+        if (Auth::check() && Auth::user()->role === 'Manager') {
             return $next($request);
         }
 
