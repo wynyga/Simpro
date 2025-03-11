@@ -8,11 +8,7 @@ use App\Models\{
     DayWork, Equipment, Tools, LandStoneSand, Cement, Rebar, Wood, RoofCeilingTile, KeramikFloor,
     PaintGlassWallpaper, Others, OilChemicalPerekat, Sanitary, PipingPump, Lighting
 };
-use App\Http\Resources\{
-    DayWorkResource,EquipmentsResource,ToolsResource,LandStoneSandResource,CementResource,
-    RebarResource,WoodResource,RoofCeilingTileResource,KeramikFloorResource,PaintGlassWallpaperResource,
-    OthersResource,OilChemicalPerekatResource,SanitaryResource,PipingPumpResource,LightingResource
-};
+use App\Helpers\StockHelper;
 
 class StockController extends Controller
 {
@@ -140,63 +136,44 @@ class StockController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $kode_barang)
     {
         $user = auth()->user();
         $perumahanId = $user->perumahan_id;
-
+    
         if (empty($perumahanId)) {
             return response()->json(['error' => 'perumahan_id is required'], 403);
         }
-
-        $jenis_peralatan = $request->input('jenis_peralatan');
-        $modelMap = [
-            'day_work' => DayWork::class,
-            'equipment' => Equipment::class,
-            'tools' => Tools::class,
-            'land_stone_sand' => LandStoneSand::class,
-            'cement' => Cement::class,
-            'rebar' => Rebar::class,
-            'wood' => Wood::class,
-            'roof_ceiling_tile' => RoofCeilingTile::class,
-            'keramik_floor' => KeramikFloor::class,
-            'paint_glass_wallpaper' => PaintGlassWallpaper::class,
-            'others' => Others::class,
-            'oil_chemical_perekat' => OilChemicalPerekat::class,
-            'sanitary' => Sanitary::class,
-            'piping_pump' => PipingPump::class,
-            'lighting' => Lighting::class,
-        ];
-
-        if (!array_key_exists($jenis_peralatan, $modelMap)) {
-            return response()->json(['error' => 'Jenis peralatan tidak valid'], 400);
-        }
-
-        $modelClass = $modelMap[$jenis_peralatan];
-        $stock = $modelClass::where('id', $id)->where('perumahan_id', $perumahanId)->first();
-
+    
+        // Menggunakan StockHelper untuk mendapatkan model berdasarkan kode_barang
+        $stock = StockHelper::getModelFromCode($kode_barang, $perumahanId);
+    
         if (!$stock) {
             return response()->json(['error' => 'Stock not found'], 404);
         }
-
+    
+        // Validasi input
         $validator = Validator::make($request->all(), [
-            'nama_barang' => 'required',
-            'uty' => 'required',
-            'satuan' => 'required',
-            'harga_satuan' => 'required|numeric',
-            'stock_bahan' => 'required|numeric'
+            'nama_barang' => 'required|string',
+            'uty' => 'required|string',
+            'satuan' => 'required|string',
+            'harga_satuan' => 'required|numeric|min:0',
+            'stock_bahan' => 'required|numeric|min:0'
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
+    
+        // Update data stock berdasarkan input
         $stock->update($request->only(['nama_barang', 'uty', 'satuan', 'harga_satuan', 'stock_bahan']));
+    
         return response()->json([
             'message' => 'Stock berhasil diperbarui',
             'data' => $stock
         ], 200);
     }
+    
 
     public function destroy($id)
     {
@@ -268,6 +245,73 @@ class StockController extends Controller
         ]);
     }
     
-
+    public function searchStock(Request $request)
+    {
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
+    
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+    
+        // Ambil parameter pencarian dari request
+        $nama_barang = $request->query('nama_barang');
+        $kode_barang = $request->query('kode_barang');
+    
+        $models = [
+            'day_works' => DayWork::class,
+            'equipments' => Equipment::class,
+            'tools' => Tools::class,
+            'land_stone_sands' => LandStoneSand::class,
+            'cements' => Cement::class,
+            'rebars' => Rebar::class,
+            'woods' => Wood::class,
+            'roof_ceiling_tiles' => RoofCeilingTile::class,
+            'keramik_floors' => KeramikFloor::class,
+            'paint_glass_wallpapers' => PaintGlassWallpaper::class,
+            'others' => Others::class,
+            'oil_chemical_perekats' => OilChemicalPerekat::class,
+            'sanitaries' => Sanitary::class,
+            'piping_pumps' => PipingPump::class,
+            'lightings' => Lighting::class
+        ];
+    
+        $results = [];
+    
+        foreach ($models as $key => $model) {
+            $query = $model::where('perumahan_id', $perumahanId);
+    
+            if (!empty($nama_barang)) {
+                $query->where('nama_barang', 'LIKE', "%$nama_barang%");
+            }
+    
+            if (!empty($kode_barang)) {
+                $query->where('kode', 'LIKE', "%$kode_barang%");
+            }
+    
+            $items = $query->get();
+    
+            if ($items->isNotEmpty()) {
+                $results[$key] = $items->map(function ($item) {
+                    return [
+                        'kode_barang' => $item->kode,
+                        'nama_barang' => $item->nama_barang,
+                        'uty' => $item->uty,
+                        'satuan' => $item->satuan,
+                        'harga_satuan' => number_format($item->harga_satuan, 2, ',', '.'),
+                        'stock_bahan' => $item->stock_bahan,
+                        'total_price' => number_format($item->harga_satuan * $item->stock_bahan, 2, ',', '.')
+                    ];
+                });
+            }
+        }
+    
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data retrieved successfully',
+            'data' => $results
+        ]);
+    }
+    
 }
 

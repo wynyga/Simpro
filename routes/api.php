@@ -35,9 +35,9 @@ Route::prefix('/stock')->group(function () {
     Route::get('/', [StockController::class, 'index']);
     Route::post('/', [StockController::class, 'store']);
     Route::get('/codes/{type}', [StockController::class, 'getStockCodes']);
-    Route::patch('/{id}', [StockController::class, 'update']);
+    Route::patch('/{kode_barang}', [StockController::class, 'update']);
     Route::delete('/{id}', [StockController::class, 'destroy']);
-    
+    Route::get('/search',[StockController::class, 'searchStock']);
 });
 
 // Gudang Routes
