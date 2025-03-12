@@ -57,6 +57,7 @@ Route::prefix('/transaksi')->group(function () {
     Route::post('/kas', [TransaksiKasController::class, 'store']);
     Route::post('/kas/{id}/verify', [TransaksiKasController::class, 'approveTransaction'])->middleware('role:Manager');
     Route::post('/kas/{id}/reject', [TransaksiKasController::class, 'rejectTransaction'])->middleware('role:Manager');
+    Route::get('/kas/history', [TransaksiKasController::class, 'getHistory'])->middleware('role:Manager');
 });
 
 // Perumahan Routes
