@@ -55,8 +55,8 @@ Route::prefix('/gudang')->group(function () {
 Route::prefix('/transaksi')->group(function () {
     Route::get('/kas', [TransaksiKasController::class, 'index']);
     Route::post('/kas', [TransaksiKasController::class, 'store']);
-    Route::put('/{id}', [TransaksiController::class, 'update']); //Coming Soon
-    Route::delete('/{id}', [TransaksiController::class, 'destroy']); //Coming Soon
+    Route::post('/kas/{id}/verify', [TransaksiKasController::class, 'approveTransaction'])->middleware('role:Manager');
+    Route::post('/kas/{id}/reject', [TransaksiKasController::class, 'rejectTransaction'])->middleware('role:Manager');
 });
 
 // Perumahan Routes

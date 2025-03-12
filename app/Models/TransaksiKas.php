@@ -14,8 +14,17 @@ class TransaksiKas extends Model
         'kode',
         'jumlah',
         'status',
+        'saldo_setelah_transaksi',  
+        'metode_pembayaran',        
+        'dibuat_oleh',              
         'keterangan_objek_transaksi',
         'perumahan_id'
+    ];
+
+    // Pastikan nilai jumlah dan saldo selalu dalam bentuk float
+    protected $casts = [
+        'jumlah' => 'float',
+        'saldo_setelah_transaksi' => 'float',
     ];
 
     // Relasi balik ke Perumahan

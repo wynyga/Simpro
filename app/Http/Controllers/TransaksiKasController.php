@@ -18,23 +18,42 @@ class TransaksiKasController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $perumahanId = $user->perumahan_id;  // Menggunakan perumahan_id dari profil user
+        $perumahanId = $user->perumahan_id;
     
         if (empty($perumahanId)) {
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
     
-        // Menghitung total Cash In dan Cash Out berdasarkan perumahan_id
-        $totalCashIn = TransaksiKas::where('kode', '101')->where('perumahan_id', $perumahanId)->sum('jumlah');
-        $totalCashOut = TransaksiKas::where('kode', '102')->where('perumahan_id', $perumahanId)->sum('jumlah');
+        // Hanya hitung transaksi yang statusnya "approved"
+        $totalCashIn = TransaksiKas::where('kode', '101')
+            ->where('perumahan_id', $perumahanId)
+            ->where('status', 'approved') // Tambahkan filter hanya untuk transaksi yang disetujui
+            ->sum('jumlah');
     
-        // Menghitung saldo kas
+        $totalCashOut = TransaksiKas::where('kode', '102')
+            ->where('perumahan_id', $perumahanId)
+            ->where('status', 'approved') // Tambahkan filter hanya untuk transaksi yang disetujui
+            ->sum('jumlah');
+    
+        // Hitung saldo kas dengan hanya memperhitungkan transaksi yang telah disetujui
         $saldoKas = $totalCashIn - $totalCashOut;
     
-        // Mengambil semua data transaksi untuk ditampilkan
-        $transaksiKas = TransaksiKas::where('perumahan_id', $perumahanId)->get();
+        // Ambil semua transaksi, termasuk pending dan rejected
+        $transaksiKas = TransaksiKas::where('perumahan_id', $perumahanId)->get()->map(function ($transaksi) {
+            return [
+                'id' => $transaksi->id,
+                'tanggal' => $transaksi->tanggal,
+                'keterangan_transaksi' => $transaksi->keterangan_transaksi,
+                'kode' => $transaksi->kode,
+                'jumlah' => $transaksi->jumlah ?? 0,
+                'keterangan_objek_transaksi' => $transaksi->keterangan_objek_transaksi ?? "-",
+                'metode_pembayaran' => $transaksi->metode_pembayaran ?? "Tunai",
+                'saldo_setelah_transaksi' => $transaksi->saldo_setelah_transaksi ?? 0,
+                'dibuat_oleh' => $transaksi->dibuat_oleh ?? "Admin",
+                'status' => $transaksi->status, // Tambahkan status transaksi
+            ];
+        });
     
-        // Mengembalikan data sebagai JSON
         return response()->json([
             'totalCashIn' => $totalCashIn,
             'totalCashOut' => $totalCashOut,
@@ -42,7 +61,8 @@ class TransaksiKasController extends Controller
             'transaksiKas' => $transaksiKas
         ]);
     }
-
+    
+    
     public function getJournalSummary($bulan, $tahun)
     {
         $user = auth()->user();
@@ -89,24 +109,82 @@ class TransaksiKasController extends Controller
         if (empty($perumahanId)) {
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
-
+    
         // Validasi input
         $validated = $request->validate([
             'tanggal' => 'required|date',
             'keterangan_transaksi' => 'required|string',
             'kode' => 'required|in:101,102', // Hanya menerima kode 101 atau 102
-            'jumlah' => 'required|numeric',
+            'jumlah' => 'required|numeric|min:0',
+            'metode_pembayaran' => 'required|in:Tunai,Transfer Bank', // Tambahkan validasi metode pembayaran
             'keterangan_objek_transaksi' => 'nullable|string'
         ]);
-
-        // Simpan transaksi baru
-        $validated['perumahan_id'] = $perumahanId;  // Add perumahan_id from session
-        $transaksi = TransaksiKas::create($validated);
-
+    
+        // Simpan transaksi baru dengan status awal "pending"
+        $transaksi = TransaksiKas::create([
+            'tanggal' => $validated['tanggal'],
+            'keterangan_transaksi' => $validated['keterangan_transaksi'],
+            'kode' => $validated['kode'],
+            'jumlah' => $validated['jumlah'],
+            'saldo_setelah_transaksi' => null, // Saldo akan dihitung saat transaksi disetujui
+            'metode_pembayaran' => $validated['metode_pembayaran'],
+            'dibuat_oleh' => $user->name, // Ambil nama user yang sedang login
+            'keterangan_objek_transaksi' => $validated['keterangan_objek_transaksi'],
+            'perumahan_id' => $perumahanId,
+            'status' => 'pending' // Status awal pending sebelum diverifikasi
+        ]);
+    
         // Mengembalikan respons JSON
         return response()->json([
-            'message' => 'Transaksi KAS berhasil disimpan.',
+            'message' => 'Transaksi KAS berhasil disimpan dan menunggu persetujuan.',
             'data' => $transaksi
         ], 201);
     }
+    
+
+    public function approveTransaction($id)
+    {
+        $transaksi = TransaksiKas::find($id);
+        if (!$transaksi) {
+            return response()->json(['error' => 'Transaksi tidak ditemukan.'], 404);
+        }
+    
+        if ($transaksi->status !== 'pending') {
+            return response()->json(['error' => 'Transaksi sudah diproses sebelumnya.'], 400);
+        }
+    
+        // Hitung ulang saldo setelah transaksi ini disetujui
+        $totalCashIn = TransaksiKas::where('kode', '101')->where('status', 'approved')->sum('jumlah');
+        $totalCashOut = TransaksiKas::where('kode', '102')->where('status', 'approved')->sum('jumlah');
+        $saldoSebelumnya = $totalCashIn - $totalCashOut;
+    
+        $saldoSetelahTransaksi = ($transaksi->kode === '101')
+            ? $saldoSebelumnya + $transaksi->jumlah
+            : $saldoSebelumnya - $transaksi->jumlah;
+    
+        // Update status menjadi "approved" dan set saldo setelah transaksi
+        $transaksi->update([
+            'status' => 'approved',
+            'saldo_setelah_transaksi' => $saldoSetelahTransaksi
+        ]);
+    
+        return response()->json(['message' => 'Transaksi berhasil disetujui.', 'data' => $transaksi]);
+    }
+    
+    public function rejectTransaction($id)
+    {
+        $transaksi = TransaksiKas::find($id);
+        if (!$transaksi) {
+            return response()->json(['error' => 'Transaksi tidak ditemukan.'], 404);
+        }
+    
+        if ($transaksi->status !== 'pending') {
+            return response()->json(['error' => 'Transaksi sudah diproses sebelumnya.'], 400);
+        }
+    
+        // Update status menjadi "rejected"
+        $transaksi->update(['status' => 'rejected']);
+    
+        return response()->json(['message' => 'Transaksi berhasil ditolak.', 'data' => $transaksi]);
+    }    
 }
