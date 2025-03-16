@@ -71,8 +71,9 @@ Route::prefix('perumahan')->group(function () {
 Route::prefix('penjualan')->group(function () {
     Route::prefix('/tipe_rumah')->group(function () {
         Route::get('/', [TipeRumahController::class, 'index']);
+        Route::get('/{id}', [TipeRumahController::class, 'show']);
         Route::get('/create', [TipeRumahController::class, 'create']);
-        Route::post('/', [TipeRumahController::class, 'store']);
+        Route::post('/add', [TipeRumahController::class, 'store']);
         Route::put('/{id}', [TipeRumahController::class, 'update']);
         Route::delete('/{id}', [TipeRumahController::class, 'destroy']);
     });

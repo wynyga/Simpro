@@ -116,4 +116,21 @@ class TipeRumahController extends Controller
             'message' => 'Tipe rumah berhasil dihapus'
         ], 204);
     } 
+
+    public function show($id)
+    {
+        $user = auth()->user();
+        
+        // Cari tipe rumah berdasarkan ID
+        $tipeRumah = TipeRumah::where('id', $id)
+                            ->where('perumahan_id', $user->perumahan_id)
+                            ->first();
+
+        if (!$tipeRumah) {
+            return response()->json(['error' => 'Tipe rumah tidak ditemukan atau akses ditolak.'], 404);
+        }
+
+        return response()->json($tipeRumah);
+    }
+
 }

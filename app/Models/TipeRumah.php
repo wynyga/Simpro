@@ -23,8 +23,14 @@ class TipeRumah extends Model
     // Relasi ke blok_unit
     public function blokUnit()
     {
-        return $this->hasMany(BlokUnit::class, 'id_tipe_rumah');
+        return $this->hasMany(Blok::class, 'id_tipe_rumah');
     }
+
+    protected $casts = [
+        'harga_standar_tengah' => 'float',
+        'harga_standar_sudut' => 'float',
+        'penambahan_bangunan' => 'float',
+    ];
 
     public function perumahan()
     {
