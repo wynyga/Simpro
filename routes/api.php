@@ -92,7 +92,7 @@ Route::prefix('penjualan')->group(function () {
         Route::get('/', [UnitController::class, 'index'])->name('unit.index');
         Route::post('/store', [UnitController::class, 'store'])->name('unit.store');
         Route::get('/{id}', [UnitController::class, 'show'])->name('unit.show');
-        Route::put('/{id}', [UnitController::class, 'update'])->name('unit.update'); //Hanya bisa nomor UNIT
+        Route::put('/{id}', [UnitController::class, 'update'])->name('unit.update'); 
         Route::delete('/{id}', [UnitController::class, 'destroy'])->name('unit.destroy');
     });
 
@@ -107,11 +107,11 @@ Route::prefix('penjualan')->group(function () {
 });
 
 // User and Blok Unit Management
-Route::prefix('/users')->group(function () {
-    Route::get('/', [UserController::class, 'index']);
-    Route::post('/create', [UserController::class, 'store']);
-    Route::put('/{id}',[UserController::class, 'update']);
-    Route::delete('/{id}',[UserController::class, 'destroy']);
+Route::prefix('users')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->middleware('cors');
+    Route::post('/add', [UserController::class, 'store']);
+    Route::put('/{id}',[UserController::class, 'update'])->middleware('cors');
+    Route::delete('/{id}',[UserController::class, 'destroy'])->middleware('cors');
 });
 
 Route::prefix('cost_center')->group(function () {

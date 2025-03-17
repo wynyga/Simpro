@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserPerumahan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\UserPerumahan;
 
 class UserController extends Controller
 {
@@ -12,57 +11,103 @@ class UserController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
+    /**
+     * Menampilkan daftar pengguna berdasarkan perumahan yang terautentikasi.
+     */
     public function index()
     {
-        $perumahanId = Auth::user()->perumahan_id;
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
+
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+
         $users = UserPerumahan::where('perumahan_id', $perumahanId)->get();
-        return response()->json($users);
+
+        return response()->json(['users' => $users]);
     }
 
+    /**
+     * Menyimpan pengguna baru ke dalam sistem.
+     */
     public function store(Request $request)
     {
-        $perumahanId = Auth::user()->perumahan_id;
-        $data = $request->validate([
+        $user = auth()->user();
+       
+        $validated = $request->validate([
             'nama_user' => 'required|string|max:255',
             'alamat_user' => 'required|string|max:255',
             'no_telepon' => 'required|digits_between:10,15',
         ]);
-    
-        $data['perumahan_id'] = $perumahanId;
-        $user = UserPerumahan::create($data);
+
+        $validated['perumahan_id'] = $user->perumahan_id;
+
+        $userPerumahan = UserPerumahan::create($validated);
+
         return response()->json([
-            'message' => 'User berhasil ditambahkan',
-            'data' => $user
+            'message' => 'User berhasil ditambahkan.',
+            'data' => $userPerumahan
         ], 201);
     }
 
+    /**
+     * Memperbarui informasi pengguna berdasarkan ID.
+     */
     public function update(Request $request, $id)
     {
-        $perumahanId = Auth::user()->perumahan_id;
-        $user = UserPerumahan::where('id', $id)->where('perumahan_id', $perumahanId)->firstOrFail();
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
 
-        $data = $request->validate([
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+
+        $userPerumahan = UserPerumahan::where('id', $id)
+            ->where('perumahan_id', $perumahanId)
+            ->first();
+
+        if (!$userPerumahan) {
+            return response()->json(['error' => 'User tidak ditemukan.'], 404);
+        }
+
+        $validated = $request->validate([
             'nama_user' => 'sometimes|required|string|max:255',
             'alamat_user' => 'sometimes|required|string|max:255',
             'no_telepon' => 'sometimes|required|digits_between:10,15',
         ]);
 
-        $user->update($data);
+        $userPerumahan->update($validated);
+
         return response()->json([
-            'message' => 'User berhasil diperbarui',
-            'data' => $user
+            'message' => 'User berhasil diperbarui.',
+            'data' => $userPerumahan
         ], 200);
     }
 
+    /**
+     * Menghapus pengguna berdasarkan ID.
+     */
     public function destroy($id)
     {
-        $perumahanId = Auth::user()->perumahan_id;
-        $user = UserPerumahan::where('id', $id)->where('perumahan_id', $perumahanId)->firstOrFail();
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
 
-        $user->delete();
-        return response()->json([
-            'message' => 'User berhasil dihapus'
-        ], 204);
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+
+        $userPerumahan = UserPerumahan::where('id', $id)
+            ->where('perumahan_id', $perumahanId)
+            ->first();
+
+        if (!$userPerumahan) {
+            return response()->json(['error' => 'User tidak ditemukan.'], 404);
+        }
+
+        $userPerumahan->delete();
+
+        return response()->json(['message' => 'User berhasil dihapus.'], 200);
     }
 }

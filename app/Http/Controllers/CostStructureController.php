@@ -27,6 +27,8 @@ class CostStructureController extends Controller
             'data' => $costStructure
         ], 201);
     }
+
+
 }
 
 

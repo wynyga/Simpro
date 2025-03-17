@@ -42,4 +42,14 @@ class Transaksi extends Model
     {
         return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
+
+    protected $casts = [
+        'harga_jual_standar' => 'float',
+        'kelebihan_tanah' => 'float',
+        'penambahan_luas_bangunan' => 'float',
+        'perubahan_spek_bangunan' => 'float',
+        'total_harga_jual' => 'float',
+        'minimum_dp' => 'float',
+        'kewajiban_hutang' => 'float',
+    ];
 }
