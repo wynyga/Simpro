@@ -119,4 +119,27 @@ class GudangOutController extends Controller
             'data' => $gudangOut
         ]);
     }
+
+    public function getGudangOutSummary($bulan, $tahun)
+    {
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
+
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+
+        // Menghitung total pengeluaran bahan dari gudang dalam bulan & tahun tertentu
+        $totalGudangOut = GudangOut::where('perumahan_id', $perumahanId)
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->sum('jumlah_harga'); // Mengambil total harga dari bahan yang keluar
+
+        return response()->json([
+            'pengeluaran_bahan' => [
+                'code_account' => 'GD0104B' . str_pad($bulan, 2, '0', STR_PAD_LEFT) . substr($tahun, -2), // Contoh: GD0104B324
+                'total_rp' => number_format($totalGudangOut, 2, ',', '.')
+            ]
+        ]);
+    }
 }
