@@ -12,6 +12,7 @@ class CostTee extends Model
     protected $fillable = [
         'cost_tee_code',
         'cost_element_code',
+        'perumahan_id',
         'description'
     ];
 

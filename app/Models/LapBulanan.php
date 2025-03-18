@@ -15,6 +15,7 @@ class LapBulanan extends Model
         'tahun',
         'jumlah',
         'status',
+        'perumahan_id',
         'code_account'
     ];
 
@@ -22,6 +23,10 @@ class LapBulanan extends Model
     {
         return $this->belongsTo(CostStructure::class, 'cost_structure_id');
     }
+
+    protected $casts = [
+        'jumlah' => 'float'
+    ];
 
     // Generate Code Account Sebelum Menyimpan
     protected static function boot()

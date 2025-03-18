@@ -99,7 +99,32 @@ return new class extends Migration
         //Tabel transaksi
         Schema::table('transaksi', function (Blueprint $table) {
             $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
-        });        
+        }); 
+        
+        //Tabel cost centres
+        Schema::table('cost_centres', function (Blueprint $table) {
+            $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
+        });   
+
+        //Tabel cost elements
+        Schema::table('cost_elements', function (Blueprint $table) {
+            $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
+        });   
+
+        //Tabel cost tees
+        Schema::table('cost_tees', function (Blueprint $table) {
+            $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
+        });   
+
+        //Tabel cost structures
+        Schema::table('cost_structures', function (Blueprint $table) {
+            $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
+        });   
+
+        //Tabel laporan bulanan
+        Schema::table('lap_bulanan', function (Blueprint $table) {
+            $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
+        });     
     }
 
     /**

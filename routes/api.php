@@ -114,41 +114,56 @@ Route::prefix('users')->group(function () {
     Route::delete('/{id}',[UserController::class, 'destroy'])->middleware('cors');
 });
 
-Route::prefix('cost_center')->group(function () {
-    Route::get('/', [CostCentreController::class, 'index']);
-    Route::post('/create', [CostCentreController::class, 'store']);
+// Routes untuk Cost Centre
+Route::prefix('cost_center')->middleware('auth')->group(function () {
+    Route::get('/', [CostCentreController::class, 'index'])->name('cost_center.index');
+    Route::post('/create', [CostCentreController::class, 'store'])->name('cost_center.store');
+    Route::put('/update/{id}', [CostCentreController::class, 'update'])->name('cost_center.update');
+    Route::delete('/delete/{id}', [CostCentreController::class, 'destroy'])->name('cost_center.delete');
 });
 
-Route::prefix('cost_element')->group(function () {
-    Route::get('/', [CostElementController::class, 'index']);
-    Route::post('/create', [CostElementController::class, 'store']);
+// Routes untuk Cost Element
+Route::prefix('cost_element')->middleware('auth')->group(function () {
+    Route::get('/', [CostElementController::class, 'index'])->name('cost_element.index');
+    Route::post('/create', [CostElementController::class, 'store'])->name('cost_element.store');
+    Route::put('/update/{id}', [CostElementController::class, 'update'])->name('cost_element.update');
+    Route::delete('/delete/{id}', [CostElementController::class, 'destroy'])->name('cost_element.delete');
 });
 
-Route::prefix('cost_tee')->group(function () {
-    Route::get('/', [CostTeeController::class, 'index']);
-    Route::post('/create', [CostTeeController::class, 'store']);
+// Routes untuk Cost Tee
+Route::prefix('cost_tee')->middleware('auth')->group(function () {
+    Route::get('/', [CostTeeController::class, 'index'])->name('cost_tee.index');
+    Route::post('/create', [CostTeeController::class, 'store'])->name('cost_tee.store');
+    Route::put('/update/{id}', [CostTeeController::class, 'update'])->name('cost_tee.update');
+    Route::delete('/delete/{id}', [CostTeeController::class, 'destroy'])->name('cost_tee.delete');
 });
 
-Route::prefix('cost_structure')->group(function () {
-    Route::get('/', [CostStructureController::class, 'index']);
-    Route::post('/create', [CostStructureController::class, 'store']);
+// Routes untuk Cost Structure
+Route::prefix('cost_structure')->middleware('auth')->group(function () {
+    Route::get('/', [CostStructureController::class, 'index'])->name('cost_structure.index');
+    Route::post('/create', [CostStructureController::class, 'store'])->name('cost_structure.store');
+    Route::put('/update/{id}', [CostStructureController::class, 'update'])->name('cost_structure.update');
+    Route::delete('/delete/{id}', [CostStructureController::class, 'destroy'])->name('cost_structure.delete');
 });
 
-Route::prefix('lap_bulanan')->group(function () {
-    Route::get('/', [LapBulananController::class, 'index']);
-    Route::post('/create', [LapBulananController::class, 'store']);
-    Route::get('/kas_masuk/{bulan}/{tahun}', [LapBulananController::class, 'getKasMasuk']);
-    Route::get('/kas_keluar/{bulan}/{tahun}', [LapBulananController::class, 'getKasKeluar']);
-    Route::get('/sisa_kas/{bulan}/{tahun}', [LapBulananController::class, 'getSisaKasProject']);
-    Route::get('/journal/{bulan}/{tahun}', [TransaksiKasController::class, 'getJournalSummary']);
-    Route::get('/inventory', [StockController::class, 'getStockInventory']);
-    Route::get('/summary/{bulan}/{tahun}', [GudangOutController::class, 'getGudangOutSummary']);
-
+// Routes untuk Laporan Bulanan
+Route::prefix('lap_bulanan')->middleware('auth')->group(function () {
+    Route::get('/', [LapBulananController::class, 'index'])->name('lap_bulanan.index');
+    Route::post('/create', [LapBulananController::class, 'store'])->name('lap_bulanan.store');
+    Route::get('/kas_masuk/{bulan}/{tahun}', [LapBulananController::class, 'getKasMasuk'])->name('lap_bulanan.kas_masuk');
+    Route::get('/kas_keluar/{bulan}/{tahun}', [LapBulananController::class, 'getKasKeluar'])->name('lap_bulanan.kas_keluar');
+    Route::get('/sisa_kas/{bulan}/{tahun}', [LapBulananController::class, 'getSisaKasProject'])->name('lap_bulanan.sisa_kas');
+    Route::get('/history', [LapBulananController::class, 'getHistory'])->name('lap_bulanan.history');
+    Route::prefix('transaksi_kas')->group(function () {
+        Route::get('/journal/{bulan}/{tahun}', [TransaksiKasController::class, 'getJournalSummary'])->name('transaksi_kas.journal_summary');
+    });
+    Route::prefix('inventory')->group(function () {
+        Route::get('/', [StockController::class, 'getStockInventory'])->name('inventory.stock');
+    });
+    Route::prefix('gudang')->middleware('auth')->group(function () {
+        Route::get('/summary/{bulan}/{tahun}', [GudangOutController::class, 'getGudangOutSummary'])->name('gudang.summary');
+    });
 });
 
-// Testing route
-// Route::get('/testing', function () {
-//     return response()->json([
-//         "message" => "Get method berhasil"
-//     ]);
-// });
+
+

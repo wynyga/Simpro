@@ -11,6 +11,7 @@ class CostCentre extends Model
 
     protected $fillable = [
         'cost_centre_code',
-        'description'
+        'description',
+        'perumahan_id',
     ];
 }

@@ -12,7 +12,9 @@ class CostElement extends Model
     protected $fillable = [
         'cost_element_code',
         'cost_centre_code',
+        'perumahan_id',
         'description'
+        
     ];
 
     public function costCentre()
