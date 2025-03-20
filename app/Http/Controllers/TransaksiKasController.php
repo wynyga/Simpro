@@ -89,15 +89,15 @@ class TransaksiKasController extends Controller
         $saldo = $totalDebit - $totalKredit;
     
         // 3️⃣ Format Response
-        return response()->json([
-            'sheet_balance' => [
-                'total_rp' => number_format($saldo, 2, ',', '.'),
-                'color' => $saldo >= 0 ? 'green' : 'red'
-            ],
-            'debit' => number_format($totalDebit, 2, ',', '.'),
-            'kredit' => number_format($totalKredit, 2, ',', '.'),
-            'saldo' => number_format($saldo, 2, ',', '.')
-        ]);
+    return response()->json([
+        'sheet_balance' => [
+            'total_rp' => round($saldo, 2), // Menyimpan sebagai float dengan 2 desimal
+            'color' => $saldo >= 0 ? 'green' : 'red'
+        ],
+        'debit' => round($totalDebit, 2), // Tetap float
+        'kredit' => round($totalKredit, 2), // Tetap float
+        'saldo' => round($saldo, 2) // Tetap float
+    ]);
     }
     
 
@@ -220,6 +220,62 @@ class TransaksiKasController extends Controller
         $transaksiKas = $query->orderBy('tanggal', 'desc')->paginate($perPage);
 
         return response()->json($transaksiKas);
+    }
+
+    public function getRingkasanKasPerTahun(Request $request, $tahun = null)
+    {
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
+        $tahun = $tahun ?? date('Y'); // Default ke tahun ini jika tidak dipilih
+
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+
+        // Hanya hitung transaksi yang statusnya "approved"
+        $totalCashIn = TransaksiKas::where('kode', '101')
+            ->where('perumahan_id', $perumahanId)
+            ->where('status', 'approved')
+            ->whereYear('tanggal', $tahun)
+            ->sum('jumlah');
+
+        $totalCashOut = TransaksiKas::where('kode', '102')
+            ->where('perumahan_id', $perumahanId)
+            ->where('status', 'approved')
+            ->whereYear('tanggal', $tahun)
+            ->sum('jumlah');
+
+        // Hitung saldo kas berdasarkan tahun
+        $saldoKas = $totalCashIn - $totalCashOut;
+
+        // Ambil semua transaksi pada tahun tertentu dengan status approved
+        $transaksiKas = TransaksiKas::where('perumahan_id', $perumahanId)
+            ->whereYear('tanggal', $tahun)
+            ->where('status', 'approved')
+            ->orderBy('tanggal', 'desc')
+            ->get()
+            ->map(function ($transaksi) {
+                return [
+                    'id' => $transaksi->id,
+                    'tanggal' => $transaksi->tanggal,
+                    'keterangan_transaksi' => $transaksi->keterangan_transaksi,
+                    'kode' => $transaksi->kode,
+                    'jumlah' => number_format($transaksi->jumlah, 2, '.', ''), // Format angka
+                    'keterangan_objek_transaksi' => $transaksi->keterangan_objek_transaksi ?? "-",
+                    'metode_pembayaran' => $transaksi->metode_pembayaran ?? "Tunai",
+                    'saldo_setelah_transaksi' => number_format($transaksi->saldo_setelah_transaksi ?? 0, 2, '.', ''),
+                    'dibuat_oleh' => $transaksi->dibuat_oleh ?? "Admin",
+                    'status' => $transaksi->status,
+                ];
+            });
+
+        return response()->json([
+            'tahun' => (string) $tahun,
+            'totalCashIn' => number_format($totalCashIn, 2, '.', ''),
+            'totalCashOut' => number_format($totalCashOut, 2, '.', ''),
+            'saldoKas' => number_format($saldoKas, 2, '.', ''),
+            'transaksiKas' => $transaksiKas,
+        ]);
     }
 
 }

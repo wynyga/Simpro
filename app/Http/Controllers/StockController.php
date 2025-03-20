@@ -214,7 +214,7 @@ class StockController extends Controller
         return response()->json(['message' => 'Stock berhasil dihapus'], 204);
     }
 
-    public function getStockInventory()
+    public function getStockInventory($bulan, $tahun)
     {
         $user = auth()->user();
         $perumahanId = $user->perumahan_id;
@@ -223,7 +223,7 @@ class StockController extends Controller
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
     
-        // Mengambil total nilai bahan/material (harga_satuan * stock_bahan)
+        // Mengambil total nilai bahan/material (harga_satuan * stock_bahan) berdasarkan bulan dan tahun
         $totalStockValue = 0;
     
         $models = [
@@ -234,16 +234,19 @@ class StockController extends Controller
     
         foreach ($models as $model) {
             $totalStockValue += $model::where('perumahan_id', $perumahanId)
-                ->sum(\Illuminate\Support\Facades\DB::raw('harga_satuan * stock_bahan')); // Menghitung total_price langsung di database
+                ->whereYear('updated_at', $tahun) // Filter berdasarkan tahun
+                ->whereMonth('updated_at', $bulan) // Filter berdasarkan bulan
+                ->sum(DB::raw('harga_satuan * stock_bahan')); // Menghitung total nilai stok
         }
     
         return response()->json([
             'persediaan_bahan' => [
                 'code_account' => 'GD0102', // Sesuai dengan laporan bulanan
-                'total_rp' => number_format($totalStockValue, 2, ',', '.')
+                'total_rp' => round($totalStockValue, 2) // Mengembalikan float, bukan string
             ]
         ]);
     }
+    
     
     public function searchStock(Request $request)
     {

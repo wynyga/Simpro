@@ -225,6 +225,67 @@ class LapBulananController extends Controller
             'data' => $laporan
         ], 201);
     }
+
+    public function update(Request $request, $id)
+    {
+        $user = auth()->user();
+        $laporan = LapBulanan::where('id', $id)
+            ->whereHas('costStructure', function ($query) use ($user) {
+                $query->where('perumahan_id', $user->perumahan_id);
+            })
+            ->first();
+
+        if (!$laporan) {
+            return response()->json(['error' => 'Unauthorized: Anda tidak memiliki akses untuk mengupdate laporan ini.'], 403);
+        }
+
+        $validated = $request->validate([
+            'cost_structure_id' => 'required|exists:cost_structures,id',
+            'bulan' => 'required|integer|min:1|max:12',
+            'tahun' => 'required|integer',
+            'jumlah' => 'required|numeric'
+        ]);
+
+        // Cari cost_structure berdasarkan ID yang dikirim user
+        $costStructure = CostStructure::where('id', $validated['cost_structure_id'])->first();
+
+        if (!$costStructure) {
+            return response()->json(['error' => 'Cost Structure dengan ID tersebut tidak ditemukan.'], 404);
+        }
+
+        // Pastikan cost_structure milik perumahan pengguna
+        if ($costStructure->perumahan_id !== $user->perumahan_id) {
+            return response()->json(['error' => 'Unauthorized: Cost Structure bukan milik perumahan Anda.'], 403);
+        }
+
+        $laporan->update($validated);
+
+        return response()->json([
+            'message' => 'Laporan bulanan berhasil diperbarui',
+            'data' => $laporan
+        ], 200);
+    }
+
+    public function destroy($id)
+    {
+        $user = auth()->user();
+        $laporan = LapBulanan::where('id', $id)
+            ->whereHas('costStructure', function ($query) use ($user) {
+                $query->where('perumahan_id', $user->perumahan_id);
+            })
+            ->first();
+
+        if (!$laporan) {
+            return response()->json(['error' => 'Unauthorized: Anda tidak memiliki akses untuk menghapus laporan ini.'], 403);
+        }
+
+        $laporan->delete();
+
+        return response()->json([
+            'message' => 'Laporan bulanan berhasil dihapus'
+        ], 204);
+    }
+
     
 }
 

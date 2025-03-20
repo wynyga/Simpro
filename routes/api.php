@@ -55,6 +55,7 @@ Route::prefix('/gudang')->group(function () {
 Route::prefix('/transaksi')->group(function () {
     Route::get('/kas', [TransaksiKasController::class, 'index']);
     Route::post('/kas', [TransaksiKasController::class, 'store']);
+    Route::get('/kas/ringkasan/{tahun?}', [TransaksiKasController::class, 'getRingkasanKasPerTahun']);
     Route::post('/kas/{id}/verify', [TransaksiKasController::class, 'approveTransaction'])->middleware('role:Manager');
     Route::post('/kas/{id}/reject', [TransaksiKasController::class, 'rejectTransaction'])->middleware('role:Manager');
     Route::get('/kas/history', [TransaksiKasController::class, 'getHistory'])->middleware('role:Manager');
@@ -150,6 +151,8 @@ Route::prefix('cost_structure')->middleware('auth')->group(function () {
 Route::prefix('lap_bulanan')->middleware('auth')->group(function () {
     Route::get('/', [LapBulananController::class, 'index'])->name('lap_bulanan.index');
     Route::post('/create', [LapBulananController::class, 'store'])->name('lap_bulanan.store');
+    Route::put('/update/{id}', [LapBulananController::class, 'update'])->name('lap_bulanan.update');
+    Route::delete('/delete/{id}', [LapBulananController::class, 'destroy'])->name('lap_bulanan.delete');
     Route::get('/kas_masuk/{bulan}/{tahun}', [LapBulananController::class, 'getKasMasuk'])->name('lap_bulanan.kas_masuk');
     Route::get('/kas_keluar/{bulan}/{tahun}', [LapBulananController::class, 'getKasKeluar'])->name('lap_bulanan.kas_keluar');
     Route::get('/sisa_kas/{bulan}/{tahun}', [LapBulananController::class, 'getSisaKasProject'])->name('lap_bulanan.sisa_kas');
@@ -158,7 +161,7 @@ Route::prefix('lap_bulanan')->middleware('auth')->group(function () {
         Route::get('/journal/{bulan}/{tahun}', [TransaksiKasController::class, 'getJournalSummary'])->name('transaksi_kas.journal_summary');
     });
     Route::prefix('inventory')->group(function () {
-        Route::get('/', [StockController::class, 'getStockInventory'])->name('inventory.stock');
+        Route::get('/{bulan}/{tahun}', [StockController::class, 'getStockInventory'])->name('inventory.stock');
     });
     Route::prefix('gudang')->middleware('auth')->group(function () {
         Route::get('/summary/{bulan}/{tahun}', [GudangOutController::class, 'getGudangOutSummary'])->name('gudang.summary');
