@@ -28,6 +28,10 @@ Route::prefix('/auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
     Route::get('/profile', [AuthController::class, 'profile'])->middleware('auth:api');
+    Route::put('/profile', [AuthController::class, 'updateProfile'])->name('auth.updateProfile');
+    Route::post('/change-password', [AuthController::class, 'changePassword'])->name('auth.changePassword');
+    Route::get('/users', [AuthController::class, 'getUsers'])->name('auth.getUsers');
+    Route::post('/reset-password/{id}', [AuthController::class, 'resetUserPassword'])->name('auth.resetUserPassword');
 });
 
 // Stock Management
