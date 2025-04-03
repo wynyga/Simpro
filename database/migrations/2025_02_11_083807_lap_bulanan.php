@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->integer('tahun'); // Tahun laporan
             $table->string('status')->default('pending');
             $table->decimal('jumlah', 15, 2); // Total transaksi
-            $table->string('code_account')->unique();
+            $table->string('code_account')->index();
             $table->timestamps();
         });
     }

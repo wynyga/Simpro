@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CostTee;
 use App\Models\CostElement;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CostTeeController extends Controller
 {
@@ -12,21 +13,21 @@ class CostTeeController extends Controller
     {
         $this->middleware('auth');
     }
-
-    // Menampilkan semua cost tee berdasarkan perumahan pengguna
+    
     public function index()
     {
         $user = auth()->user();
-        $costTees = CostTee::whereHas('costElement', function ($query) use ($user) {
-            $query->where('perumahan_id', $user->perumahan_id);
-        })->with('costElement')->get();
-
+        $costTees = CostTee::where('perumahan_id', $user->perumahan_id)
+            ->with('costElement')
+            ->get();
+    
         if ($costTees->isEmpty()) {
             return response()->json(['message' => 'Tidak ada Cost Tee ditemukan'], 404);
         }
-
+    
         return response()->json($costTees);
     }
+    
 
     // Menampilkan detail cost tee tertentu
     public function show($id)
@@ -46,18 +47,20 @@ class CostTeeController extends Controller
         return response()->json($costTee);
     }
 
-    // Menyimpan cost tee baru
     public function store(Request $request)
     {
         $user = auth()->user();
 
         $validated = $request->validate([
-            'cost_tee_code' => 'required|string|unique:cost_tees,cost_tee_code',
+            'cost_tee_code' => [
+                'required',
+                'string',
+                Rule::unique('cost_tees')->where(fn($q) => $q->where('perumahan_id', $user->perumahan_id))
+            ],
             'cost_element_code' => 'required|string|exists:cost_elements,cost_element_code',
             'description' => 'required|string'
         ]);
 
-        // Cek apakah cost_element_code milik perumahan pengguna
         $costElement = CostElement::where('cost_element_code', $validated['cost_element_code'])
             ->where('perumahan_id', $user->perumahan_id)
             ->first();
@@ -76,14 +79,11 @@ class CostTeeController extends Controller
         ], 201);
     }
 
-    // Memperbarui cost tee
     public function update(Request $request, $id)
     {
         $user = auth()->user();
         $costTee = CostTee::where('id', $id)
-            ->whereHas('costElement', function ($query) use ($user) {
-                $query->where('perumahan_id', $user->perumahan_id);
-            })
+            ->where('perumahan_id', $user->perumahan_id)
             ->first();
 
         if (!$costTee) {
@@ -91,12 +91,15 @@ class CostTeeController extends Controller
         }
 
         $validated = $request->validate([
-            'cost_tee_code' => 'required|string|unique:cost_tees,cost_tee_code,' . $id,
+            'cost_tee_code' => [
+                'required',
+                'string',
+                Rule::unique('cost_tees')->where(fn($q) => $q->where('perumahan_id', $user->perumahan_id))->ignore($id),
+            ],
             'cost_element_code' => 'required|string|exists:cost_elements,cost_element_code',
             'description' => 'required|string'
         ]);
 
-        // Cek apakah cost_element_code milik perumahan pengguna
         $costElement = CostElement::where('cost_element_code', $validated['cost_element_code'])
             ->where('perumahan_id', $user->perumahan_id)
             ->first();
@@ -112,7 +115,6 @@ class CostTeeController extends Controller
             'data' => $costTee
         ], 200);
     }
-
     // Menghapus cost tee
     public function destroy($id)
     {

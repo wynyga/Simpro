@@ -68,8 +68,12 @@ Route::prefix('/transaksi')->group(function () {
 // Perumahan Routes
 Route::prefix('perumahan')->group(function () {
     Route::get('/', [PerumahanController::class, 'index']);
-    Route::post('/', [PerumahanController::class, 'store']);
+    Route::get('/{id}', [PerumahanController::class, 'show']);
+    Route::post('/store', [PerumahanController::class, 'store']);
     Route::post('/select', [PerumahanController::class, 'selectPerumahan']);
+    Route::put('/update/{id}', [PerumahanController::class, 'update']);
+    Route::delete('/delete/{id}', [PerumahanController::class, 'destroy']);
+    Route::post('/change', [PerumahanController::class, 'changePerumahan']);
 });
 
 // Tipe Rumah Routes

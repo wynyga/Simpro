@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CostStructure;
 use App\Models\CostTee;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CostStructureController extends Controller
 {
@@ -17,16 +18,17 @@ class CostStructureController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $costStructures = CostStructure::whereHas('costTee', function ($query) use ($user) {
-            $query->where('perumahan_id', $user->perumahan_id);
-        })->with('costTee')->get();
-
+        $costStructures = CostStructure::where('perumahan_id', $user->perumahan_id)
+            ->with('costTee')
+            ->get();
+    
         if ($costStructures->isEmpty()) {
             return response()->json(['message' => 'Tidak ada Cost Structure ditemukan'], 404);
         }
-
+    
         return response()->json($costStructures);
     }
+    
 
     // Menampilkan detail cost structure tertentu
     public function show($id)
@@ -45,8 +47,6 @@ class CostStructureController extends Controller
 
         return response()->json($costStructure);
     }
-
-    // Menyimpan cost structure baru
     public function store(Request $request)
     {
         $user = auth()->user();
@@ -57,7 +57,6 @@ class CostStructureController extends Controller
             'description' => 'required|string'
         ]);
 
-        // Cek apakah cost_tee_code milik perumahan pengguna
         $costTee = CostTee::where('cost_tee_code', $validated['cost_tee_code'])
             ->where('perumahan_id', $user->perumahan_id)
             ->first();
@@ -76,14 +75,11 @@ class CostStructureController extends Controller
         ], 201);
     }
 
-    // Memperbarui cost structure
     public function update(Request $request, $id)
     {
         $user = auth()->user();
         $costStructure = CostStructure::where('id', $id)
-            ->whereHas('costTee', function ($query) use ($user) {
-                $query->where('perumahan_id', $user->perumahan_id);
-            })
+            ->where('perumahan_id', $user->perumahan_id)
             ->first();
 
         if (!$costStructure) {
@@ -96,7 +92,6 @@ class CostStructureController extends Controller
             'description' => 'required|string'
         ]);
 
-        // Cek apakah cost_tee_code milik perumahan pengguna
         $costTee = CostTee::where('cost_tee_code', $validated['cost_tee_code'])
             ->where('perumahan_id', $user->perumahan_id)
             ->first();
@@ -112,7 +107,6 @@ class CostStructureController extends Controller
             'data' => $costStructure
         ], 200);
     }
-
     // Menghapus cost structure
     public function destroy($id)
     {

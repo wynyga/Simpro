@@ -101,10 +101,10 @@ return new class extends Migration
             $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
         }); 
         
-        //Tabel cost centres
-        Schema::table('cost_centres', function (Blueprint $table) {
-            $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
-        });   
+        // //Tabel cost centres
+        // Schema::table('cost_centres', function (Blueprint $table) {
+        //     $table->foreignId('perumahan_id')->after('id')->constrained('perumahan')->onDelete('cascade');
+        // });   
 
         //Tabel cost elements
         Schema::table('cost_elements', function (Blueprint $table) {

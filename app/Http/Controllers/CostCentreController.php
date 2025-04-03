@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CostCentre;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CostCentreController extends Controller
 {
@@ -12,7 +13,6 @@ class CostCentreController extends Controller
         $this->middleware('auth');
     }
 
-    // Menampilkan semua cost centre berdasarkan perumahan pengguna
     public function index()
     {
         $user = auth()->user();
@@ -25,11 +25,12 @@ class CostCentreController extends Controller
         return response()->json($costCentres);
     }
 
-    // Menampilkan detail cost centre tertentu
     public function show($id)
     {
         $user = auth()->user();
-        $costCentre = CostCentre::where('id', $id)->where('perumahan_id', $user->perumahan_id)->first();
+        $costCentre = CostCentre::where('id', $id)
+            ->where('perumahan_id', $user->perumahan_id)
+            ->first();
 
         if (!$costCentre) {
             return response()->json(['error' => 'Cost Centre tidak ditemukan atau tidak ada akses'], 404);
@@ -38,13 +39,16 @@ class CostCentreController extends Controller
         return response()->json($costCentre);
     }
 
-    // Menyimpan cost centre baru
     public function store(Request $request)
     {
         $user = auth()->user();
 
         $validated = $request->validate([
-            'cost_centre_code' => 'required|string|unique:cost_centres,cost_centre_code',
+            'cost_centre_code' => [
+                'required',
+                'string',
+                Rule::unique('cost_centres')->where(fn($q) => $q->where('perumahan_id', $user->perumahan_id))
+            ],
             'description' => 'required|string'
         ]);
 
@@ -58,18 +62,23 @@ class CostCentreController extends Controller
         ], 201);
     }
 
-    // Memperbarui cost centre
     public function update(Request $request, $id)
     {
         $user = auth()->user();
-        $costCentre = CostCentre::where('id', $id)->where('perumahan_id', $user->perumahan_id)->first();
+        $costCentre = CostCentre::where('id', $id)
+            ->where('perumahan_id', $user->perumahan_id)
+            ->first();
 
         if (!$costCentre) {
             return response()->json(['error' => 'Unauthorized: Anda tidak memiliki akses untuk mengupdate data ini.'], 403);
         }
 
         $validated = $request->validate([
-            'cost_centre_code' => 'required|string|unique:cost_centres,cost_centre_code,' . $id,
+            'cost_centre_code' => [
+                'required',
+                'string',
+                Rule::unique('cost_centres')->where(fn($q) => $q->where('perumahan_id', $user->perumahan_id))->ignore($id),
+            ],
             'description' => 'required|string'
         ]);
 
@@ -81,11 +90,12 @@ class CostCentreController extends Controller
         ], 200);
     }
 
-    // Menghapus cost centre
     public function destroy($id)
     {
         $user = auth()->user();
-        $costCentre = CostCentre::where('id', $id)->where('perumahan_id', $user->perumahan_id)->first();
+        $costCentre = CostCentre::where('id', $id)
+            ->where('perumahan_id', $user->perumahan_id)
+            ->first();
 
         if (!$costCentre) {
             return response()->json(['error' => 'Unauthorized: Anda tidak memiliki akses untuk menghapus data ini.'], 403);

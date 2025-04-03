@@ -21,17 +21,11 @@ class PerumahanController extends Controller
         //return view('perumahan.index', compact('perumahans'));  // Mengirim data ke view
     }
     
-    // public function create()
-    // {
-    //     return view('perumahan.create');
-    // }
-
     public function store(Request $request)
     {
         $data = $request->validate([
             'nama_perumahan' => 'required|string|max:255',
             'lokasi' => 'required|string|max:255',
-            'tanggal_harga' => 'required|date',
         ]);
 
         $perumahan = Perumahan::create($data);
@@ -83,6 +77,55 @@ class PerumahanController extends Controller
         } else {
             return response()->json(['error' => 'Perumahan tidak ditemukan'], 404);
         }
+    }
+    // Menampilkan detail perumahan berdasarkan ID
+    public function show($id)
+    {
+        $perumahan = Perumahan::find($id);
+        if (!$perumahan) {
+            return response()->json(['error' => 'Perumahan tidak ditemukan'], 404);
+        }
+
+        return response()->json($perumahan);
+    }
+
+    // Mengupdate data perumahan
+    public function update(Request $request, $id)
+    {
+        $perumahan = Perumahan::find($id);
+
+        if (!$perumahan) {
+            return response()->json(['error' => 'Perumahan tidak ditemukan'], 404);
+        }
+
+        $data = $request->validate([
+            'nama_perumahan' => 'required|string|max:255',
+            'lokasi' => 'required|string|max:255',
+            'tanggal_harga' => 'required|date',
+        ]);
+
+        $perumahan->update($data);
+
+        return response()->json([
+            'message' => 'Data perumahan berhasil diperbarui',
+            'data' => $perumahan
+        ]);
+    }
+
+    // Menghapus data perumahan
+    public function destroy($id)
+    {
+        $perumahan = Perumahan::find($id);
+
+        if (!$perumahan) {
+            return response()->json(['error' => 'Perumahan tidak ditemukan'], 404);
+        }
+
+        $perumahan->delete();
+
+        return response()->json([
+            'message' => 'Perumahan berhasil dihapus'
+        ], 204);
     }
 
 }

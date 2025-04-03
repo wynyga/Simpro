@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('cost_tees', function (Blueprint $table) {
             $table->id();
-            $table->string('cost_tee_code')->unique(); // KO0100501
-            $table->string('cost_element_code'); // KO01005
+            $table->string('cost_tee_code')->index(); // Tambahkan ini juga kalau nanti akan dijadikan referensi
+            $table->string('cost_element_code')->index();            
             $table->string('description'); // Biaya Alat Peraga Marketing
             $table->timestamps();
 

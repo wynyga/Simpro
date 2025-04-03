@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('cost_elements', function (Blueprint $table) {
             $table->id();
-            $table->string('cost_element_code')->unique(); // KO01005
-            $table->string('cost_centre_code'); // KO010
+            $table->string('cost_element_code')->index();
+            $table->string('cost_centre_code')->index(); 
             $table->string('description'); // Biaya Marketing
             $table->timestamps();
 

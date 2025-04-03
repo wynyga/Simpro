@@ -192,34 +192,26 @@ class LapBulananController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-    
-        // Validasi input dari request
+
         $validated = $request->validate([
             'cost_structure_id' => 'required|exists:cost_structures,id',
             'bulan' => 'required|integer|min:1|max:12',
             'tahun' => 'required|integer',
             'jumlah' => 'required|numeric'
         ]);
-    
-        // Cari cost_structure berdasarkan ID yang dikirim user
-        $costStructure = CostStructure::where('id', $validated['cost_structure_id'])->first();
-    
-        // Jika cost_structure_id tidak ditemukan, return error 404
+
+        $costStructure = CostStructure::where('id', $validated['cost_structure_id'])
+            ->where('perumahan_id', $user->perumahan_id)
+            ->first();
+
         if (!$costStructure) {
-            return response()->json(['error' => 'Cost Structure dengan ID tersebut tidak ditemukan.'], 404);
-        }
-    
-        // Pastikan cost_structure milik perumahan pengguna
-        if ($costStructure->perumahan_id !== $user->perumahan_id) {
             return response()->json(['error' => 'Unauthorized: Cost Structure bukan milik perumahan Anda.'], 403);
         }
-    
-        // Tambahkan perumahan_id sebelum insert ke database
+
         $validated['perumahan_id'] = $user->perumahan_id;
-    
-        // Simpan laporan bulanan baru
+
         $laporan = LapBulanan::create($validated);
-    
+
         return response()->json([
             'message' => 'Laporan bulanan berhasil disimpan',
             'data' => $laporan
@@ -230,9 +222,7 @@ class LapBulananController extends Controller
     {
         $user = auth()->user();
         $laporan = LapBulanan::where('id', $id)
-            ->whereHas('costStructure', function ($query) use ($user) {
-                $query->where('perumahan_id', $user->perumahan_id);
-            })
+            ->where('perumahan_id', $user->perumahan_id)
             ->first();
 
         if (!$laporan) {
@@ -246,15 +236,11 @@ class LapBulananController extends Controller
             'jumlah' => 'required|numeric'
         ]);
 
-        // Cari cost_structure berdasarkan ID yang dikirim user
-        $costStructure = CostStructure::where('id', $validated['cost_structure_id'])->first();
+        $costStructure = CostStructure::where('id', $validated['cost_structure_id'])
+            ->where('perumahan_id', $user->perumahan_id)
+            ->first();
 
         if (!$costStructure) {
-            return response()->json(['error' => 'Cost Structure dengan ID tersebut tidak ditemukan.'], 404);
-        }
-
-        // Pastikan cost_structure milik perumahan pengguna
-        if ($costStructure->perumahan_id !== $user->perumahan_id) {
             return response()->json(['error' => 'Unauthorized: Cost Structure bukan milik perumahan Anda.'], 403);
         }
 
@@ -270,9 +256,7 @@ class LapBulananController extends Controller
     {
         $user = auth()->user();
         $laporan = LapBulanan::where('id', $id)
-            ->whereHas('costStructure', function ($query) use ($user) {
-                $query->where('perumahan_id', $user->perumahan_id);
-            })
+            ->where('perumahan_id', $user->perumahan_id)
             ->first();
 
         if (!$laporan) {

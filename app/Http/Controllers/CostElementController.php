@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CostElement;
 use App\Models\CostCentre;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CostElementController extends Controller
 {
@@ -17,16 +18,17 @@ class CostElementController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $costElements = CostElement::whereHas('costCentre', function ($query) use ($user) {
-            $query->where('perumahan_id', $user->perumahan_id);
-        })->with('costCentre')->get();
-
+        $costElements = CostElement::where('perumahan_id', $user->perumahan_id)
+            ->with('costCentre')
+            ->get();
+    
         if ($costElements->isEmpty()) {
             return response()->json(['message' => 'Tidak ada Cost Element ditemukan'], 404);
         }
-
+    
         return response()->json($costElements);
     }
+    
 
     // Menampilkan detail cost element tertentu
     public function show($id)
@@ -46,18 +48,20 @@ class CostElementController extends Controller
         return response()->json($costElement);
     }
 
-    // Menyimpan cost element baru
     public function store(Request $request)
     {
         $user = auth()->user();
 
         $validated = $request->validate([
-            'cost_element_code' => 'required|string|unique:cost_elements,cost_element_code',
+            'cost_element_code' => [
+                'required',
+                'string',
+                Rule::unique('cost_elements')->where(fn($q) => $q->where('perumahan_id', $user->perumahan_id))
+            ],
             'cost_centre_code' => 'required|string|exists:cost_centres,cost_centre_code',
             'description' => 'required|string'
         ]);
 
-        // Cek apakah cost_centre_code milik perumahan pengguna
         $costCentre = CostCentre::where('cost_centre_code', $validated['cost_centre_code'])
             ->where('perumahan_id', $user->perumahan_id)
             ->first();
@@ -76,14 +80,11 @@ class CostElementController extends Controller
         ], 201);
     }
 
-    // Memperbarui cost element
     public function update(Request $request, $id)
     {
         $user = auth()->user();
         $costElement = CostElement::where('id', $id)
-            ->whereHas('costCentre', function ($query) use ($user) {
-                $query->where('perumahan_id', $user->perumahan_id);
-            })
+            ->where('perumahan_id', $user->perumahan_id)
             ->first();
 
         if (!$costElement) {
@@ -91,12 +92,15 @@ class CostElementController extends Controller
         }
 
         $validated = $request->validate([
-            'cost_element_code' => 'required|string|unique:cost_elements,cost_element_code,' . $id,
+            'cost_element_code' => [
+                'required',
+                'string',
+                Rule::unique('cost_elements')->where(fn($q) => $q->where('perumahan_id', $user->perumahan_id))->ignore($id),
+            ],
             'cost_centre_code' => 'required|string|exists:cost_centres,cost_centre_code',
             'description' => 'required|string'
         ]);
 
-        // Cek apakah cost_centre_code milik perumahan pengguna
         $costCentre = CostCentre::where('cost_centre_code', $validated['cost_centre_code'])
             ->where('perumahan_id', $user->perumahan_id)
             ->first();
