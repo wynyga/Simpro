@@ -142,6 +142,7 @@ Route::prefix('cost_element')->middleware('auth')->group(function () {
 // Routes untuk Cost Tee
 Route::prefix('cost_tee')->middleware('auth')->group(function () {
     Route::get('/', [CostTeeController::class, 'index'])->name('cost_tee.index');
+    Route::get('/{id}', [CostStructureController::class, 'show'])->name('cost_structure.index');
     Route::post('/create', [CostTeeController::class, 'store'])->name('cost_tee.store');
     Route::put('/update/{id}', [CostTeeController::class, 'update'])->name('cost_tee.update');
     Route::delete('/delete/{id}', [CostTeeController::class, 'destroy'])->name('cost_tee.delete');
@@ -150,6 +151,7 @@ Route::prefix('cost_tee')->middleware('auth')->group(function () {
 // Routes untuk Cost Structure
 Route::prefix('cost_structure')->middleware('auth')->group(function () {
     Route::get('/', [CostStructureController::class, 'index'])->name('cost_structure.index');
+    Route::get('/{id}', [CostStructureController::class, 'show'])->name('cost_structure.index');
     Route::post('/create', [CostStructureController::class, 'store'])->name('cost_structure.store');
     Route::put('/update/{id}', [CostStructureController::class, 'update'])->name('cost_structure.update');
     Route::delete('/delete/{id}', [CostStructureController::class, 'destroy'])->name('cost_structure.delete');
