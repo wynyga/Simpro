@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
             $table->string('cost_centre_code')->index(); // tambahkan index di sini
             $table->string('description');
+            $table->string('cost_code');
             $table->timestamps();
         });
         

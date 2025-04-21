@@ -228,6 +228,27 @@ public function resetUserPassword(Request $request, $id)
     return $this->sendResponse([], 'Password pengguna berhasil direset.');
 }
 
+public function deleteUser($id)
+{
+    $authUser = auth()->user();
 
+    // Cek apakah user yang login adalah direktur
+    if ($authUser->role !== 'Direktur') {
+        return $this->sendError('Hanya direktur yang dapat menghapus pengguna.', [], 403);
+    }
 
+    $user = User::find($id);
+
+    if (!$user) {
+        return $this->sendError('User tidak ditemukan.', [], 404);
+    }
+
+    if ($user->id === $authUser->id) {
+        return $this->sendError('Tidak dapat menghapus akun sendiri.', [], 403);
+    }
+
+    $user->delete();
+
+    return $this->sendResponse([], 'User berhasil dihapus.');
+}
 }

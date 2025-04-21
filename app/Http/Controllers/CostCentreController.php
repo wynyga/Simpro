@@ -49,12 +49,14 @@ class CostCentreController extends Controller
                 'string',
                 Rule::unique('cost_centres')->where(fn($q) => $q->where('perumahan_id', $user->perumahan_id))
             ],
-            'description' => 'required|string'
+            'description' => 'required|string',
+            'cost_code' => 'required|string|in:KASIN,KASOUT',
         ]);
-
+        
         $validated['perumahan_id'] = $user->perumahan_id;
-
+        
         $costCentre = CostCentre::create($validated);
+        
 
         return response()->json([
             'message' => 'Cost Centre berhasil ditambahkan',
@@ -79,10 +81,12 @@ class CostCentreController extends Controller
                 'string',
                 Rule::unique('cost_centres')->where(fn($q) => $q->where('perumahan_id', $user->perumahan_id))->ignore($id),
             ],
-            'description' => 'required|string'
+            'description' => 'required|string',
+            'cost_code' => 'required|string|in:KASIN,KASOUT',
         ]);
-
+        
         $costCentre->update($validated);
+        
 
         return response()->json([
             'message' => 'Cost Centre berhasil diupdate',

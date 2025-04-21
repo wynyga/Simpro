@@ -32,6 +32,7 @@ Route::prefix('/auth')->group(function () {
     Route::post('/change-password', [AuthController::class, 'changePassword'])->name('auth.changePassword');
     Route::get('/users', [AuthController::class, 'getUsers'])->name('auth.getUsers');
     Route::post('/reset-password/{id}', [AuthController::class, 'resetUserPassword'])->name('auth.resetUserPassword');
+    Route::delete('/users/{id}', [AuthController::class, 'deleteUser'])->name('auth.deleteUser')->middleware('auth:api');
 });
 
 // Stock Management

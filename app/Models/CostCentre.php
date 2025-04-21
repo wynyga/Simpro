@@ -13,5 +13,6 @@ class CostCentre extends Model
         'cost_centre_code',
         'description',
         'perumahan_id',
+        'cost_code',
     ];
 }
