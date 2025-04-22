@@ -10,7 +10,7 @@ class LapBulanan extends Model
     protected $table = 'lap_bulanan';
 
     protected $fillable = [
-        'cost_structure_id',
+        'cost_tee_id',
         'bulan',
         'tahun',
         'jumlah',
@@ -19,24 +19,47 @@ class LapBulanan extends Model
         'code_account'
     ];
 
-    public function costStructure()
-    {
-        return $this->belongsTo(CostStructure::class, 'cost_structure_id');
-    }
-
     protected $casts = [
         'jumlah' => 'float'
     ];
 
-    // Generate Code Account Sebelum Menyimpan
+    /**
+     * Relasi ke CostTee
+     */
+    public function costTee()
+    {
+        return $this->belongsTo(CostTee::class, 'cost_tee_id');
+    }
+
+    /**
+     * Relasi shortcut ke CostCentre via CostTee -> CostElement -> CostCentre
+     */
+    public function costCentre()
+    {
+        return $this->hasOneThrough(
+            CostCentre::class,
+            CostElement::class,
+            'id', // foreign key di cost_elements
+            'id', // foreign key di cost_centres
+            'costTee.cost_element_id', // foreign key di lap_bulanan
+            'cost_centre_id' // foreign key di cost_elements
+        );
+    }
+
+    /**
+     * Generate kode akun otomatis sebelum disimpan
+     */
     protected static function boot()
     {
         parent::boot();
+
         static::creating(function ($laporan) {
             $kodeBulan = str_pad($laporan->bulan, 2, '0', STR_PAD_LEFT);
             $kodeTahun = substr($laporan->tahun, -2);
-            $laporan->code_account = $laporan->costStructure->cost_tee_code . 'B' . $kodeBulan . $kodeTahun;
+
+            if ($laporan->costTee) {
+                $laporan->code_account = $laporan->costTee->cost_tee_code . 'B' . $kodeBulan . $kodeTahun;
+            }
         });
     }
 }
-

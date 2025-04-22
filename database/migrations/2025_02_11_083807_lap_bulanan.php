@@ -9,12 +9,20 @@ return new class extends Migration {
     {
         Schema::create('lap_bulanan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cost_structure_id')->constrained('cost_structures')->onDelete('cascade');
+
+            // Relasi ke cost tee
+            $table->unsignedBigInteger('cost_tee_id');
+            $table->foreign('cost_tee_id')->references('id')->on('cost_tees')->onDelete('cascade');
+
+            // Relasi ke perumahan (penting untuk filtering user)
+            $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
+
             $table->integer('bulan'); // 1-12
             $table->integer('tahun'); // Tahun laporan
             $table->string('status')->default('pending');
             $table->decimal('jumlah', 15, 2); // Total transaksi
-            $table->string('code_account')->index();
+            $table->string('code_account')->index(); // Bisa jadi kode unik kas atau nomor referensi
+
             $table->timestamps();
         });
     }
@@ -24,5 +32,3 @@ return new class extends Migration {
         Schema::dropIfExists('lap_bulanan');
     }
 };
-
-

@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::create('cost_elements', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
             $table->string('cost_element_code')->index();
             $table->string('cost_centre_code')->index(); 
             $table->string('description'); // Biaya Marketing
