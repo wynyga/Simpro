@@ -32,4 +32,10 @@ class TransaksiKas extends Model
     {
         return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
+
+        public function kwitansi()
+    {
+        return $this->hasOne(Kwitansi::class, 'transaksi_kas_id');
+    }
+
 }

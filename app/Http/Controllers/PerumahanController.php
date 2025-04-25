@@ -26,6 +26,7 @@ class PerumahanController extends Controller
         $data = $request->validate([
             'nama_perumahan' => 'required|string|max:255',
             'lokasi' => 'required|string|max:255',
+            'inisial' => 'required|string|max:255',
         ]);
 
         $perumahan = Perumahan::create($data);
@@ -101,7 +102,7 @@ class PerumahanController extends Controller
         $data = $request->validate([
             'nama_perumahan' => 'required|string|max:255',
             'lokasi' => 'required|string|max:255',
-            'tanggal_harga' => 'required|date',
+            'inisial' => 'required|string|max:255',
         ]);
 
         $perumahan->update($data);

@@ -18,7 +18,8 @@ use App\Http\Controllers\{
     CostStructureController,
     CostCentreController,
     CostElementController,
-    CostTeeController
+    CostTeeController,
+    KwitansiController
 };
 
 // Authentication Routes
@@ -177,6 +178,12 @@ Route::prefix('lap_bulanan')->middleware('auth')->group(function () {
     Route::prefix('gudang')->middleware('auth')->group(function () {
         Route::get('/summary/{bulan}/{tahun}', [GudangOutController::class, 'getGudangOutSummary'])->name('gudang.summary');
     });
+});
+
+Route::prefix('kwitansi')->middleware('auth')->group(function () {
+    Route::post('store', [KwitansiController::class, 'store']); // simpan kwitansi
+    Route::get('/{id}', [KwitansiController::class, 'show']); // detail kwitansi
+    Route::get('/{id}/cetak', [KwitansiController::class, 'cetak']); // generate PDF
 });
 
 

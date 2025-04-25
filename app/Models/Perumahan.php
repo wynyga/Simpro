@@ -15,7 +15,8 @@ class Perumahan extends Model
 
     protected $fillable = [
         'nama_perumahan',
-        'lokasi'
+        'lokasi',
+        'inisial'
     ];
 
         // Mendefinisikan relasi dengan tabel stock
@@ -126,5 +127,10 @@ class Perumahan extends Model
     public function users()
     {
         return $this->hasMany(User::class, 'perumahan_id');
+    }
+
+    public function kwitansi()
+    {
+        return $this->hasMany(kwitansi::class, 'perumahan_id');
     }
 }

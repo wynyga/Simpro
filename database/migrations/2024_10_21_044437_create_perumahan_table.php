@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_perumahan');
             $table->string('lokasi');
+            $table->string('inisial');
             $table->timestamps();
         });
     }

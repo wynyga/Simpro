@@ -116,7 +116,7 @@ class TransaksiKasController extends Controller
             'keterangan_transaksi' => 'required|string',
             'kode' => 'required|in:101,102', // Hanya menerima kode 101 atau 102
             'jumlah' => 'required|numeric|min:0',
-            'metode_pembayaran' => 'required|in:Tunai,Transfer Bank', // Tambahkan validasi metode pembayaran
+            'metode_pembayaran' => 'required|in:Tunai,Transfer Bank,Cek,Giro,Draft', // Tambahkan validasi metode pembayaran
             'keterangan_objek_transaksi' => 'nullable|string'
         ]);
     
@@ -192,35 +192,33 @@ class TransaksiKasController extends Controller
     {
         $user = auth()->user();
         $perumahanId = $user->perumahan_id;
-
+    
         if (empty($perumahanId)) {
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
-
+    
         // Ambil parameter filter dari request
-        $status = $request->query('status'); // optional (approved, pending, rejected)
-        $startDate = $request->query('start_date'); // optional (format: YYYY-MM-DD)
-        $endDate = $request->query('end_date'); // optional (format: YYYY-MM-DD)
-        $perPage = $request->query('per_page', 10); // default: 10 item per page
-
-        // Query transaksi berdasarkan perumahan_id
-        $query = TransaksiKas::where('perumahan_id', $perumahanId);
-
-        // Filter berdasarkan status jika diberikan
+        $status = $request->query('status');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+        $perPage = $request->query('per_page', 10);
+    
+        // Query transaksi berdasarkan perumahan_id dan relasi kwitansi
+        $query = TransaksiKas::with('kwitansi')->where('perumahan_id', $perumahanId);
+    
         if ($status) {
             $query->where('status', $status);
         }
-
-        // Filter berdasarkan rentang tanggal jika diberikan
+    
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
-
-        // Ambil data dengan pagination
+    
         $transaksiKas = $query->orderBy('tanggal', 'desc')->paginate($perPage);
-
+    
         return response()->json($transaksiKas);
     }
+    
 
     public function getRingkasanKasPerTahun(Request $request, $tahun = null)
     {
