@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('pengirim')->nullable();  // Bisa kosong
             $table->string('no_nota');
             $table->date('tanggal_barang_masuk');
+            $table->string('sistem_pembayaran');
             $table->string('status')->default('pending');
             $table->integer('jumlah');
             $table->string('satuan');
