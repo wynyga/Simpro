@@ -43,17 +43,65 @@ class TransaksiController extends Controller
             'kelebihan_tanah' => 'nullable|numeric',
             'penambahan_luas_bangunan' => 'nullable|numeric',
             'perubahan_spek_bangunan' => 'nullable|numeric',
-            'total_harga_jual' => 'required|numeric',
             'kpr_disetujui' => 'required|in:Ya,Tidak',
             'minimum_dp' => 'required|numeric',
-            'kewajiban_hutang' => 'nullable|numeric',
+            'biaya_booking' => 'nullable|numeric',
         ]);
-
+    
+        $data['kelebihan_tanah'] = $data['kelebihan_tanah'] ?? 0;
+        $data['penambahan_luas_bangunan'] = $data['penambahan_luas_bangunan'] ?? 0;
+        $data['perubahan_spek_bangunan'] = $data['perubahan_spek_bangunan'] ?? 0;
+    
+        $data['total_harga_jual'] = 
+            $data['harga_jual_standar'] + 
+            $data['kelebihan_tanah'] + 
+            $data['penambahan_luas_bangunan'] + 
+            $data['perubahan_spek_bangunan'];
+    
+        $data['plafon_kpr'] = $data['total_harga_jual'] - $data['minimum_dp'];
         $data['perumahan_id'] = $user->perumahan_id;
-        
+    
         $transaksi = Transaksi::create($data);
+    
         return response()->json(['message' => 'Transaksi berhasil ditambahkan', 'data' => $transaksi], 201);
     }
+    
+    public function update(Request $request, $id)
+    {
+        $user = auth()->user();
+        $transaksi = Transaksi::where('id', $id)
+                              ->where('perumahan_id', $user->perumahan_id)
+                              ->firstOrFail();
+    
+        $validated = $request->validate([
+            'unit_id' => 'required|exists:unit,id',
+            'user_id' => 'required|exists:user_perumahan,id',
+            'harga_jual_standar' => 'required|numeric',
+            'kelebihan_tanah' => 'nullable|numeric',
+            'penambahan_luas_bangunan' => 'nullable|numeric',
+            'perubahan_spek_bangunan' => 'nullable|numeric',
+            'kpr_disetujui' => 'required|in:Ya,Tidak',
+            'minimum_dp' => 'required|numeric',
+            'biaya_booking' => 'nullable|numeric',
+        ]);
+    
+        $validated['kelebihan_tanah'] = $validated['kelebihan_tanah'] ?? 0;
+        $validated['penambahan_luas_bangunan'] = $validated['penambahan_luas_bangunan'] ?? 0;
+        $validated['perubahan_spek_bangunan'] = $validated['perubahan_spek_bangunan'] ?? 0;
+    
+        $validated['total_harga_jual'] = 
+            $validated['harga_jual_standar'] + 
+            $validated['kelebihan_tanah'] + 
+            $validated['penambahan_luas_bangunan'] + 
+            $validated['perubahan_spek_bangunan'];
+    
+        $validated['plafon_kpr'] = $validated['total_harga_jual'] - $validated['minimum_dp'];
+    
+        $transaksi->update($validated);
+    
+        return response()->json(['message' => 'Transaksi berhasil diperbarui', 'data' => $transaksi], 200);
+    }
+    
 
     public function edit($id)
     {
@@ -63,30 +111,6 @@ class TransaksiController extends Controller
                               ->where('perumahan_id', $user->perumahan_id)
                               ->firstOrFail();
         return response()->json($transaksi);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $user = auth()->user();
-        $transaksi = Transaksi::where('id', $id)
-                              ->where('perumahan_id', $user->perumahan_id)
-                              ->firstOrFail();
-
-        $validated = $request->validate([
-            'unit_id' => 'required|exists:unit,id',
-            'user_id' => 'required|exists:user_perumahan,id',
-            'harga_jual_standar' => 'required|numeric',
-            'kelebihan_tanah' => 'nullable|numeric',
-            'penambahan_luas_bangunan' => 'nullable|numeric',
-            'perubahan_spek_bangunan' => 'nullable|numeric',
-            'total_harga_jual' => 'required|numeric',
-            'kpr_disetujui' => 'required|in:Ya,Tidak',
-            'minimum_dp' => 'required|numeric',
-            'kewajiban_hutang' => 'nullable|numeric',
-        ]);
-
-        $transaksi->update($validated);
-        return response()->json(['message' => 'Transaksi berhasil diperbarui', 'data' => $transaksi], 200);
     }
 
     public function destroy($id)

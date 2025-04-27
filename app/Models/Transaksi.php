@@ -12,7 +12,7 @@ class Transaksi extends Model
     protected $table = 'transaksi';
 
     protected $fillable = [
-        'unit_id',  // Updated to reflect new structure
+        'unit_id',
         'user_id',
         'harga_jual_standar',
         'kelebihan_tanah',
@@ -21,23 +21,21 @@ class Transaksi extends Model
         'total_harga_jual',
         'kpr_disetujui',
         'minimum_dp',
-        'kewajiban_hutang',
-        'perumahan_id'  // Ensure this is maintained if still relevant
+        'plafon_kpr',
+        'biaya_booking',
+        'perumahan_id'
     ];
 
-    // Relationship to Unit
     public function unit()
     {
         return $this->belongsTo(Unit::class, 'unit_id');
     }
 
-    // Relationship to UserPerumahan
     public function userPerumahan()
     {
         return $this->belongsTo(UserPerumahan::class, 'user_id');
     }
 
-    // Optional: Relationship to Perumahan if you have a separate Perumahan entity
     public function perumahan()
     {
         return $this->belongsTo(Perumahan::class, 'perumahan_id');
@@ -50,6 +48,7 @@ class Transaksi extends Model
         'perubahan_spek_bangunan' => 'float',
         'total_harga_jual' => 'float',
         'minimum_dp' => 'float',
-        'kewajiban_hutang' => 'float',
+        'plafon_kpr' => 'float',
+        'biaya_booking' => 'float',
     ];
 }
