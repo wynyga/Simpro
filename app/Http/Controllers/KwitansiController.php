@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Kwitansi;
 use App\Models\TransaksiKas;
 use App\Models\Perumahan;
+use App\Models\CostTee;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -18,17 +20,14 @@ class KwitansiController extends Controller
     
         $transaksiKas = TransaksiKas::findOrFail($request->transaksi_kas_id);
     
-        // Validasi status
         if ($transaksiKas->status !== 'approved') {
             return response()->json(['message' => 'Transaksi kas belum disetujui.'], 422);
         }
     
-        // Cek apakah sudah pernah dibuat kwitansi untuk transaksi ini
         if (Kwitansi::where('transaksi_kas_id', $transaksiKas->id)->exists()) {
             return response()->json(['message' => 'Kwitansi untuk transaksi ini sudah ada.'], 409);
         }
     
-        // Ambil data perumahan (pastikan relasi atau find by id)
         $perumahan = Perumahan::findOrFail($transaksiKas->perumahan_id);
     
         $latestId = Kwitansi::max('id') + 1;
@@ -40,6 +39,19 @@ class KwitansiController extends Controller
             now()->year
         );
     
+        // 🔥 Cari nama keterangan berdasarkan sumber_transaksi
+        $untukPembayaran = null;
+    
+        if ($transaksiKas->sumber_transaksi === 'cost_code') {
+            $costTee = CostTee::find($transaksiKas->keterangan_transaksi_id);
+            $untukPembayaran = $costTee ? "{$costTee->code} - {$costTee->description}" : "Tidak Diketahui";
+        } elseif ($transaksiKas->sumber_transaksi === 'penjualan') {
+            $transaksi = Transaksi::with('unit', 'userPerumahan')->find($transaksiKas->keterangan_transaksi_id);
+            $untukPembayaran = $transaksi
+                ? "Unit {$transaksi->unit->nomor_unit} - {$transaksi->userPerumahan->nama_user}"
+                : "Tidak Diketahui";
+        }
+    
         $kwitansi = Kwitansi::create([
             'transaksi_kas_id' => $transaksiKas->id,
             'perumahan_id' => $perumahan->id,
@@ -47,7 +59,7 @@ class KwitansiController extends Controller
             'tanggal' => now(),
             'dari' => $transaksiKas->dibuat_oleh,
             'jumlah' => $transaksiKas->jumlah,
-            'untuk_pembayaran' => $transaksiKas->keterangan_objek_transaksi ?? $transaksiKas->keterangan_transaksi,
+            'untuk_pembayaran' => $untukPembayaran,
             'jenis_penerimaan' => $transaksiKas->metode_pembayaran,
             'dibuat_oleh' => auth()->user()->name,
             'disetor_oleh' => $transaksiKas->dibuat_oleh,

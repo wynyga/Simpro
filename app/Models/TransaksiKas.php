@@ -10,7 +10,6 @@ class TransaksiKas extends Model
 
     protected $fillable = [
         'tanggal',
-        'keterangan_transaksi',
         'kode',
         'jumlah',
         'status',
@@ -18,13 +17,16 @@ class TransaksiKas extends Model
         'metode_pembayaran',        
         'dibuat_oleh',              
         'keterangan_objek_transaksi',
-        'perumahan_id'
+        'perumahan_id',
+        'sumber_transaksi', 
+        'keterangan_transaksi_id' 
     ];
 
     // Pastikan nilai jumlah dan saldo selalu dalam bentuk float
     protected $casts = [
         'jumlah' => 'float',
         'saldo_setelah_transaksi' => 'float',
+        'keterangan_transaksi_id' => 'float',
     ];
 
     // Relasi balik ke Perumahan
