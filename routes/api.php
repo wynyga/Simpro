@@ -179,6 +179,8 @@ Route::prefix('lap_bulanan')->middleware('auth')->group(function () {
     Route::prefix('gudang')->middleware('auth')->group(function () {
         Route::get('/summary/{bulan}/{tahun}', [GudangOutController::class, 'getGudangOutSummary'])->name('gudang.summary');
     });
+    Route::get('/tahunan/{tahun}', [LapBulananController::class, 'getLaporanTahunan']);
+
 });
 
 Route::prefix('kwitansi')->middleware('auth')->group(function () {

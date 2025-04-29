@@ -208,4 +208,58 @@ class LapBulananController extends Controller
 
         return response()->json(['message' => 'Laporan bulanan berhasil dihapus'], 204);
     }
+
+    public function getLaporanTahunan($tahun)
+    {
+        $user = auth()->user();
+    
+        $laporans = LapBulanan::with('costTee.costElement.costCentre')
+            ->where('perumahan_id', $user->perumahan_id)
+            ->where('tahun', $tahun)
+            ->get();
+    
+        $rekap = [];
+    
+        foreach ($laporans as $laporan) {
+            $bulan = $laporan->bulan;
+            $kategori = optional($laporan->costTee)->description ?? 'Tidak Diketahui';
+            $jenis = optional($laporan->costTee->costElement->costCentre)->cost_code ?? '-';
+            $jumlah = $laporan->jumlah;
+    
+            $rekap[$bulan][] = [
+                'kategori' => $kategori,
+                'jenis' => $jenis,
+                'jumlah' => $jumlah,
+            ];
+        }
+    
+        $totalKasMasuk = $laporans->filter(function ($laporan) {
+            return optional($laporan->costTee->costElement->costCentre)->cost_code === 'KASIN';
+        })->sum('jumlah');
+    
+        $totalKasKeluar = $laporans->filter(function ($laporan) {
+            return optional($laporan->costTee->costElement->costCentre)->cost_code === 'KASOUT';
+        })->sum('jumlah');
+    
+        $sisaKas = $totalKasMasuk - $totalKasKeluar;
+    
+        return response()->json([
+            'tahun' => $tahun,
+            'total_kas_masuk' => [
+                'total_rp' => number_format($totalKasMasuk, 2, ',', '.'),
+                'raw' => (float) $totalKasMasuk,
+            ],
+            'total_kas_keluar' => [
+                'total_rp' => number_format($totalKasKeluar, 2, ',', '.'),
+                'raw' => (float) $totalKasKeluar,
+            ],
+            'sisa_kas' => [
+                'total_rp' => number_format($sisaKas, 2, ',', '.'),
+                'raw' => (float) $sisaKas,
+                'status' => $sisaKas < 0 ? 'DEFISIT' : 'SURPLUS',
+            ],
+            'rekap_detail' => $rekap,
+        ]);
+    }
+    
 }
