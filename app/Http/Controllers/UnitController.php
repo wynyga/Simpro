@@ -15,15 +15,25 @@ class UnitController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $units = Unit::whereHas('blok', function($query) use ($user) {
-            $query->where('perumahan_id', $user->perumahan_id);
-        })->with('blok', 'tipeRumah')->get();
-
+        $perPage = $request->input('per_page', 10);
+        $search = $request->input('search');
+    
+        $query = Unit::whereHas('blok', function ($q) use ($user) {
+            $q->where('perumahan_id', $user->perumahan_id);
+        })->with('blok', 'tipeRumah');
+    
+        if ($search) {
+            $query->where('nomor_unit', 'like', '%' . $search . '%');
+        }
+    
+        $units = $query->paginate($perPage);
+    
         return response()->json($units);
     }
+    
 
     public function store(Request $request)
     {
