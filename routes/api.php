@@ -19,6 +19,7 @@ use App\Http\Controllers\{
     CostCentreController,
     CostElementController,
     CostTeeController,
+    PenjualanStatusController,
     KwitansiController
 };
 
@@ -185,6 +186,8 @@ Route::prefix('kwitansi')->middleware('auth')->group(function () {
     Route::get('/{id}', [KwitansiController::class, 'show']); // detail kwitansi
     Route::get('/{id}/cetak', [KwitansiController::class, 'cetak']); // generate PDF
 });
+
+Route::get('/penjualan/status-bayar', [PenjualanStatusController::class, 'index']);
 
 
 

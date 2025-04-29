@@ -50,5 +50,6 @@ class Transaksi extends Model
         'minimum_dp' => 'float',
         'plafon_kpr' => 'float',
         'biaya_booking' => 'float',
+        
     ];
 }
