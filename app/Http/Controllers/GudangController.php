@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\GudangIn;
 use App\Models\GudangOut;
-use App\Helpers\StockHelper;
 
 class GudangController extends Controller
 {
