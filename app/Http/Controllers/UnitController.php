@@ -97,4 +97,16 @@ class UnitController extends Controller
         $unit->delete();
         return response()->json(['message' => 'Unit deleted successfully'], 204);
     }
+
+    public function all()
+    {
+        $user = auth()->user();
+
+        $units = \App\Models\Unit::whereHas('blok', function ($q) use ($user) {
+            $q->where('perumahan_id', $user->perumahan_id);
+        })->with('blok', 'tipeRumah')->get();
+
+        return response()->json($units);
+    }
+
 }

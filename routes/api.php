@@ -83,6 +83,7 @@ Route::prefix('perumahan')->group(function () {
 Route::prefix('penjualan')->group(function () {
     Route::prefix('/tipe_rumah')->group(function () {
         Route::get('/', [TipeRumahController::class, 'index']);
+        Route::get('/all', [TipeRumahController::class, 'all']);
         Route::get('/{id}', [TipeRumahController::class, 'show']);
         Route::get('/create', [TipeRumahController::class, 'create']);
         Route::post('/add', [TipeRumahController::class, 'store']);
@@ -93,6 +94,7 @@ Route::prefix('penjualan')->group(function () {
     // Blok Routes
     Route::prefix('/blok')->group(function () {
         Route::get('/', [BlokController::class, 'index'])->name('blok.index');
+        Route::get('/all', [BlokController::class, 'all']);
         Route::post('/store', [BlokController::class, 'store'])->name('blok.store');
         Route::get('/{id}', [BlokController::class, 'show'])->name('blok.show');
         Route::put('/{id}', [BlokController::class, 'update'])->name('blok.update');
@@ -102,6 +104,7 @@ Route::prefix('penjualan')->group(function () {
     // Unit Routes
     Route::prefix('/unit')->group(function () {
         Route::get('/', [UnitController::class, 'index'])->name('unit.index');
+        Route::get('/all', [UnitController::class, 'all']);
         Route::post('/store', [UnitController::class, 'store'])->name('unit.store');
         Route::get('/{id}', [UnitController::class, 'show'])->name('unit.show');
         Route::put('/{id}', [UnitController::class, 'update'])->name('unit.update'); 
@@ -121,6 +124,7 @@ Route::prefix('penjualan')->group(function () {
 // User and Blok Unit Management
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index'])->middleware('cors');
+    Route::get('/all', [UserController::class, 'all']);
     Route::post('/add', [UserController::class, 'store']);
     Route::put('/{id}',[UserController::class, 'update'])->middleware('cors');
     Route::delete('/{id}',[UserController::class, 'destroy'])->middleware('cors');

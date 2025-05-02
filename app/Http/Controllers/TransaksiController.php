@@ -14,14 +14,26 @@ class TransaksiController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $transaksi = Transaksi::with('unit.blok', 'unit.tipeRumah', 'userPerumahan')
-                              ->where('perumahan_id', $user->perumahan_id)
-                              ->get();
-        return response()->json($transaksi);
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 10);
+    
+        $query = Transaksi::with('unit.blok', 'unit.tipeRumah', 'userPerumahan')
+            ->where('perumahan_id', $user->perumahan_id);
+    
+        if ($search) {
+            $query->whereHas('userPerumahan', function ($q) use ($search) {
+                $q->where('nama_user', 'like', "%{$search}%");
+            })->orWhereHas('unit', function ($q) use ($search) {
+                $q->where('nomor_unit', 'like', "%{$search}%");
+            });
+        }
+    
+        return response()->json($query->paginate($perPage));
     }
+    
 
     public function create()
     {

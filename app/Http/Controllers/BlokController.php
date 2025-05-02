@@ -13,17 +13,23 @@ class BlokController extends Controller
     }
     
     // Menampilkan semua blok berdasarkan perumahan pengguna
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $bloks = Blok::where('perumahan_id', $user->perumahan_id)->get();
-        
-        if ($bloks->isEmpty()) {
-            return response()->json(['message' => 'Tidak ada blok ditemukan'], 404);
+        $perPage = $request->input('per_page', 10);
+        $search = $request->input('search');
+    
+        $query = Blok::where('perumahan_id', $user->perumahan_id);
+    
+        if ($search) {
+            $query->where('nama_blok', 'like', "%{$search}%");
         }
-
+    
+        $bloks = $query->paginate($perPage);
+    
         return response()->json($bloks);
     }
+    
 
     // Menampilkan detail blok tertentu
     public function show($id)
@@ -95,4 +101,14 @@ class BlokController extends Controller
             'message' => 'Blok berhasil dihapus'
         ], 204);
     }
+
+    public function all()
+    {
+        $user = auth()->user();
+
+        $bloks = \App\Models\Blok::where('perumahan_id', $user->perumahan_id)->get();
+
+        return response()->json($bloks);
+    }
+
 }

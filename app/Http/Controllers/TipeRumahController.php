@@ -13,19 +13,39 @@ class TipeRumahController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         if (!$user->perumahan_id) {
             return response()->json(['error' => 'Access Denied: No perumahan assigned to user.'], 403);
         }
     
-        $tipe_rumahs = TipeRumah::where('perumahan_id', $user->perumahan_id)
-                                ->with('perumahan')
-                                ->get();
-        return response()->json($tipe_rumahs);
+        $perPage = $request->input('per_page', 10);
+        $search = $request->input('search');
+    
+        $query = TipeRumah::where('perumahan_id', $user->perumahan_id);
+    
+        if ($search) {
+            $query->where('tipe_rumah', 'like', "%{$search}%");
+        }
+    
+        $tipeRumah = $query->paginate($perPage);
+    
+        return response()->json($tipeRumah);
     }
     
+    public function all()
+    {
+        $user = auth()->user();
+
+        if (!$user->perumahan_id) {
+            return response()->json(['error' => 'User tidak memiliki perumahan_id.'], 403);
+        }
+
+        $tipeRumah = \App\Models\TipeRumah::where('perumahan_id', $user->perumahan_id)->get();
+
+        return response()->json($tipeRumah);
+    }    
 
     public function create()
     {

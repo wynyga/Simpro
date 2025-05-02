@@ -15,19 +15,31 @@ class UserController extends Controller
     /**
      * Menampilkan daftar pengguna berdasarkan perumahan yang terautentikasi.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         $perumahanId = $user->perumahan_id;
-
+    
         if (empty($perumahanId)) {
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
-
-        $users = UserPerumahan::where('perumahan_id', $perumahanId)->get();
-
-        return response()->json(['users' => $users]);
+    
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 10);
+    
+        $query = UserPerumahan::where('perumahan_id', $perumahanId);
+    
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_user', 'like', "%{$search}%")
+                  ->orWhere('alamat_user', 'like', "%{$search}%")
+                  ->orWhere('no_telepon', 'like', "%{$search}%");
+            });
+        }
+    
+        return response()->json($query->paginate($perPage));
     }
+    
 
     /**
      * Menyimpan pengguna baru ke dalam sistem.
@@ -110,4 +122,19 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User berhasil dihapus.'], 200);
     }
+
+    public function all()
+    {
+        $user = auth()->user();
+        $perumahanId = $user->perumahan_id;
+
+        if (empty($perumahanId)) {
+            return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
+        }
+
+        $users = UserPerumahan::where('perumahan_id', $perumahanId)->get();
+
+        return response()->json($users);
+    }
+
 }
