@@ -17,17 +17,21 @@ class GudangController extends Controller
     {
         $user = auth()->user();
         $perumahanId = $user->perumahan_id;
-
+    
         if (empty($perumahanId)) {
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
-
-        $gudangIns = GudangIn::where('perumahan_id', $perumahanId)->get();
+    
+        $gudangIns = GudangIn::with('sttb') // tambahkan relasi
+            ->where('perumahan_id', $perumahanId)
+            ->get();
+    
         $gudangOuts = GudangOut::where('perumahan_id', $perumahanId)->get();
-
+    
         return response()->json([
             'gudang_in' => $gudangIns,
             'gudang_out' => $gudangOuts
         ]);
     }
+    
 }

@@ -21,6 +21,18 @@ class GudangIn extends Model
         'harga_satuan',
         'jumlah_harga',
         'keterangan',
+        'jenis_pembayaran',
         'perumahan_id'
     ];
+
+    public function sttb()
+    {
+        return $this->hasOne(Sttb::class, 'gudang_in_id');
+    }    
+    public function perumahan()
+    {
+        return $this->belongsTo(Perumahan::class);
+    }
+
+
 }

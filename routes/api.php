@@ -20,7 +20,8 @@ use App\Http\Controllers\{
     CostElementController,
     CostTeeController,
     PenjualanStatusController,
-    KwitansiController
+    KwitansiController,
+    STTBController,
 };
 
 // Authentication Routes
@@ -56,6 +57,7 @@ Route::prefix('/gudang')->group(function () {
     Route::post('/out/verify/{id}', [GudangOutController::class, 'verify'])->middleware('role:Manager'); 
     Route::post('/out/reject/{id}', [GudangOutController::class, 'reject'])->middleware('role:Manager'); 
     Route::get('/all', [GudangController::class, 'index']); 
+    Route::get('/in/{id}', [GudangInController::class, 'show']);
 });
 
 // Transaction Routes
@@ -191,6 +193,9 @@ Route::prefix('kwitansi')->middleware('auth')->group(function () {
     Route::post('store', [KwitansiController::class, 'store']); // simpan kwitansi
     Route::get('/{id}', [KwitansiController::class, 'show']); // detail kwitansi
     Route::get('/{id}/cetak', [KwitansiController::class, 'cetak']); // generate PDF
+    Route::post('/sttb/store', [STTBController::class, 'store']);
+    Route::get('/sttb/{id}', [STTBController::class, 'show']);
+    Route::get('/sttb/{id}/cetak', [STTBController::class, 'cetak']);
 });
 
 Route::get('/penjualan/status-bayar', [PenjualanStatusController::class, 'index']);

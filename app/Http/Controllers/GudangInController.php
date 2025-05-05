@@ -44,6 +44,7 @@ class GudangInController extends Controller
             'tanggal_barang_masuk' => 'required|date',
             'sistem_pembayaran' => 'required',
             'jumlah' => 'required|numeric|min:1',
+            'jenis_penerimaan' => 'required|in:Langsung,Tidak Langsung,Ambil Sendiri',
             'keterangan' => 'nullable'
         ]);
         
@@ -71,6 +72,7 @@ class GudangInController extends Controller
         $gudangIn->satuan = $stockModel->satuan;
         $gudangIn->harga_satuan = $stockModel->harga_satuan;
         $gudangIn->jumlah_harga = $jumlahHarga;
+        $gudangIn->jenis_penerimaan = $validated['jenis_penerimaan'];
         $gudangIn->keterangan = $validated['keterangan'] ?? null;
         $gudangIn->status = 'pending';
         $gudangIn->save();
@@ -124,4 +126,15 @@ class GudangInController extends Controller
             'data' => $gudangIn
         ]);
     }
+
+    public function show($id)
+    {
+        $user = auth()->user();
+        $gudangIn = GudangIn::where('id', $id)
+            ->where('perumahan_id', $user->perumahan_id)
+            ->firstOrFail();
+
+        return response()->json($gudangIn);
+    }
+
 }
