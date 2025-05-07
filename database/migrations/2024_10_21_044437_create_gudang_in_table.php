@@ -21,8 +21,6 @@ return new class extends Migration {
             $table->decimal('harga_satuan', 18, 2);
             $table->decimal('jumlah_harga', 18, 2);
             $table->text('keterangan')->nullable();
-            $table->enum('jenis_penerimaan', ['Langsung', 'Tidak Langsung', 'Ambil Sendiri'])->nullable();
-           // $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
             $table->timestamps();
         });
     }

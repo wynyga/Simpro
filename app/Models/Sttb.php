@@ -19,7 +19,6 @@ class Sttb extends Model
         'nama_barang',
         'jumlah',
         'satuan',
-        'jenis_penerimaan',
         'diterima_oleh',
         'diserahkan_oleh',
         'mengetahui',

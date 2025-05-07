@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kwitansi;
 use App\Models\TransaksiKas;
+use App\Models\GudangIn;
 use App\Models\Perumahan;
 use App\Models\CostTee;
 use App\Models\Transaksi;
@@ -39,7 +40,6 @@ class KwitansiController extends Controller
             now()->year
         );
     
-        // 🔥 Cari nama keterangan berdasarkan sumber_transaksi
         $untukPembayaran = null;
     
         if ($transaksiKas->sumber_transaksi === 'cost_code') {
@@ -60,15 +60,15 @@ class KwitansiController extends Controller
             'dari' => $transaksiKas->dibuat_oleh,
             'jumlah' => $transaksiKas->jumlah,
             'untuk_pembayaran' => $untukPembayaran,
-            'jenis_penerimaan' => $transaksiKas->metode_pembayaran,
+            'metode_pembayaran' => $transaksiKas->metode_pembayaran,
             'dibuat_oleh' => auth()->user()->name,
             'disetor_oleh' => $transaksiKas->dibuat_oleh,
             'mengetahui' => null,
+            'gudang_in_id' => null // hanya untuk transaksi kas, biarkan null
         ]);
     
         return response()->json($kwitansi);
     }
-    
 
     public function show($id)
     {
@@ -87,5 +87,17 @@ class KwitansiController extends Controller
     
         return $pdf->download("kwitansi-{$safeNoDoc}.pdf");
     }
+
+    public function cetakCO($id)
+    {
+        $kwitansi = Kwitansi::with(['gudangIn', 'perumahan'])
+            ->where('id', $id)
+            ->where('no_doc', 'like', '%/CO-%') // filter khusus kwitansi CO
+            ->firstOrFail();
     
+        $pdf = Pdf::loadView('kwitansi.template-co', compact('kwitansi'))->setPaper('A5', 'portrait');
+        $safeNoDoc = str_replace(['/', '\\'], '-', $kwitansi->no_doc);
+    
+        return $pdf->download("kwitansi-co-{$safeNoDoc}.pdf");
+    } 
 }

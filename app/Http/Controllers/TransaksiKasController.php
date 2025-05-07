@@ -43,7 +43,7 @@ class TransaksiKasController extends Controller
                 'kode' => $transaksi->kode,
                 'jumlah' => $transaksi->jumlah ?? 0,
                 'keterangan_objek_transaksi' => $transaksi->keterangan_objek_transaksi ?? "-",
-                'metode_pembayaran' => $transaksi->metode_pembayaran ?? "Tunai",
+                'metode_pembayaran' => $transaksi->metode_pembayaran ?? "Cash",
                 'saldo_setelah_transaksi' => $transaksi->saldo_setelah_transaksi ?? 0,
                 'dibuat_oleh' => $transaksi->dibuat_oleh ?? "Admin",
                 'status' => $transaksi->status,
@@ -109,7 +109,7 @@ class TransaksiKasController extends Controller
             'tanggal' => 'required|date',
             'kode' => 'required|in:101,102',
             'jumlah' => 'required|numeric|min:0',
-            'metode_pembayaran' => 'required|in:Tunai,Transfer Bank,Cek,Giro,Draft',
+            'metode_pembayaran' => 'required|in:Cash,Transfer Bank,Cek,Giro,Draft',
             'sumber_transaksi' => 'required|in:cost_code,penjualan',
             'keterangan_transaksi_id' => 'required|numeric', // sekarang ini yang wajib
         ]);
@@ -248,7 +248,7 @@ class TransaksiKasController extends Controller
                     'kode' => $transaksi->kode,
                     'jumlah' => number_format($transaksi->jumlah, 2, '.', ''),
                     'keterangan_objek_transaksi' => $transaksi->keterangan_objek_transaksi ?? "-",
-                    'metode_pembayaran' => $transaksi->metode_pembayaran ?? "Tunai",
+                    'metode_pembayaran' => $transaksi->metode_pembayaran ?? "Cash",
                     'saldo_setelah_transaksi' => number_format($transaksi->saldo_setelah_transaksi ?? 0, 2, '.', ''),
                     'dibuat_oleh' => $transaksi->dibuat_oleh ?? "Admin",
                     'status' => $transaksi->status,

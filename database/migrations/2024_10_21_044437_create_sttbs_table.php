@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->string('nama_barang');
             $table->string('jumlah');
             $table->string('satuan');
-            $table->enum('jenis_penerimaan', ['Langsung', 'Tidak Langsung', 'Ambil Sendiri']);
             $table->string('diterima_oleh');
             $table->string('diserahkan_oleh');
             $table->string('mengetahui')->nullable();

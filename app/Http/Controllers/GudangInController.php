@@ -36,30 +36,23 @@ class GudangInController extends Controller
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
     
-        // Validasi input
         $validated = $request->validate([
             'kode_barang' => 'required',
             'pengirim' => 'required',
             'no_nota' => 'required',
             'tanggal_barang_masuk' => 'required|date',
-            'sistem_pembayaran' => 'required',
+            'sistem_pembayaran' => 'required|in:Cash,Dua Mingguan,Bulanan',
             'jumlah' => 'required|numeric|min:1',
-            'jenis_penerimaan' => 'required|in:Langsung,Tidak Langsung,Ambil Sendiri',
             'keterangan' => 'nullable'
         ]);
-        
-        // ambil stockModel berdasarkan $validated['kode_barang']
+    
         $stockModel = StockHelper::getModelFromCode($validated['kode_barang'], $perumahanId);
         if (!$stockModel) {
-            return response()->json([
-                'message' => 'Barang tidak ditemukan di stok.',
-            ], 404);
+            return response()->json(['message' => 'Barang tidak ditemukan di stok.'], 404);
         }
-        
-        // hitung jumlah harga otomatis
+    
         $jumlahHarga = $validated['jumlah'] * $stockModel->harga_satuan;
-        
-        // simpan
+    
         $gudangIn = new GudangIn();
         $gudangIn->perumahan_id = $perumahanId;
         $gudangIn->kode_barang = $validated['kode_barang'];
@@ -72,17 +65,16 @@ class GudangInController extends Controller
         $gudangIn->satuan = $stockModel->satuan;
         $gudangIn->harga_satuan = $stockModel->harga_satuan;
         $gudangIn->jumlah_harga = $jumlahHarga;
-        $gudangIn->jenis_penerimaan = $validated['jenis_penerimaan'];
         $gudangIn->keterangan = $validated['keterangan'] ?? null;
         $gudangIn->status = 'pending';
         $gudangIn->save();
-        
-
+    
         return response()->json([
             'message' => 'Data Gudang In berhasil disimpan dengan status pending. Menunggu verifikasi.',
             'data' => $gudangIn
         ], 201);
-    }                                            
+    }
+    
 
     // Project Manager Verifikasi Gudang In
     public function verify( $id)

@@ -48,7 +48,7 @@
 
     <div class="header">
         <img src="{{ public_path('images/BumiAsih.png') }}" alt="Logo">
-        <h2>SURAT TANDA TERIMA BARANG (STTB)</h2>
+        <h2>BUKTI PENERIMAAM BARANG DARI SUPLAYER / VENDOR</h2>
         <p>No. Dokumen: {{ $sttb->no_doc }}</p>
         <p>Tanggal: {{ \Carbon\Carbon::parse($sttb->tanggal)->translatedFormat('d F Y') }}</p>
     </div>
@@ -64,9 +64,13 @@
                 <td>: {{ $sttb->jumlah }} {{ $sttb->satuan }}</td>
             </tr>
             <tr>
-                <td>Jenis Penerimaan</td>
-                <td>: {{ $sttb->jenis_penerimaan }}</td>
-            </tr>
+                <td>Sistem Pembayaran</td>
+                <td>: {{ $sttb->gudangIn->sistem_pembayaran ?? '-' }}</td>
+            </tr> 
+            <tr>
+                <td>Keterangan Barang</td>
+                <td>: {{ $sttb->gudangIn->keterangan ?? '-' }}</td>
+            </tr>           
         </table>
     </div>
 
@@ -76,11 +80,7 @@
         </p>
         <table>
             <tr>
-                <td width="30%">Nama Pengirim</td>
-                <td>: {{ $sttb->pengirim }}</td>
-            </tr>
-            <tr>
-                <td>Diserahkan Oleh</td>
+                <td width="30%">Sudah Terima Dari</td>
                 <td>: {{ $sttb->diserahkan_oleh }}</td>
             </tr>
             <tr>
@@ -92,9 +92,9 @@
 
     <table class="signature-table">
         <tr>
-            <td>Diserahkan Oleh,</td>
-            <td>Diterima Oleh,</td>
             <td>Mengetahui,</td>
+            <td>Dibuat Oleh,</td>
+            <td>Disetor Oleh,</td>
         </tr>
         <tr style="height: 60px;">
             <td style="padding-top: 40px;">( ............................ )</td>
@@ -102,9 +102,9 @@
             <td style="padding-top: 40px;">( ............................ )</td>
         </tr>
         <tr>
-            <td class="small">Pengirim</td>
-            <td class="small">Penerima</td>
-            <td class="small">Direktur / Manager</td>
+            <td class="small">Penerima Barang</td>
+            <td class="small">Pemesan/Account</td>
+            <td class="small">Customer/Vendor</td>
         </tr>
     </table>
 

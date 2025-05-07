@@ -22,9 +22,31 @@ class GudangController extends Controller
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
     
-        $gudangIns = GudangIn::with('sttb') // tambahkan relasi
-            ->where('perumahan_id', $perumahanId)
-            ->get();
+        $gudangIns = GudangIn::with('sttb', 'kwitansiCo')
+        ->where('perumahan_id', $perumahanId)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'nama_barang' => $item->nama_barang,
+                'pengirim' => $item->pengirim,
+                'no_nota' => $item->no_nota,
+                'tanggal_barang_masuk' => $item->tanggal_barang_masuk,
+                'jumlah' => $item->jumlah,
+                'status' => $item->status,
+                'sttb' => $item->sttb ? [
+                    'id' => $item->sttb->id,
+                    'no_doc' => $item->sttb->no_doc,
+                    'tanggal' => $item->sttb->tanggal,
+                ] : null,
+                'kwitansi_co' => $item->kwitansiCo ? [
+                    'id' => $item->kwitansiCo->id,
+                    'no_doc' => $item->kwitansiCo->no_doc,
+                    'tanggal' => $item->kwitansiCo->tanggal,
+                ] : null,
+            ];
+        });
+    
     
         $gudangOuts = GudangOut::where('perumahan_id', $perumahanId)->get();
     

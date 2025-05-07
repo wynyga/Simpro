@@ -65,7 +65,7 @@
                 </tr>
                 <tr>
                     <td>Jenis Penerimaan</td>
-                    <td>: {{ $kwitansi->jenis_penerimaan }}</td>
+                    <td>: {{ $kwitansi->metode_pembayaran }}</td>
                 </tr>
             </table>
         </div>

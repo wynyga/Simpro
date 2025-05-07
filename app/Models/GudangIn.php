@@ -21,7 +21,6 @@ class GudangIn extends Model
         'harga_satuan',
         'jumlah_harga',
         'keterangan',
-        'jenis_pembayaran',
         'perumahan_id'
     ];
 
@@ -33,6 +32,9 @@ class GudangIn extends Model
     {
         return $this->belongsTo(Perumahan::class);
     }
-
-
+    public function kwitansiCo()
+    {
+        return $this->hasOne(Kwitansi::class, 'gudang_in_id')->where('no_doc', 'like', '%/CO-%');
+    }
+    
 }

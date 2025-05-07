@@ -196,6 +196,8 @@ Route::prefix('kwitansi')->middleware('auth')->group(function () {
     Route::post('/sttb/store', [STTBController::class, 'store']);
     Route::get('/sttb/{id}', [STTBController::class, 'show']);
     Route::get('/sttb/{id}/cetak', [STTBController::class, 'cetak']);
+    Route::get('/cetak-co/{id}', [KwitansiController::class, 'cetakCO']);
+
 });
 
 Route::get('/penjualan/status-bayar', [PenjualanStatusController::class, 'index']);

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('status')->default('pending');
             $table->decimal('jumlah', 18, 2); // Jumlah dalam Rupiah
             $table->decimal('saldo_setelah_transaksi', 15, 2)->nullable(); // Saldo setelah transaksi
-            $table->enum('metode_pembayaran', ['Tunai', 'Transfer Bank', 'Giro', 'Cek', 'Draft'])->default('Tunai');
+            $table->enum('metode_pembayaran', ['Cash', 'Transfer Bank', 'Giro', 'Cek', 'Draft'])->default('Cash');
             $table->string('dibuat_oleh'); // Nama user
             $table->text('keterangan_objek_transaksi')->nullable(); // Keterangan objek transaksi
             $table->timestamps();

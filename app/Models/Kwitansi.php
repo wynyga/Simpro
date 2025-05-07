@@ -22,6 +22,7 @@ class Kwitansi extends Model
         'jenis_penerimaan',
         'dibuat_oleh',
         'disetor_oleh',
+        'gudang_in_id',
         'mengetahui',
     ];
 
@@ -34,5 +35,10 @@ class Kwitansi extends Model
     {
         return $this->belongsTo(Perumahan::class);
     }
+    public function gudangIn()
+    {
+        return $this->belongsTo(GudangIn::class, 'gudang_in_id');
+    }
+
 }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Sttb;
 use App\Models\GudangIn;
 use App\Models\Perumahan;
+use App\Models\Kwitansi;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -14,7 +15,6 @@ class SttbController extends Controller
     {
         $request->validate([
             'gudang_in_id' => 'required|exists:gudang_in,id',
-            'jenis_penerimaan' => 'required|in:Langsung,Tidak Langsung,Ambil Sendiri',
         ]);
     
         $gudangIn = GudangIn::findOrFail($request->gudang_in_id);
@@ -29,28 +29,53 @@ class SttbController extends Controller
     
         $perumahan = Perumahan::findOrFail($gudangIn->perumahan_id);
         $latestId = Sttb::max('id') + 1;
-        $no_doc = sprintf("%02d/TB-%s/%d", $latestId, $perumahan->inisial, now()->year);
+        $no_doc_sttb = sprintf("%02d/TB-%s/%d", $latestId, $perumahan->inisial, now()->year);
     
         $sttb = Sttb::create([
             'gudang_in_id' => $gudangIn->id,
             'perumahan_id' => $perumahan->id,
-            'no_doc' => $no_doc,
+            'no_doc' => $no_doc_sttb,
             'tanggal' => now(),
             'nama_barang' => $gudangIn->nama_barang,
-            'nama_supplier' => $gudangIn->pengirim,
             'jumlah' => $gudangIn->jumlah,
             'satuan' => $gudangIn->satuan,
-            'pengirim' => $gudangIn->pengirim,
-            'jenis_penerimaan' => $request->jenis_penerimaan, // <-- Ambil dari request, bukan dari gudangIn
+            'nama_supplier' => $gudangIn->pengirim,
             'diserahkan_oleh' => $gudangIn->pengirim,
             'diterima_oleh' => auth()->user()->name,
             'mengetahui' => null,
         ]);
     
-        return response()->json($sttb);
+        $kwitansiCO = null;
+        $validJenis = ['Cash', 'Transfer Bank', 'Giro', 'Cek', 'Draft'];
+    
+        if (in_array($gudangIn->sistem_pembayaran, $validJenis)) {
+            $latestKwitansiId = Kwitansi::max('id') + 1;
+            $no_doc_co = sprintf("%02d/CO-%s/%d", $latestKwitansiId, $perumahan->inisial, now()->year);
+    
+            $kwitansiCO = Kwitansi::create([
+                'gudang_in_id' => $gudangIn->id, // ✅ WAJIB AGAR relasi kwitansiCo bisa ditemukan
+                'perumahan_id' => $perumahan->id,
+                'no_doc' => $no_doc_co,
+                'tanggal' => now(),
+                'dari' => $gudangIn->pengirim,
+                'jumlah' => $gudangIn->jumlah_harga,
+                'untuk_pembayaran' => 'Pembayaran ' . $gudangIn->sistem_pembayaran . ' atas Barang ' . $gudangIn->nama_barang,
+                'metode_pembayaran' => $gudangIn->sistem_pembayaran,
+                'dibuat_oleh' => auth()->user()->name,
+                'disetor_oleh' => $gudangIn->pengirim,
+                'mengetahui' => null,
+            ]);
+        }
+    
+        return response()->json([
+            'sttb' => $sttb,
+            'kwitansi_co' => $kwitansiCO,
+        ]);
     }
     
-
+    
+    
+    
     public function show($id)
     {
         $sttb = Sttb::with(['gudangIn', 'perumahan'])->findOrFail($id);
@@ -67,4 +92,5 @@ class SttbController extends Controller
 
         return $pdf->download("sttb-{$safeNoDoc}.pdf");
     }
+    
 }

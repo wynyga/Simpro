@@ -21,8 +21,7 @@ return new class extends Migration
             $table->string('dari'); // nama pembayar
             $table->decimal('jumlah', 20, 2);
             $table->text('untuk_pembayaran');
-            $table->enum('jenis_penerimaan', ['Tunai', 'Transfer Bank','Giro','Cek','Draft']);
-    
+            $table->enum('metode_pembayaran', ['Cash', 'Transfer Bank','Giro','Cek','Draft']);
             $table->string('dibuat_oleh')->nullable();
             $table->string('disetor_oleh')->nullable();
             $table->string('mengetahui')->nullable();
