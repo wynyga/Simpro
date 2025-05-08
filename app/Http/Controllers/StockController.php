@@ -72,11 +72,11 @@ class StockController extends Controller
     {
         $user = auth()->user();
         $perumahanId = $user->perumahan_id;
+    
         if (empty($perumahanId)) {
-            // Log atau handle kasus ketika perumahan_id tidak ditemukan
             return response()->json(['error' => 'perumahan_id is required'], 403);
         }
-
+    
         $validator = Validator::make($request->all(), [
             'jenis_peralatan' => 'required|string|in:day_work,equipment,tools,land_stone_sand,cement,rebar,wood,roof_ceiling_tile,keramik_floor,paint_glass_wallpaper,others,oil_chemical_perekat,sanitary,piping_pump,lighting',
             'nama_barang' => 'required',
@@ -85,11 +85,11 @@ class StockController extends Controller
             'harga_satuan' => 'required|numeric',
             'stock_bahan' => 'required|numeric'
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
+    
         try {
             $modelMap = [
                 'day_work' => DayWork::class,
@@ -108,34 +108,46 @@ class StockController extends Controller
                 'piping_pump' => PipingPump::class,
                 'lighting' => Lighting::class,
             ];
+    
             if (!array_key_exists($request->jenis_peralatan, $modelMap)) {
                 return response()->json(['error' => 'Jenis peralatan tidak valid'], 400);
             }
-            
-
+    
             $modelClass = $modelMap[$request->jenis_peralatan];
             $stock = new $modelClass;
-
-            // Logic to generate code
-            $prefix = $stock->getPrefix(); // Assume getPrefix method is defined in models
-            $lastId = $modelClass::max('id') + 1;
-            $stock->kode = $prefix . str_pad($lastId, 2, '0', STR_PAD_LEFT);
-
-            // Fill stock data
+    
+            // Ambil prefix dari model
+            $prefix = $stock->getPrefix(); // asumsi setiap model punya method getPrefix()
+    
+            // Ambil stok terakhir berdasarkan perumahan_id
+            $lastForPerumahan = $modelClass::where('perumahan_id', $perumahanId)
+                ->orderByDesc('id')
+                ->first();
+    
+            $nextNumber = 1;
+    
+            if ($lastForPerumahan && preg_match('/\-(\d{2})$/', $lastForPerumahan->kode, $match)) {
+                $nextNumber = (int)$match[1] + 1;
+            }
+    
+            $stock->kode = $prefix . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
+    
+            // Simpan data
             $stock->fill($request->only(['nama_barang', 'uty', 'satuan', 'harga_satuan', 'stock_bahan']));
-            $stock->perumahan_id = $perumahanId; 
+            $stock->perumahan_id = $perumahanId;
             $stock->save();
-
+    
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data stock berhasil disimpan.',
                 'data' => $stock
             ], 201);
+    
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
+    
     public function update(Request $request, $kode_barang)
     {
         $user = auth()->user();

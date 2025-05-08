@@ -8,6 +8,7 @@ use App\Models\Perumahan;
 use App\Models\Kwitansi;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Helpers\KwitansiService;
 
 class SttbController extends Controller
 {
@@ -28,8 +29,18 @@ class SttbController extends Controller
         }
     
         $perumahan = Perumahan::findOrFail($gudangIn->perumahan_id);
-        $latestId = Sttb::max('id') + 1;
-        $no_doc_sttb = sprintf("%02d/TB-%s/%d", $latestId, $perumahan->inisial, now()->year);
+        $lastSttb = Sttb::where('perumahan_id', $perumahan->id)
+        ->orderByDesc('id')
+        ->first();
+    
+        $nextSttbNumber = 1;
+        
+        if ($lastSttb && preg_match('/^(\d{2})\/TB-/', $lastSttb->no_doc, $match)) {
+            $nextSttbNumber = (int)$match[1] + 1;
+        }
+        
+        $no_doc_sttb = sprintf("%02d/TB-%s/%d", $nextSttbNumber, $perumahan->inisial, now()->year);
+    
     
         $sttb = Sttb::create([
             'gudang_in_id' => $gudangIn->id,
@@ -49,11 +60,10 @@ class SttbController extends Controller
         $validJenis = ['Cash', 'Transfer Bank', 'Giro', 'Cek', 'Draft'];
     
         if (in_array($gudangIn->sistem_pembayaran, $validJenis)) {
-            $latestKwitansiId = Kwitansi::max('id') + 1;
-            $no_doc_co = sprintf("%02d/CO-%s/%d", $latestKwitansiId, $perumahan->inisial, now()->year);
+            $no_doc_co = KwitansiService::generateNoDoc($perumahan->id, 'CO');
     
             $kwitansiCO = Kwitansi::create([
-                'gudang_in_id' => $gudangIn->id, // ✅ WAJIB AGAR relasi kwitansiCo bisa ditemukan
+                'gudang_in_id' => $gudangIn->id, 
                 'perumahan_id' => $perumahan->id,
                 'no_doc' => $no_doc_co,
                 'tanggal' => now(),
@@ -72,9 +82,6 @@ class SttbController extends Controller
             'kwitansi_co' => $kwitansiCO,
         ]);
     }
-    
-    
-    
     
     public function show($id)
     {
