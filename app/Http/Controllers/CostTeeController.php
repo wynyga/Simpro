@@ -18,7 +18,7 @@ class CostTeeController extends Controller
     {
         $user = auth()->user();
         $costTees = CostTee::where('perumahan_id', $user->perumahan_id)
-            ->with('costElement')
+            ->with('costElement.costCentre')
             ->get();
     
         if ($costTees->isEmpty()) {

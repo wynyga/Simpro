@@ -48,7 +48,7 @@
 
     <div class="header">
         <img src="{{ public_path('images/BumiAsih.png') }}" alt="Logo">
-        <h2>BUKTI PEMBAYARAN / PENGELUARAN KAS/BANK*</h2>
+        <h2>BUKTI PEMBAYARAN / PENGELUARAN KAS/BANK<br> KWITANSI </h2>
         <p>No. Dokumen: {{ $kwitansi->no_doc }}</p>
         <p>Tanggal: {{ \Carbon\Carbon::parse($kwitansi->tanggal)->translatedFormat('d F Y') }}</p>
     </div>

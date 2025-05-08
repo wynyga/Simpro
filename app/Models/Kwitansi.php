@@ -28,7 +28,7 @@ class Kwitansi extends Model
 
     public function transaksiKas()
     {
-        return $this->belongsTo(TransaksiKas::class);
+        return $this->belongsTo(TransaksiKas::class,'transaksi_kas_id');
     }
 
     public function perumahan()
