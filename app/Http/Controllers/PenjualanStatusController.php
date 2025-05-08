@@ -47,6 +47,7 @@ class PenjualanStatusController extends Controller
                     'user_id' => $transaksi->user_id,
                     'total_harga_jual' => $transaksi->total_harga_jual,
                     'plafon_kpr' => $transaksi->plafon_kpr,
+                    'minimum_dp' => $transaksi->minimum_dp,
                     'total_bayar' => (float) $totalBayar,
                     'status_bayar' => $statusBayar,
                     'unit' => $transaksi->unit ? $transaksi->unit->nomor_unit : null,
