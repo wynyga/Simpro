@@ -261,5 +261,19 @@ class LapBulananController extends Controller
             'rekap_detail' => $rekap,
         ]);
     }
+
+    public function getByBulanTahun($bulan, $tahun)
+    {
+        $user = auth()->user();
+
+        $laporans = LapBulanan::with('costTee.costElement.costCentre')
+            ->where('perumahan_id', $user->perumahan_id)
+            ->where('bulan', $bulan)
+            ->where('tahun', $tahun)
+            ->get();
+
+        return response()->json($laporans);
+    }
+
     
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TransaksiKas;
+use App\Models\LapBulanan;
+use Illuminate\Support\Facades\DB;
 
 class TransaksiKasController extends Controller
 {
@@ -72,13 +74,13 @@ class TransaksiKasController extends Controller
 
         $totalDebit = TransaksiKas::where('kode', '101')
             ->where('perumahan_id', $perumahanId)
-            ->whereYear('tanggal', '<=', $tahun)
+            ->whereYear('tanggal', $tahun)
             ->whereMonth('tanggal', '<=', $bulan)
             ->sum('jumlah');
 
         $totalKredit = TransaksiKas::where('kode', '102')
             ->where('perumahan_id', $perumahanId)
-            ->whereYear('tanggal', '<=', $tahun)
+            ->whereYear('tanggal', $tahun)
             ->whereMonth('tanggal', '<=', $bulan)
             ->sum('jumlah');
 
@@ -94,6 +96,7 @@ class TransaksiKasController extends Controller
             'saldo' => round($saldo, 2)
         ]);
     }
+
     
 
     public function store(Request $request)
@@ -135,8 +138,6 @@ class TransaksiKasController extends Controller
             'data' => $transaksi
         ], 201);
     }
-    
-
     public function approveTransaction($id)
     {
         $transaksi = TransaksiKas::find($id);
@@ -149,21 +150,45 @@ class TransaksiKasController extends Controller
             return response()->json(['error' => 'Transaksi sudah diproses sebelumnya.'], 400);
         }
 
+        // Hitung saldo sebelumnya
         $totalCashIn = TransaksiKas::where('kode', '101')->where('status', 'approved')->sum('jumlah');
         $totalCashOut = TransaksiKas::where('kode', '102')->where('status', 'approved')->sum('jumlah');
         $saldoSebelumnya = $totalCashIn - $totalCashOut;
 
+        // Hitung saldo setelah transaksi ini
         $saldoSetelahTransaksi = ($transaksi->kode === '101')
             ? $saldoSebelumnya + $transaksi->jumlah
             : $saldoSebelumnya - $transaksi->jumlah;
 
+        // Update status transaksi kas
         $transaksi->update([
             'status' => 'approved',
             'saldo_setelah_transaksi' => $saldoSetelahTransaksi
         ]);
 
+        // === Tambahan === Auto-insert ke laporan bulanan jika sumber_transaksi adalah cost_code
+        if ($transaksi->sumber_transaksi === 'cost_code') {
+            $bulan = date('n', strtotime($transaksi->tanggal));
+            $tahun = date('Y', strtotime($transaksi->tanggal));
+
+            // Gunakan updateOrInsert atau updateOrCreate agar tidak dobel
+            LapBulanan::updateOrCreate(
+                [
+                    'perumahan_id' => $transaksi->perumahan_id,
+                    'cost_tee_id' => $transaksi->keterangan_transaksi_id,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                ],
+                [
+                    // Jika update, tambahkan jumlah
+                    'jumlah' => DB::raw("jumlah + {$transaksi->jumlah}")
+                ]
+            );
+        }
+
         return response()->json(['message' => 'Transaksi berhasil disetujui.', 'data' => $transaksi]);
     }
+
     
     public function rejectTransaction($id)
     {

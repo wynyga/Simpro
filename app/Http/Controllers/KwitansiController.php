@@ -92,4 +92,40 @@ class KwitansiController extends Controller
 
         return $pdf->download("kwitansi-co-{$safeNoDoc}.pdf");
     }
+
+    public function all()
+    {
+        $user = auth()->user();
+
+        $kwitansis = Kwitansi::with(['transaksiKas', 'perumahan'])
+            ->where('perumahan_id', $user->perumahan_id)
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        return response()->json($kwitansis);
+    }
+
+    public function index(Request $request)
+    {
+        $user = auth()->user();
+        $perPage = $request->input('per_page', 10);
+        $search = $request->input('search');
+
+        $query = Kwitansi::with(['transaksiKas', 'perumahan'])
+            ->where('perumahan_id', $user->perumahan_id)
+            ->orderBy('tanggal', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('no_doc', 'like', "%{$search}%")
+                ->orWhere('untuk_pembayaran', 'like', "%{$search}%");
+            });
+        }
+
+        $kwitansis = $query->paginate($perPage);
+
+        return response()->json($kwitansis);
+    }
+
+
 }

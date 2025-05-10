@@ -186,10 +186,13 @@ Route::prefix('lap_bulanan')->middleware('auth')->group(function () {
         Route::get('/summary/{bulan}/{tahun}', [GudangOutController::class, 'getGudangOutSummary'])->name('gudang.summary');
     });
     Route::get('/tahunan/{tahun}', [LapBulananController::class, 'getLaporanTahunan']);
+    Route::get('/{bulan}/{tahun}', [LapBulananController::class, 'getByBulanTahun'])->name('lap_bulanan.filter');
 
 });
 
 Route::prefix('kwitansi')->middleware('auth')->group(function () {
+    Route::get('/', [KwitansiController::class, 'index']); // <--- GET paginated
+    Route::get('/all', [KwitansiController::class, 'all']); 
     Route::post('store', [KwitansiController::class, 'store']); // simpan kwitansi
     Route::get('/{id}', [KwitansiController::class, 'show']); // detail kwitansi
     Route::get('/{id}/cetak', [KwitansiController::class, 'cetak']); // generate PDF
@@ -197,7 +200,6 @@ Route::prefix('kwitansi')->middleware('auth')->group(function () {
     Route::get('/sttb/{id}', [STTBController::class, 'show']);
     Route::get('/sttb/{id}/cetak', [STTBController::class, 'cetak']);
     Route::get('/cetak-co/{id}', [KwitansiController::class, 'cetakCO']);
-
 });
 
 Route::get('/penjualan/status-bayar', [PenjualanStatusController::class, 'index']);
