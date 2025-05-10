@@ -1,0 +1,673 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\{
+    Cement,
+    DayWork,
+    Equipment,
+    KeramikFloor,
+    LandStoneSand,
+    Rebar,
+    RoofCeilingTile,
+    Tools,
+    Wood,
+    PaintGlassWallpaper,
+    Others,
+    OilChemicalPerekat,
+    Sanitary,
+    PipingPump,
+    Lighting,
+};
+
+
+class DayWorkSeeder extends Seeder
+{
+    public function run()
+    {
+
+        $cements = [
+            ['kode' => 'CEM50-01', 'nama_barang' => 'Portland Cement Bosowa @ 50 Kg', 'uty' => 1, 'satuan' => 'Zak', 'harga_satuan' => 68000],
+            ['kode' => 'CEM50-02', 'nama_barang' => 'Portland Cement Hochin @ 50 Kg', 'uty' => 1, 'satuan' => 'Zak', 'harga_satuan' => 66000],
+            ['kode' => 'CEM50-03', 'nama_barang' => 'Portland Cement Tonasa @ 50 Kg', 'uty' => 1, 'satuan' => 'Zak', 'harga_satuan' => 70000],
+            ['kode' => 'CEM50-04', 'nama_barang' => 'Portland Cement Tiga Roda @ 50 Kg', 'uty' => 1, 'satuan' => 'Zak', 'harga_satuan' => 64000],
+            ['kode' => 'CEM50-05', 'nama_barang' => 'White Cement @ 50 Kg', 'uty' => 1, 'satuan' => 'Zak', 'harga_satuan' => 0],
+            ['kode' => 'CEM50-06', 'nama_barang' => 'Cement Warna', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 0],
+            ['kode' => 'CEM50-07', 'nama_barang' => 'Cement Nut Keramick Eks SIKA', 'uty' => 1, 'satuan' => 'Dos', 'harga_satuan' => 15000],
+            ['kode' => 'CEM50-08', 'nama_barang' => 'Plamur Tembok', 'uty' => 1, 'satuan' => 'Kg', 'harga_satuan' => 0],
+            ['kode' => 'CEM50-09', 'nama_barang' => 'Milk Powder @ 25 Kg (Kapur)', 'uty' => 1, 'satuan' => 'Zak', 'harga_satuan' => 17000],
+            ['kode' => 'CEM50-10', 'nama_barang' => 'Air Bersih', 'uty' => 1, 'satuan' => 'm3', 'harga_satuan' => 0],
+        ];        
+        $dayWorks = [
+            [
+                'kode' => 'MDW10-01',
+                'nama_barang' => 'Kepala Tukang',
+                'uty' => 1,
+                'satuan' => 'Hari',
+                'harga_satuan' => 175000,
+            ],
+            [
+                'kode' => 'MDW10-02',
+                'nama_barang' => 'Tukang Beton',
+                'uty' => 1,
+                'satuan' => 'Hari',
+                'harga_satuan' => 150000,
+            ],
+            [
+                'kode' => 'MDW10-03',
+                'nama_barang' => 'Tukang Kayu',
+                'uty' => 1,
+                'satuan' => 'Hari',
+                'harga_satuan' => 200000,
+            ],
+            [
+                'kode' => 'MDW10-04',
+                'nama_barang' => 'Pembantu Tukang',
+                'uty' => 1,
+                'satuan' => 'Hari',
+                'harga_satuan' => 135000,
+            ],
+        ];
+
+        $equipments = [
+            [
+                'kode' => 'EQP20-01',
+                'nama_barang' => 'Concrete Mixer',
+                'uty' => 1,
+                'satuan' => 'Jam',
+                'harga_satuan' => 10000,
+            ],
+            [
+                'kode' => 'EQP20-02',
+                'nama_barang' => 'Excavator PC 320 D (50 m3/hour)',
+                'uty' => 1,
+                'satuan' => 'Jam',
+                'harga_satuan' => 550000,
+            ],
+            [
+                'kode' => 'EQP20-03',
+                'nama_barang' => 'Bulldozer D3 C (40 m3/hour)',
+                'uty' => 1,
+                'satuan' => 'Jam',
+                'harga_satuan' => 650000,
+            ],
+            [
+                'kode' => 'EQP20-04',
+                'nama_barang' => 'Dump Truck (5 m3/unit)',
+                'uty' => 1,
+                'satuan' => 'Hari',
+                'harga_satuan' => 500000,
+            ],
+            [
+                'kode' => 'EQP20-05',
+                'nama_barang' => 'Mesin stampler',
+                'uty' => 1,
+                'satuan' => 'day',
+                'harga_satuan' => 12500,
+            ],
+        ];
+
+        $keramikFloors = [
+            ['kode' => 'KERM90-01', 'nama_barang' => 'Tehel 25x25 cm White', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 80000],
+            ['kode' => 'KERM90-02', 'nama_barang' => 'Tehel 25x25 cm Color', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 80000],
+            ['kode' => 'KERM90-03', 'nama_barang' => 'Tehel 25x40 cm Color', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 80000],
+            ['kode' => 'KERM90-04', 'nama_barang' => 'Tehel 25x50 cm Color', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 100000],
+            ['kode' => 'KERM90-05', 'nama_barang' => 'Tehel 40x40 cm Color', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 55000],
+            ['kode' => 'KERM90-06', 'nama_barang' => 'Tehel 50x50 cm Color', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 55000],
+            ['kode' => 'KERM90-07', 'nama_barang' => 'Tehel Fasade 40x40 cm Color', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 55000],
+            ['kode' => 'KERM90-08', 'nama_barang' => 'Tehel 60x60 cm Color', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 55000],
+            ['kode' => 'KERM90-09', 'nama_barang' => 'Tehel Esenza uk. 60x60 cm', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 225000],
+            ['kode' => 'KERM90-10', 'nama_barang' => 'Tehel HappyHouse uk. 60x60 cm', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 180000],
+            ['kode' => 'KERM90-11', 'nama_barang' => 'Kuku Tehel', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 800],
+        ];
+
+        $landStoneSands = [
+            ['kode' => 'LSS40-01', 'nama_barang' => 'Tanah Timbunan', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 37500],
+            ['kode' => 'LSS40-02', 'nama_barang' => 'Tanah Pilihan (Tanah taman)', 'uty' => 1, 'satuan' => 'm3', 'harga_satuan' => 12500],
+            ['kode' => 'LSS40-03', 'nama_barang' => 'Tanah Tras', 'uty' => 1, 'satuan' => 'm3', 'harga_satuan' => 82352.94],
+            ['kode' => 'LSS40-04', 'nama_barang' => 'Pasir Kali', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 600000],
+            ['kode' => 'LSS40-05', 'nama_barang' => 'Pasir Halus / Plester', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 600000],
+            ['kode' => 'LSS40-06', 'nama_barang' => 'Pasir Kasar (Urug, Cor & Pasangan)', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 600000],
+            ['kode' => 'LSS40-07', 'nama_barang' => 'Sirtu Alam (Sirtu Kali / Kerikil)', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 0],
+            ['kode' => 'LSS40-08', 'nama_barang' => 'Sirtu Gunung (Sirtu Standard)', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 100000],
+            ['kode' => 'LSS40-09', 'nama_barang' => 'Batu Belah / Batu Gunung (Batu pondasi)', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 850000],
+            ['kode' => 'LSS40-10', 'nama_barang' => 'Batu Kali / Batu Sungai', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 600000],
+            ['kode' => 'LSS40-11', 'nama_barang' => 'Batu Belah Uk. 10-15 cm (Batu Mangga)', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 0],
+            ['kode' => 'LSS40-12', 'nama_barang' => 'Batu Split Uk. 2-3 cm', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 1300000],
+            ['kode' => 'LSS40-13', 'nama_barang' => 'Batu Split Uk. 1-2 cm', 'uty' => 1, 'satuan' => 'Dum', 'harga_satuan' => 1400000],
+            ['kode' => 'LSS40-14', 'nama_barang' => 'Batu Bata Uk. 5,5 x 11 x 23', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 800],
+            ['kode' => 'LSS40-15', 'nama_barang' => 'Batako Uk. 27x 13 x 8', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1400],
+            ['kode' => 'LSS40-16', 'nama_barang' => 'Hollowbrick', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 2800],
+            ['kode' => 'LSS40-17', 'nama_barang' => 'Paving Stone K300 t=8cm', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'LSS40-18', 'nama_barang' => 'Paving Stone K300 t=6cm', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'LSS40-19', 'nama_barang' => 'Aspal Hotmix (Readymix)', 'uty' => 1, 'satuan' => 'Ton', 'harga_satuan' => 0],
+            ['kode' => 'LSS40-20', 'nama_barang' => 'Kanstein 15 x 50', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 0],
+            ['kode' => 'LSS40-21', 'nama_barang' => 'Kertas pasir 200', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 13000],
+            ['kode' => 'LSS40-22', 'nama_barang' => 'Kertas pasir 300', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 12000],
+            ['kode' => 'LSS40-23', 'nama_barang' => 'Kertas pasir 400', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 11000],
+            ['kode' => 'LSS40-24', 'nama_barang' => 'Kertas pasir 200', 'uty' => 1, 'satuan' => 'M', 'harga_satuan' => 17000],
+            ['kode' => 'LSS40-25', 'nama_barang' => 'Kertas pasir 300', 'uty' => 1, 'satuan' => 'M', 'harga_satuan' => 16500],
+            ['kode' => 'LSS40-26', 'nama_barang' => 'Kertas pasir 400', 'uty' => 1, 'satuan' => 'M', 'harga_satuan' => 16000],
+            ['kode' => 'LSS40-27', 'nama_barang' => 'Kain Has untuk Compound Gypsum', 'uty' => 1, 'satuan' => 'Roll', 'harga_satuan' => 12000],
+            ['kode' => 'LSS40-28', 'nama_barang' => 'Batu Alam Andezit', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 0],
+        ];       
+        
+        $rebars = [
+            ['kode' => 'REB60-01', 'nama_barang' => 'Besi Beton Polos dia. 4  mm SNI A', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 25000],
+            ['kode' => 'REB60-02', 'nama_barang' => 'Besi Beton Polos dia. 6  mm SNI A', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 30000],
+            ['kode' => 'REB60-03', 'nama_barang' => 'Besi Beton Polos dia. 6 mm SNI Serti', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 35000],
+            ['kode' => 'REB60-04', 'nama_barang' => 'Besi Beton Polos dia. 8 mm SNI A', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 48000],
+            ['kode' => 'REB60-05', 'nama_barang' => 'Besi Beton Polos dia. 8 mm SNI Serti', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 65000],
+            ['kode' => 'REB60-06', 'nama_barang' => 'Besi Beton Polos dia. 10 mm SNI B', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 50000],
+            ['kode' => 'REB60-07', 'nama_barang' => 'Besi Beton Polos dia. 10 mm SNI A', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 68000],
+            ['kode' => 'REB60-08', 'nama_barang' => 'Besi Beton Polos dia. 10 mm SNI A Besar', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 70000],
+            ['kode' => 'REB60-09', 'nama_barang' => 'Besi Beton Polos dia. 10 mm SNI Serti', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 85000],
+            ['kode' => 'REB60-10', 'nama_barang' => 'Besi Beton Polos dia. 12 mm SNI Serti', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 112000],
+            ['kode' => 'REB60-11', 'nama_barang' => 'Besi Beton Ulir dia. 14 - 24 mm SNI Serti', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 187000],
+            ['kode' => 'REB60-12', 'nama_barang' => 'Kawat Beton (Bend Rat)', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 25000],
+            ['kode' => 'REB60-33', 'nama_barang' => 'Paku kayu 4"', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 22000],
+            ['kode' => 'REB60-34', 'nama_barang' => 'Paku Kayu 3"', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 23000],
+            ['kode' => 'REB60-35', 'nama_barang' => 'Paku Beton 4 Inch', 'uty' => 1, 'satuan' => 'Dos', 'harga_satuan' => 20000],
+            ['kode' => 'REB60-36', 'nama_barang' => 'Paku Seng Sakuraruf', 'uty' => 1, 'satuan' => 'Kg', 'harga_satuan' => 30000],
+            ['kode' => 'REB60-37', 'nama_barang' => 'Paku Seng Gelombang', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 20000],
+            ['kode' => 'REB60-38', 'nama_barang' => 'Paku Gypsun', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 25000],
+            ['kode' => 'REB60-39', 'nama_barang' => 'Paku Tripleks', 'uty' => 1, 'satuan' => 'Kg', 'harga_satuan' => 14000],
+            ['kode' => 'REB60-40', 'nama_barang' => 'Paku Skrup 1 Inch', 'uty' => 1, 'satuan' => 'dos', 'harga_satuan' => 5000],
+            ['kode' => 'REB60-44', 'nama_barang' => 'Kaso Baja Ringan Eks Pryda/Taso/Gygastile C75.65 @ 5,8 M', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 76500],
+            ['kode' => 'REB60-45', 'nama_barang' => 'Reng Baja Ringan Eks Pryda/Taso/Gygastile R32.45 @ 5,8 M', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 35500],
+            ['kode' => 'REB60-46', 'nama_barang' => 'Baja Ringan Canal C 75/75 Sumber Berkat_1', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 80000],
+            ['kode' => 'REB60-47', 'nama_barang' => 'Baja Ringan Canal C 75/75 Sumber Berkat_2', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 77500],
+            ['kode' => 'REB60-48', 'nama_barang' => 'Reng Baja Ringan 35/40 Sumber Berkat_1', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 50000],
+            ['kode' => 'REB60-49', 'nama_barang' => 'Besi Beton Polos dia. 8 mm SNI A Sumber Berkat_1', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 45000],
+            ['kode' => 'REB60-50', 'nama_barang' => 'Screw Baja Ringan #10/19 Sumber Berkat', 'uty' => 1, 'satuan' => 'Dos', 'harga_satuan' => 200000],
+            ['kode' => 'REB60-51', 'nama_barang' => 'Screw Baja Ringan #12/45 Sumber Berkat', 'uty' => 1, 'satuan' => 'Dos', 'harga_satuan' => 400000],
+            ['kode' => 'REB60-52', 'nama_barang' => 'Screw Baja Ringan #10/19 Hasan', 'uty' => 1, 'satuan' => 'Dos', 'harga_satuan' => 200000],
+            ['kode' => 'REB60-53', 'nama_barang' => 'Screw Baja Ringan #12/45 Hasan', 'uty' => 1, 'satuan' => 'Dos', 'harga_satuan' => 190000],
+            ['kode' => 'REB60-54', 'nama_barang' => 'Screw Gypsum 2" Inch Warna Hitam', 'uty' => 1, 'satuan' => 'Dos', 'harga_satuan' => 70000],
+        ];
+
+        $roofCeilingTiles = [
+            ['kode' => 'RCT80-01', 'nama_barang' => 'Genteng Metal (setara Sakura Roof)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 29000],
+            ['kode' => 'RCT80-02', 'nama_barang' => 'Bubungan Genteng Metal (Setara Sakura roof)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 29000],
+            ['kode' => 'RCT80-03', 'nama_barang' => 'Nok Genteng Metal (setara Sakura Roof)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 24000],
+            ['kode' => 'RCT80-04', 'nama_barang' => 'Paku Genteng Metal', 'uty' => 1, 'satuan' => 'Kg', 'harga_satuan' => 20000],
+            ['kode' => 'RCT80-05', 'nama_barang' => 'Flashing Genteng Metal (setara Multi Roof)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 20000],
+            ['kode' => 'RCT80-06', 'nama_barang' => 'Seng Got / Gelombang Biru (eks Kuala)', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 55000],
+            ['kode' => 'RCT80-07', 'nama_barang' => 'Seng Gelombang BJLS 30 Putih (Uk. 180x90x0,3 cm)', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 37857],
+            ['kode' => 'RCT80-08', 'nama_barang' => 'Spandek Gallvalum 0,25 mm', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 37857],
+            ['kode' => 'RCT80-09', 'nama_barang' => 'Spandek Gallvalum 0,3 mm', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 37857],
+            ['kode' => 'RCT80-10', 'nama_barang' => 'Spandek Gallvalum 0,35 mm', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 37857],
+            ['kode' => 'RCT80-11', 'nama_barang' => 'Spandek Warna 0,25 mm, 3.7 Meter', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 105000],
+            ['kode' => 'RCT80-12', 'nama_barang' => 'Spandek Warna 0,3 mm, 3.7 Meter', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 105000],
+            ['kode' => 'RCT80-13', 'nama_barang' => 'Spandek Warna 0,35 mm, 3,7 Meter', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 105000],
+            ['kode' => 'RCT80-14', 'nama_barang' => 'Bumbungan Spandek Gallvalum', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 37857],
+            ['kode' => 'RCT80-15', 'nama_barang' => 'Bumbungan Spandek Warna 0.25 mm 2,5  meter', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 37857],
+            ['kode' => 'RCT80-16', 'nama_barang' => "Seng Plat BJLS 25 Putih", 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 14000],
+            ['kode' => 'RCT80-17', 'nama_barang' => 'Seng Plat Biru', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 55000],
+            ['kode' => 'RCT80-18', 'nama_barang' => 'Genteng Beton', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 65000],
+            ['kode' => 'RCT80-19', 'nama_barang' => 'Bumbungan Genteng Beton', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 0],
+            ['kode' => 'RCT80-20', 'nama_barang' => 'Genteng Keramik', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 24000],
+            ['kode' => 'RCT80-21', 'nama_barang' => 'Bumbungan Genteng Keramik', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'RCT80-22', 'nama_barang' => 'Genteng Tanah Kanmuri', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 24000],
+            ['kode' => 'RCT80-23', 'nama_barang' => 'Bumbungan Genteng Tanah Kanmuri', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 24000],
+            ['kode' => 'RCT80-24', 'nama_barang' => 'Profile Gypsum Teratai C 12', 'uty' => 1, 'satuan' => 'm', 'harga_satuan' => 16000],
+            ['kode' => 'RCT80-25', 'nama_barang' => 'Profile Gypsum C 10', 'uty' => 1, 'satuan' => 'm', 'harga_satuan' => 16000],
+            ['kode' => 'RCT80-26', 'nama_barang' => 'Profile Gypsum C 8', 'uty' => 1, 'satuan' => 'm', 'harga_satuan' => 12000],
+            ['kode' => 'RCT80-27', 'nama_barang' => 'Profile Beton', 'uty' => 1, 'satuan' => 'm', 'harga_satuan' => 135000],
+            ['kode' => 'RCT80-28', 'nama_barang' => 'Stereoform', 'uty' => 1, 'satuan' => 'm3', 'harga_satuan' => 1000000],
+            ['kode' => 'RCT80-29', 'nama_barang' => 'Gabus', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 75000],
+        ];    
+
+        $tools = [
+            ['kode' => 'EQT30-01', 'nama_barang' => 'Sekop', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 85000],
+            ['kode' => 'EQT30-02', 'nama_barang' => 'Cangkul', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 65000],
+            ['kode' => 'EQT30-03', 'nama_barang' => 'Pakuel', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 45000],
+            ['kode' => 'EQT30-04', 'nama_barang' => 'Linggis', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 30000],
+            ['kode' => 'EQT30-05', 'nama_barang' => 'Laser Meter', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 4500000],
+            ['kode' => 'EQT30-06', 'nama_barang' => 'Tripod Theodolith', 'uty' => 1, 'satuan' => 'Hari', 'harga_satuan' => 15000000],
+            ['kode' => 'EQT30-07', 'nama_barang' => 'Tripod Level', 'uty' => 1, 'satuan' => 'unit', 'harga_satuan' => 9000000],
+            ['kode' => 'EQT30-08', 'nama_barang' => 'Level (Waterpass)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 25000],
+            ['kode' => 'EQT30-09', 'nama_barang' => 'Argo (gerobak)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 750000],
+            ['kode' => 'EQT30-10', 'nama_barang' => 'Ember Cor', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 8000],
+            ['kode' => 'EQT30-11', 'nama_barang' => 'Tang Buaya', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 25000],
+            ['kode' => 'EQT30-12', 'nama_barang' => 'Tang Potong', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 30000],
+            ['kode' => 'EQT30-13', 'nama_barang' => 'Tang Jepit', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 25000],
+            ['kode' => 'EQT30-14', 'nama_barang' => 'Gunting Seng', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 21000],
+            ['kode' => 'EQT30-15', 'nama_barang' => 'Gunting Besi', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 275000],
+            ['kode' => 'EQT30-16', 'nama_barang' => 'Kunci Inggris', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 125000],
+            ['kode' => 'EQT30-17', 'nama_barang' => 'Mesin Sawmile', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 625000],
+            ['kode' => 'EQT30-18', 'nama_barang' => 'Mesin Grinda', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 550000],
+            ['kode' => 'EQT30-19', 'nama_barang' => 'Mesin Gatter', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 800000],
+            ['kode' => 'EQT30-20', 'nama_barang' => 'Mesin Bor Beton', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 450000],
+            ['kode' => 'EQT30-21', 'nama_barang' => 'Mesin Sekap', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 725000],
+            ['kode' => 'EQT30-22', 'nama_barang' => 'Gergaji Tangan', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 70000],
+            ['kode' => 'EQT30-23', 'nama_barang' => 'Meteran Plastik 50 Meter', 'uty' => 1, 'satuan' => 'Pcs', 'harga_satuan' => 85000],
+            ['kode' => 'EQT30-24', 'nama_barang' => 'Alat Ukur Meteran (5 Meter)', 'uty' => 1, 'satuan' => 'Pcs', 'harga_satuan' => 15000],
+            ['kode' => 'EQT30-25', 'nama_barang' => 'Kuas Roll Giselle', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 25000],
+            ['kode' => 'EQT30-26', 'nama_barang' => 'Kuas 2½ Inch', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 8000],
+            ['kode' => 'EQT30-27', 'nama_barang' => 'Kuas 3" Inch', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 9600],
+            ['kode' => 'EQT30-28', 'nama_barang' => 'Tropol', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 15000],
+            ['kode' => 'EQT30-29', 'nama_barang' => 'Benang Nillon', 'uty' => 1, 'satuan' => 'Roll', 'harga_satuan' => 5000],
+            ['kode' => 'EQT30-30', 'nama_barang' => 'Sinar 0.5 mm', 'uty' => 1, 'satuan' => 'Roll', 'harga_satuan' => 20000],
+            ['kode' => 'EQT30-31', 'nama_barang' => 'Selang Level Benang 1/2"', 'uty' => 100, 'satuan' => 'm', 'harga_satuan' => 1400],
+            ['kode' => 'EQT30-32', 'nama_barang' => 'Kawat Ayakan Pasir Halus', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 15000],
+            ['kode' => 'EQT30-33', 'nama_barang' => 'Ban Dalam Arco', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 35000],
+            ['kode' => 'EQT30-34', 'nama_barang' => 'Ban Luar Arco', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 23000],
+            ['kode' => 'EQT30-35', 'nama_barang' => 'Velg Arco', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'EQT30-36', 'nama_barang' => 'Terpal (4x6) m', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 125000],
+            ['kode' => 'EQT30-37', 'nama_barang' => 'Kuas 1 Inch', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 8000],
+            ['kode' => 'EQT30-38', 'nama_barang' => 'Kuas 2 Inch', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 10000],
+            ['kode' => 'EQT30-39', 'nama_barang' => 'Kuas 5 Inch', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 15000],
+        ];
+
+        $woods = [
+            ['kode' => 'WOD70-01', 'nama_barang' => 'Kayu Jati (11x11cm)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 96000],
+            ['kode' => 'WOD70-02', 'nama_barang' => 'Kayu Besi, Linggua (6/14 cm)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 0],
+            ['kode' => 'WOD70-03', 'nama_barang' => 'Kayu Kamper, Cempaka, dll (6/12 cm)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 16000],
+            ['kode' => 'WOD70-04', 'nama_barang' => 'Kayu Kelas III 6/14 cm (Kayu Lokal, dll)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 0],
+            ['kode' => 'WOD70-05', 'nama_barang' => 'Kayu Kelas III 5/10 cm (Kayu Lokal, dll)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 70000],
+            ['kode' => 'WOD70-06', 'nama_barang' => 'Kayu Kelas III 5/7 cm (Kayu Lokal, dll)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 0],
+            ['kode' => 'WOD70-07', 'nama_barang' => 'Kayu Kelas III 6/4 cm (Kayu Lokal, dll)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 20000],
+            ['kode' => 'WOD70-08', 'nama_barang' => 'Kayu Kelas III 2/3 cm (Kayu Lokal, dll)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 0],
+            ['kode' => 'WOD70-09', 'nama_barang' => 'Kayu Kelas IV 5/7 cm (Kayu Merah, Kayu Mall, dll)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 35000],
+            ['kode' => 'WOD70-10', 'nama_barang' => 'Kayu Kelas IV 4/6 cm (Kayu Merah, Kayu Mall, dll)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 0],
+            ['kode' => 'WOD70-20', 'nama_barang' => 'Papan Kayu Kelas III 2/30 cm (Kayu Lokal, dll)', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 41250],
+            ['kode' => 'WOD70-24', 'nama_barang' => 'Tripleks 6 mm (120 x 245 cm)', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 85000],
+            ['kode' => 'WOD70-25', 'nama_barang' => 'Tripleks 9 mm (120 x 245 cm)', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 95000],
+            ['kode' => 'WOD70-26', 'nama_barang' => 'Gypsum board 9 mm', 'uty' => 1, 'satuan' => 'Lbr', 'harga_satuan' => 68000],
+            ['kode' => 'WOD70-29', 'nama_barang' => 'Dolken/Bambu', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 10000],
+            ['kode' => 'WOD70-30', 'nama_barang' => 'Profile Kayu Sp3', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 10500],
+            ['kode' => 'WOD70-31', 'nama_barang' => 'Profile Kayu C40', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 16500],
+        ];        
+
+        $paintGlassWallpapers = [
+            ['kode' => 'PGW100-01', 'nama_barang' => 'Cat Minyalk untuk Kayu/Besi', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 32500],
+            ['kode' => 'PGW100-02', 'nama_barang' => 'Cat Tembok Eks Metrolite', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 15400],
+            ['kode' => 'PGW100-03', 'nama_barang' => 'Cat Tembok Eks Dulux', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 16600],
+            ['kode' => 'PGW100-04', 'nama_barang' => 'Cat Tembok Eks NO DROP 4 Kg', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 70000],
+            ['kode' => 'PGW100-05', 'nama_barang' => 'Cat Tembok Eks Aries Gold (20 Kg)', 'uty' => 1, 'satuan' => 'Pile', 'harga_satuan' => 400000],
+            ['kode' => 'PGW100-06', 'nama_barang' => 'Cat Tembok Eks LIGATEK', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 6000],
+            ['kode' => 'PGW100-07', 'nama_barang' => 'Cat Kayu Mowilex', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 67500],
+            ['kode' => 'PGW100-08', 'nama_barang' => 'Cat Kayu Avian 194', 'uty' => 1, 'satuan' => 'ltr', 'harga_satuan' => 60000],
+            ['kode' => 'PGW100-09', 'nama_barang' => 'Cat Catylack', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 19000],
+            ['kode' => 'PGW100-10', 'nama_barang' => 'Cat Multiguard', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 18500],
+            ['kode' => 'PGW100-11', 'nama_barang' => 'Cat Menie Kayu/Besi/Seng', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 37500],
+            ['kode' => 'PGW100-12', 'nama_barang' => 'Menie Besi/Zinkromet', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 37500],
+            ['kode' => 'PGW100-13', 'nama_barang' => 'Cat Alkalis Tembok', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 37500],
+            ['kode' => 'PGW100-14', 'nama_barang' => 'Cat Melaminto', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 42500],
+            ['kode' => 'PGW100-15', 'nama_barang' => 'Cat Epoxy', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 75000],
+            ['kode' => 'PGW100-16', 'nama_barang' => 'Cat pilok', 'uty' => 1, 'satuan' => 'btl', 'harga_satuan' => 30000],
+            ['kode' => 'PGW100-17', 'nama_barang' => 'Cleare', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 20000],
+            ['kode' => 'PGW100-18', 'nama_barang' => 'Plamur Tembok', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 17500],
+            ['kode' => 'PGW100-19', 'nama_barang' => 'Dempul Kayu', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 26500],
+            ['kode' => 'PGW100-20', 'nama_barang' => 'Dempul Besi', 'uty' => 1, 'satuan' => 'kg', 'harga_satuan' => 27500],
+            ['kode' => 'PGW100-21', 'nama_barang' => 'Kaca Bening 5mm', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 55000],
+            ['kode' => 'PGW100-22', 'nama_barang' => 'Kaca Riben 40 5mm', 'uty' => 1, 'satuan' => 'm2', 'harga_satuan' => 55000],
+            ['kode' => 'PGW100-23', 'nama_barang' => 'Cat Tembok Eks NO DROP 20 Kg', 'uty' => 1, 'satuan' => 'Pile', 'harga_satuan' => 1260000],
+        ];
+
+        $others = [
+            ['kode' => 'OTH110-01', 'nama_barang' => 'Kusen Eks Kayu Jati 6/16 cm', 'uty' => 1, 'satuan' => 'm', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-02', 'nama_barang' => 'Kusen Kayu Besi/Linggua', 'uty' => 1, 'satuan' => 'm', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-03', 'nama_barang' => 'Kusen Kayu Cempaka/Wasian/Gepasa', 'uty' => 1, 'satuan' => 'm', 'harga_satuan' => 55000],
+            ['kode' => 'OTH110-04', 'nama_barang' => 'Kusen Kayu Kelas III (Kayu Lokal)', 'uty' => 1, 'satuan' => 'm', 'harga_satuan' => 50000],
+            ['kode' => 'OTH110-05', 'nama_barang' => 'Kusen Kayu Kelas IV (Ky Merah) jendela', 'uty' => 1, 'satuan' => 'm', 'harga_satuan' => 450000],
+            ['kode' => 'OTH110-06', 'nama_barang' => 'Pintu Doeble Tripleks uk 82x200cm', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 325000],
+            ['kode' => 'OTH110-07', 'nama_barang' => 'Pintu Double Tripleks uk 72x200cm', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 300000],
+            ['kode' => 'OTH110-08', 'nama_barang' => 'Pintu Panel Double Kayu Jati (82X240 Tb. 3 cm)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-09', 'nama_barang' => 'Pintu Panel Double Kayu Cempaka (82 x 240 Tb. 3 cm)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-10', 'nama_barang' => 'Pintu Panel Double Kayu Nyantu/Mahoni uk 82x200cm', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-11', 'nama_barang' => 'Pintu Panel Kayu Jati (82 x 210 Tb. 3 cm)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-12', 'nama_barang' => 'Pintu Panel Kayu Cempaka (82 x 210 Tb. 3 cm)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 600000],
+            ['kode' => 'OTH110-13', 'nama_barang' => 'Pintu Panel Kayu Nyantu/Mahoni (82 x 210 Tb. 3 cm)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-14', 'nama_barang' => 'Daun Pintu Takewoods rangka Kayu', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-15', 'nama_barang' => 'Daun Pintu Takewoods-All sheet', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-16', 'nama_barang' => 'Kosen + Daun Pintu Alluminium 69x180 cm, Eks KingDoor', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 275000],
+            ['kode' => 'OTH110-17', 'nama_barang' => 'Kusen + Pintu Alluminium 72X210 cm (Pabrikasi)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1300000],
+            ['kode' => 'OTH110-18', 'nama_barang' => 'Kosen + Pintu PVC NP11 Uk. 72x210 cm Biru Muda/pink', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 225000],
+            ['kode' => 'OTH110-19', 'nama_barang' => 'Daun Jendela Kayu Jati', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-20', 'nama_barang' => 'Daun Jendela Linggua', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-21', 'nama_barang' => 'Daun Jendela Cempaka Wasian', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 250000],
+            ['kode' => 'OTH110-22', 'nama_barang' => 'Daun Jendela Nyantu/Mahoni', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-23', 'nama_barang' => 'Daun Jendela Kayu Merah', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-24', 'nama_barang' => 'Daun Jendela Alluminium', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-25', 'nama_barang' => 'Lisplank Kayu Kelas II 2,5/12, 2,5/26', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-26', 'nama_barang' => 'Lisplank Kalsi Plank 20 cm Corak Kayu Sumber Berkat', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 75000],
+            ['kode' => 'OTH110-27', 'nama_barang' => 'Handle Pintu SS', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 110000],
+            ['kode' => 'OTH110-28', 'nama_barang' => 'Handle dan Kunci Pintu Kuningan', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 110000],
+            ['kode' => 'OTH110-29', 'nama_barang' => 'Handle dan Kunci Pintu Standart', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 58000],
+            ['kode' => 'OTH110-30', 'nama_barang' => 'Engsel Standart 4"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 19000],
+            ['kode' => 'OTH110-31', 'nama_barang' => 'Engsel Standart 5"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 25000],
+            ['kode' => 'OTH110-32', 'nama_barang' => 'Engsel Nylon Arch 3"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-33', 'nama_barang' => 'Grendel Semi Kodok untuk Daun Jendela', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 12000],
+            ['kode' => 'OTH110-34', 'nama_barang' => 'Hak Angin Standart', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 7500],
+            ['kode' => 'OTH110-35', 'nama_barang' => 'Handle Jendela Standart', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 8000],
+            ['kode' => 'OTH110-36', 'nama_barang' => 'Kunci Taman Biasa', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-37', 'nama_barang' => 'Kunci Taman 2 Slag', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-38', 'nama_barang' => 'Kunci Taman 3 Slag', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-39', 'nama_barang' => 'Kunci Selot', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-40', 'nama_barang' => 'Kunci Lemari', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-41', 'nama_barang' => 'Grendel Jendela', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 0],
+            ['kode' => 'OTH110-42', 'nama_barang' => 'Cat Kosen, Pintu dan Jendela merek BELASO', 'uty' => 1, 'satuan' => 'klg', 'harga_satuan' => 95000],
+            ['kode' => 'OTH110-43', 'nama_barang' => 'Cat Kosen, Pintu dan Jendela merek Mowilek', 'uty' => 1, 'satuan' => 'klg', 'harga_satuan' => 75000],
+        ];
+
+        $oilChemicalPerekat = [
+            ['kode' => 'OCP110-01', 'nama_barang' => 'Minyak Tanah / Kerosine (Industri)', 'uty' => 1, 'satuan' => 'Ltr', 'harga_satuan' => 7900],
+            ['kode' => 'OCP110-02', 'nama_barang' => 'Solar (Industri)', 'uty' => 1, 'satuan' => 'Ltr', 'harga_satuan' => 7355],
+            ['kode' => 'OCP110-03', 'nama_barang' => 'Solar (HET)', 'uty' => 1, 'satuan' => 'Ltr', 'harga_satuan' => 4300],
+            ['kode' => 'OCP110-04', 'nama_barang' => 'Minyak Pelumas / Oli (Pertamina)', 'uty' => 1, 'satuan' => 'Ltr', 'harga_satuan' => 25000],
+            ['kode' => 'OCP110-05', 'nama_barang' => 'Cornis / Lem Profile / Coumpound Eks Knaff @ 20 Kg', 'uty' => 2, 'satuan' => 'sak', 'harga_satuan' => 80000],
+            ['kode' => 'OCP110-06', 'nama_barang' => 'Caton tip', 'uty' => 1, 'satuan' => 'roll', 'harga_satuan' => 15000],
+            ['kode' => 'OCP110-07', 'nama_barang' => 'Lem Fox', 'uty' => 1, 'satuan' => 'Kg', 'harga_satuan' => 17000],
+            ['kode' => 'OCP110-08', 'nama_barang' => 'Lem Eha-Bondx', 'uty' => 1, 'satuan' => 'Ltr', 'harga_satuan' => 35000],
+            ['kode' => 'OCP110-09', 'nama_barang' => 'Lem compon', 'uty' => 1, 'satuan' => 'Kg', 'harga_satuan' => 16500],
+            ['kode' => 'OCP110-10', 'nama_barang' => 'Perekat Batu Alam', 'uty' => 1, 'satuan' => 'bks', 'harga_satuan' => 0],
+            ['kode' => 'OCP110-11', 'nama_barang' => 'Minyak Cat / Thiner', 'uty' => 1, 'satuan' => 'Ltr', 'harga_satuan' => 25000],
+            ['kode' => 'OCP110-12', 'nama_barang' => 'Minyak Bekisting', 'uty' => 1, 'satuan' => 'Ltr', 'harga_satuan' => 15000],
+            ['kode' => 'OCP110-13', 'nama_barang' => 'Politur', 'uty' => 1, 'satuan' => 'Ltr', 'harga_satuan' => 35000],
+        ];
+
+        $sanitaries = [
+            ['kode' => 'SAN120-01', 'nama_barang' => 'Wastafel/Lavatory Standar Ex Toto', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 450000],
+            ['kode' => 'SAN120-02', 'nama_barang' => 'Closet Jongkok Ex Toto/Amstant/Triliun', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 250000],
+            ['kode' => 'SAN120-03', 'nama_barang' => 'Closet Duduk Ex Toto/Amstant', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1750000],
+            ['kode' => 'SAN120-04', 'nama_barang' => 'Floor Drain Plastik', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 55000],
+            ['kode' => 'SAN120-05', 'nama_barang' => 'Floor Drain SS', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 55000],
+            ['kode' => 'SAN120-06', 'nama_barang' => 'Hand Shower TOTO', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 136250],
+            ['kode' => 'SAN120-07', 'nama_barang' => 'Hand Kran ex TOTO/lokal', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 225000],
+            ['kode' => 'SAN120-08', 'nama_barang' => 'Acrylic Handle Sink Tap TOTO', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 48750],
+            ['kode' => 'SAN120-09', 'nama_barang' => 'Kitchen Sink SB 1 Stainless Steel', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 225000],
+            ['kode' => 'SAN120-10', 'nama_barang' => 'Kitchen Sink SB 2 Stainless Steel', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 295000],
+            ['kode' => 'SAN120-11', 'nama_barang' => 'Saringan Kamar Mandi', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 15000],
+        ];
+
+        $pipingPumps = [
+            ['kode' => 'PIPP130-01', 'nama_barang' => 'Pipa PVC AW ½ Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 3000],
+            ['kode' => 'PIPP130-02', 'nama_barang' => 'Pipa PVC AW 3/4 Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 3750],
+            ['kode' => 'PIPP130-03', 'nama_barang' => 'Pipa PVC AW 1 Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 4750],
+            ['kode' => 'PIPP130-04', 'nama_barang' => 'Pipa PVC AW 1 1/4 Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 5000],
+            ['kode' => 'PIPP130-05', 'nama_barang' => 'Pipa PVC AW 1,5 Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 6250],
+            ['kode' => 'PIPP130-06', 'nama_barang' => 'Pipa PVC D 2 Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 7500],
+            ['kode' => 'PIPP130-07', 'nama_barang' => 'Pipa PVC D 3 Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 20000],
+            ['kode' => 'PIPP130-08', 'nama_barang' => 'Pipa Polyethylene (PE) Dia 1/2 Inch', 'uty' => 1, 'satuan' => 'Meter', 'harga_satuan' => 7500],
+            ['kode' => 'PIPP130-09', 'nama_barang' => 'Pipa Polyethylene (PE) Dia 3/4 Inch', 'uty' => 1, 'satuan' => 'Meter', 'harga_satuan' => 9500],
+            ['kode' => 'PIPP130-10', 'nama_barang' => 'Pipa Polyethylene (PE) Dia 1 Inch', 'uty' => 1, 'satuan' => 'Meter', 'harga_satuan' => 10000],
+            ['kode' => 'PIPP130-11', 'nama_barang' => 'Pipa Polyethylene (PE) Dia 1 1/4 Inch', 'uty' => 1, 'satuan' => 'Meter', 'harga_satuan' => 12500],
+            ['kode' => 'PIPP130-12', 'nama_barang' => 'Stop Kran PVC 1/2 Icnh', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 55000],
+            ['kode' => 'PIPP130-13', 'nama_barang' => 'Stop Kran PVC 3/4 Icnh', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 70000],
+            ['kode' => 'PIPP130-14', 'nama_barang' => 'Stop Kran PVC 1 Icnh', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 82000],
+            ['kode' => 'PIPP130-15', 'nama_barang' => 'Stop Kran PVC 1 1/4 Icnh', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 95000],
+            ['kode' => 'PIPP130-16', 'nama_barang' => 'Mata Kran SS 1/2"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 15000],
+            ['kode' => 'PIPP130-17', 'nama_barang' => 'Double Naple 1/2"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 63000],
+            ['kode' => 'PIPP130-18', 'nama_barang' => 'Double Naple 3/4"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 115000],
+            ['kode' => 'PIPP130-19', 'nama_barang' => 'Double Naple 1"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 135000],
+            ['kode' => 'PIPP130-20', 'nama_barang' => 'Elbow TS AW 1/2" Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1225],
+            ['kode' => 'PIPP130-21', 'nama_barang' => 'Elbow TS AW 3/4" Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1575],
+            ['kode' => 'PIPP130-22', 'nama_barang' => 'Elbow TS AW 1" Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 2538],
+            ['kode' => 'PIPP130-23', 'nama_barang' => 'Elbow TS AW 1 1/4" Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 6213],
+            ['kode' => 'PIPP130-24', 'nama_barang' => 'Knee PVC 1/2 Inch Drat Dalam Kuningan', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 7500],
+            ['kode' => 'PIPP130-25', 'nama_barang' => 'Socket - PVC AW 1/2 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1050],
+            ['kode' => 'PIPP130-26', 'nama_barang' => 'Socket - PVC AW 3/4 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1313],
+            ['kode' => 'PIPP130-27', 'nama_barang' => 'Socket - PVC AW 1 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 2100],
+            ['kode' => 'PIPP130-28', 'nama_barang' => 'Socket - PVC AW 1 1/4 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 2100],
+            ['kode' => 'PIPP130-29', 'nama_barang' => 'Socket Pipa PE 1/2 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1050],
+            ['kode' => 'PIPP130-30', 'nama_barang' => 'Socket Pipa PE 3/4 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1313],
+            ['kode' => 'PIPP130-31', 'nama_barang' => 'Socket Pipa PE 1 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 2100],
+            ['kode' => 'PIPP130-32', 'nama_barang' => 'Socket Pipa PE 1 1/4 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 2100],
+            ['kode' => 'PIPP130-33', 'nama_barang' => 'Over Sock PVC AW 1/2" x 3/4 "', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1488],
+            ['kode' => 'PIPP130-34', 'nama_barang' => 'Over Sock PVC AW 1/2" x 1"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1575],
+            ['kode' => 'PIPP130-35', 'nama_barang' => 'Over Sock PVC AW 3/4" x 1"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1925],
+            ['kode' => 'PIPP130-36', 'nama_barang' => 'Over Sock PVC AW 1 x 1,5"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 4288],
+            ['kode' => 'PIPP130-37', 'nama_barang' => 'Over Sock PVC AW 1 x 2"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 5250],
+            ['kode' => 'PIPP130-38', 'nama_barang' => 'Over Sock PIPA PE 1/2" x 3/4 "', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1488],
+            ['kode' => 'PIPP130-39', 'nama_barang' => 'Over Sock PIPA PE 1/2" x 1"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1575],
+            ['kode' => 'PIPP130-40', 'nama_barang' => 'Over Sock PIPA PE 3/4" x 1"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 1925],
+            ['kode' => 'PIPP130-41', 'nama_barang' => 'Over Sock PIPA PE 1 x 1 1/4"', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 4288],
+            ['kode' => 'PIPP130-42', 'nama_barang' => 'Tee PVC AW 1/2 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 3000],
+            ['kode' => 'PIPP130-43', 'nama_barang' => 'Tee PVC AW 3/4 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 2275],
+            ['kode' => 'PIPP130-44', 'nama_barang' => 'Tee PVC AW 1 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 3763],
+            ['kode' => 'PIPP130-45', 'nama_barang' => 'Tee PVC AW 1 1/4 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 3763],
+            ['kode' => 'PIPP130-46', 'nama_barang' => 'Tee PVC AW 1/2 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 3000],
+            ['kode' => 'PIPP130-47', 'nama_barang' => 'Tee PVC AW 3/4 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 2275],
+            ['kode' => 'PIPP130-48', 'nama_barang' => 'Tee PVC AW 1 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 3763],
+            ['kode' => 'PIPP130-49', 'nama_barang' => 'Lem Pipa PVC ex Wavin', 'uty' => 1, 'satuan' => 'mg', 'harga_satuan' => 10000],
+            ['kode' => 'PIPP130-50', 'nama_barang' => 'Pipa PVC D 2 Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 55000],
+            ['kode' => 'PIPP130-51', 'nama_barang' => 'Pipa PVC D 2 1/2 Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 60000],
+            ['kode' => 'PIPP130-52', 'nama_barang' => 'Pipa PVC D 3 Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 80000],
+            ['kode' => 'PIPP130-53', 'nama_barang' => 'Pipa PVC D 4 Inch', 'uty' => 1, 'satuan' => 'Ujung', 'harga_satuan' => 120000],
+            ['kode' => 'PIPP130-54', 'nama_barang' => 'Elbow PVC D 2 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 4471],
+            ['kode' => 'PIPP130-55', 'nama_barang' => 'Elbow PVC D 2,5 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 6125],
+            ['kode' => 'PIPP130-56', 'nama_barang' => 'Elbow PVC D 3 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 15000],
+            ['kode' => 'PIPP130-57', 'nama_barang' => 'Elbow PVC D 4 Inch', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 19460],
+            ['kode' => 'PIPP130-58', 'nama_barang' => "Pipa Galvanis Medium A dia. 2\"", 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 53400],
+            ['kode' => 'PIPP130-59', 'nama_barang' => "Pipa Galvanis Medium A dia. 3\"", 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 75850],
+            ['kode' => 'PIPP130-60', 'nama_barang' => 'Pompa Air Listrik; Suction 9 m, Head 40 m; Kap. 35 l/min', 'uty' => 1, 'satuan' => 'Unit', 'harga_satuan' => 1500000],
+            ['kode' => 'PIPP130-61', 'nama_barang' => 'Jet Pump; Head 30 m; Kap. 30 l/sec', 'uty' => 1, 'satuan' => 'Unit', 'harga_satuan' => 950000],
+            ['kode' => 'PIPP130-62', 'nama_barang' => 'Jet Pump Ex Groundfos; Head 50 m; Kap. 72 l/sec', 'uty' => 1, 'satuan' => 'Unit', 'harga_satuan' => 4500000],
+            ['kode' => 'PIPP130-63', 'nama_barang' => 'Submersible Deep Well Pum; Head 70 m; Kap. 2 HP', 'uty' => 1, 'satuan' => 'Unit', 'harga_satuan' => 4750000],
+            ['kode' => 'PIPP130-64', 'nama_barang' => 'Submersible Deep Well Pum; Head 100 m; Kap. 1 HP', 'uty' => 1, 'satuan' => 'Unit', 'harga_satuan' => 6750000],
+            ['kode' => 'PIPP130-65', 'nama_barang' => 'Submersible Deep Well Pum; Head 70 m; Kap. 3 HP', 'uty' => 1, 'satuan' => 'Unit', 'harga_satuan' => 9500000],
+            ['kode' => 'PIPP130-66', 'nama_barang' => 'Selang Air Nilon 3/4 inch', 'uty' => 1, 'satuan' => 'bh', 'harga_satuan' => 27500],
+        ];        
+
+        $lightings = [
+            ['kode' => 'LIGH140-01', 'nama_barang' => 'Saklar Tunggal Merek Panasonic 10A, 220V', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 27500],
+            ['kode' => 'LIGH140-02', 'nama_barang' => 'Saklar Seri Merek Panasonic 10A, 220V', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 46500],
+            ['kode' => 'LIGH140-03', 'nama_barang' => 'Saklar Tukar Merek Panasonic 10A, 220V', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 72500],
+            ['kode' => 'LIGH140-04', 'nama_barang' => 'Saklar Tunggal Merek Boroco 10A, 220V', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 9000],
+            ['kode' => 'LIGH140-05', 'nama_barang' => 'Saklar Seri Merek Boroco 10A, 220V', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 10000],
+            ['kode' => 'LIGH140-06', 'nama_barang' => 'Saklar Tukar Merek Boroco 10A, 220V', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 25000],
+            ['kode' => 'LIGH140-07', 'nama_barang' => 'Saklar Tunggal Dan Stop Kontak Merek Panasonic 10A, 220V', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 27500],
+            ['kode' => 'LIGH140-08', 'nama_barang' => 'Saklar Seri Dan Stop Kontak Merek Panasonic 10A, 220V', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 46500],
+            ['kode' => 'LIGH140-09', 'nama_barang' => 'Saklar Tunggal dan Stop Kontak Merek Broco 10A, 220V', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 9000],
+            ['kode' => 'LIGH140-10', 'nama_barang' => 'Saklar Seri dan Stop Kontak Merek Broco 10A, 220V', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 12000],
+            ['kode' => 'LIGH140-11', 'nama_barang' => 'Stop Kontak Tanam Standard Merek Panasonic', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 30000],
+            ['kode' => 'LIGH140-12', 'nama_barang' => 'Stop Kontak Tanam Standard Merek Boroco', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 10000],
+            ['kode' => 'LIGH140-13', 'nama_barang' => 'Stop Kontak Tempel Standard Merek Boroko', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 10000],
+            ['kode' => 'LIGH140-14', 'nama_barang' => 'Stop Kontak Outdor Mobile 2 Lubang Merek Boroko', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 30000],
+            ['kode' => 'LIGH140-15', 'nama_barang' => 'Stop Kontak Male (Cok/Staker) Standard', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 30000],
+            ['kode' => 'LIGH140-16', 'nama_barang' => 'Inbow Box Plastik Persegi 75 x 75 x 35 mm', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 5000],
+            ['kode' => 'LIGH140-17', 'nama_barang' => 'Inbow Box Plastik Bulat dia. 75 mm', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 2000],
+            ['kode' => 'LIGH140-18', 'nama_barang' => 'Rood Brown (Arde)', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 38125],
+            ['kode' => 'LIGH140-19', 'nama_barang' => 'Kawat Tembaga 2,5 mm (Ground)', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 38125],
+            ['kode' => 'LIGH140-20', 'nama_barang' => 'Klem Grounding 5/8 "', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 6000],
+            ['kode' => 'LIGH140-21', 'nama_barang' => 'MCB Broco 1Ph 6 Ampere', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 45000],
+            ['kode' => 'LIGH140-22', 'nama_barang' => 'MCB MG 1Ph 10 Ampere', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 95000],
+            ['kode' => 'LIGH140-23', 'nama_barang' => 'MCB MG 1Ph 20 Ampere', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 125000],
+            ['kode' => 'LIGH140-24', 'nama_barang' => 'Panel Box Merek DEXTA 2 Group', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 15000],
+            ['kode' => 'LIGH140-25', 'nama_barang' => 'Panel Box Merek DEXTA 4 Group', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 45000],
+            ['kode' => 'LIGH140-26', 'nama_barang' => 'Isolasi Kabel ex Unibel', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 12500],
+            ['kode' => 'LIGH140-27', 'nama_barang' => 'Isolasi Kabel Dalam Air', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 7500],
+            ['kode' => 'LIGH140-28', 'nama_barang' => 'Kabel NYA 1,5 mm2', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 3200],
+            ['kode' => 'LIGH140-29', 'nama_barang' => 'Kabel NYA 2,5 mm2', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 4200],
+            ['kode' => 'LIGH140-30', 'nama_barang' => 'Kabel NYM 2 x 1,5 mm2', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 11500],
+            ['kode' => 'LIGH140-31', 'nama_barang' => 'Kabel NYM 2 x 2,5 mm2', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 15000],
+            ['kode' => 'LIGH140-32', 'nama_barang' => 'Kabel NYM 3 x 2,5 mm2', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 18000],
+            ['kode' => 'LIGH140-33', 'nama_barang' => 'Kabel NYY 2 x 1,5 mm2 Sumber Berkat', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 10000],
+            ['kode' => 'LIGH140-34', 'nama_barang' => 'Kabel NYY 2 x 2,5 mm2', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 3800],
+            ['kode' => 'LIGH140-35', 'nama_barang' => 'Kabel NYY 3 x 1,5 mm2', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 3800],
+            ['kode' => 'LIGH140-36', 'nama_barang' => 'Kabel NYY 3 x 2,5 mm2', 'uty' => 1, 'satuan' => "m'", 'harga_satuan' => 3800],
+            ['kode' => 'LIGH140-37', 'nama_barang' => 'KWH m\' 1 ph 5(20)A Fuji Dharma', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 225000],
+            ['kode' => 'LIGH140-38', 'nama_barang' => 'Sadel Index No. 10', 'uty' => 1, 'satuan' => 'dos', 'harga_satuan' => 5300],
+            ['kode' => 'LIGH140-39', 'nama_barang' => 'Sadel Index No. 12', 'uty' => 1, 'satuan' => 'dos', 'harga_satuan' => 6500],
+            ['kode' => 'LIGH140-40', 'nama_barang' => 'Fitting Tempel Merek Segi (MIS MART)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 9500],
+            ['kode' => 'LIGH140-41', 'nama_barang' => 'Fitting Tempel Merek Broco', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 15000],
+            ['kode' => 'LIGH140-42', 'nama_barang' => 'Fitting Gantung Merek Broco', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 16000],
+            ['kode' => 'LIGH140-43', 'nama_barang' => 'Fitting Gantung Universal Hitam', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 16000],
+            ['kode' => 'LIGH140-44', 'nama_barang' => 'Lampu LED 6 Watt Merek Philips', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 48000],
+            ['kode' => 'LIGH140-45', 'nama_barang' => 'Pipa Listrik (conduit)', 'uty' => 1, 'satuan' => 'Bh', 'harga_satuan' => 12500],
+        ];
+
+        foreach ($dayWorks as $item) {
+            DayWork::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }
+
+        foreach ($equipments as $item) {
+            Equipment::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }
+
+        foreach ($keramikFloors as $item) {
+            KeramikFloor::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }
+
+        foreach ($landStoneSands as $item) {
+            LandStoneSand::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }        
+
+        foreach ($rebars as $item) {
+            Rebar::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }        
+        foreach ($roofCeilingTiles as $item) {
+            RoofCeilingTile::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }
+        foreach ($tools as $item) {
+            Tools::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }
+        foreach ($woods as $item) {
+            Wood::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }    
+        foreach ($paintGlassWallpapers as $item) {
+            PaintGlassWallpaper::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }  
+        foreach ($others as $item) {
+            Others::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        } 
+        foreach ($oilChemicalPerekat as $item) {
+            OilChemicalPerekat::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }  
+        foreach ($sanitaries as $item) {
+            Sanitary::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        } 
+        foreach ($pipingPumps as $item) {
+            PipingPump::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        } 
+        foreach ($lightings as $item) {
+            Lighting::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }     
+        foreach ($cements as $item) {
+            Cement::create([
+                'kode' => $item['kode'],
+                'nama_barang' => $item['nama_barang'],
+                'uty' => $item['uty'],
+                'satuan' => $item['satuan'],
+                'harga_satuan' => $item['harga_satuan'],
+                'stock_bahan' => 0,
+                'perumahan_id' => 1,
+            ]);
+        }                                                       
+    }
+}
