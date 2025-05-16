@@ -30,6 +30,10 @@ class CostElementSeeder extends Seeder
             ['code' => 'KI1001', 'desc' => 'Hutang Pihak Ketiga (Pinjaman Pihak Ketiga)'],
             ['code' => 'KI1101', 'desc' => 'Hutang Berelasi (Setoran dari Mitra Relasi atau Pemegang Saham)'],
 
+            ['code' => 'KO0101', 'desc' => 'Biaya Tanah dan Making Tanah'],
+            ['code' => 'KO0102', 'desc' => 'Biaya Prasarana Jalan, Drainase, Listrik, air dll'],
+            ['code' => 'KO0103', 'desc' => 'Biaya Sarana bangunan; (Biaya KPR, IMB, Listrik, PDAM, AJB, Sertifikat)'],
+            ['code' => 'KO0104', 'desc' => 'Biaya Konstuksi Bangunan'],
             ['code' => 'KO0105', 'desc' => 'Biaya Marketing (Iklan, Brosur, Marketing Fee, dll)'],
             ['code' => 'KO0106', 'desc' => 'Pajak Bayar Dimuka (PNBP, BPHTB, PPh 23, PPh 21, PPN)'],
             ['code' => 'KO0107', 'desc' => 'Biaya Lainnya yang berhubungan dengan proyek'],

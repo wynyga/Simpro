@@ -24,7 +24,7 @@ class TransaksiSeeder extends Seeder
             $total_harga_jual = $harga_standar + $kelebihan_tanah + $penambahan_luas_bangunan + $perubahan_spek_bangunan;
 
             if ($i <= 5) {
-                // Transaksi LUNAS: tidak ada plafon, tidak perlu buat transaksi kas atau kwitansi
+                // Transaksi LUNAS
                 $minimum_dp = $total_harga_jual;
                 $plafon_kpr = 0;
                 $kpr_disetujui = 'Tidak';
@@ -50,39 +50,39 @@ class TransaksiSeeder extends Seeder
                 'perumahan_id' => 1,
             ]);
 
-            // Hanya buat transaksi kas & kwitansi untuk yang HUTANG
-            if ($i > 5 && $minimum_dp > 0) {
-                $kas = TransaksiKas::create([
-                    'tanggal' => Carbon::now(),
-                    'kode' => '101',
-                    'jumlah' => $minimum_dp,
-                    'saldo_setelah_transaksi' => null,
-                    'metode_pembayaran' => 'Cash',
-                    'dibuat_oleh' => 'Seeder',
-                    'keterangan_objek_transaksi' => 'DP Penjualan Unit: ' . $transaksi->unit->nomor_unit,
-                    'perumahan_id' => 1,
-                    'status' => 'approved',
-                    'sumber_transaksi' => 'penjualan',
-                    'keterangan_transaksi_id' => $transaksi->id,
-                ]);
+            // Buat transaksi kas & kwitansi baik untuk LUNAS maupun HUTANG
+            $jumlah_pembayaran = $minimum_dp; // untuk LUNAS = full, HUTANG = DP
 
-                $no_doc = KwitansiService::generateNoDoc(1, 'CI');
+            $kas = TransaksiKas::create([
+                'tanggal' => Carbon::now(),
+                'kode' => '101',
+                'jumlah' => $jumlah_pembayaran,
+                'saldo_setelah_transaksi' => null,
+                'metode_pembayaran' => 'Cash',
+                'dibuat_oleh' => 'Seeder',
+                'keterangan_objek_transaksi' => 'Pembayaran Penjualan Unit: ' . $transaksi->unit->nomor_unit,
+                'perumahan_id' => 1,
+                'status' => 'approved',
+                'sumber_transaksi' => 'penjualan',
+                'keterangan_transaksi_id' => $transaksi->id,
+            ]);
 
-                Kwitansi::create([
-                    'transaksi_kas_id' => $kas->id,
-                    'perumahan_id' => 1,
-                    'no_doc' => $no_doc,
-                    'tanggal' => Carbon::now(),
-                    'dari' => $kas->dibuat_oleh,
-                    'jumlah' => $kas->jumlah,
-                    'untuk_pembayaran' => 'DP Penjualan Unit: ' . $transaksi->unit->nomor_unit,
-                    'metode_pembayaran' => $kas->metode_pembayaran,
-                    'dibuat_oleh' => 'Seeder',
-                    'disetor_oleh' => $kas->dibuat_oleh,
-                    'mengetahui' => null,
-                    'gudang_in_id' => null,
-                ]);
-            }
+            $no_doc = KwitansiService::generateNoDoc(1, 'CI');
+
+            Kwitansi::create([
+                'transaksi_kas_id' => $kas->id,
+                'perumahan_id' => 1,
+                'no_doc' => $no_doc,
+                'tanggal' => Carbon::now(),
+                'dari' => $kas->dibuat_oleh,
+                'jumlah' => $kas->jumlah,
+                'untuk_pembayaran' => 'Pembayaran Penjualan Unit: ' . $transaksi->unit->nomor_unit,
+                'metode_pembayaran' => $kas->metode_pembayaran,
+                'dibuat_oleh' => 'Seeder',
+                'disetor_oleh' => $kas->dibuat_oleh,
+                'mengetahui' => null,
+                'gudang_in_id' => null,
+            ]);
         }
     }
 }

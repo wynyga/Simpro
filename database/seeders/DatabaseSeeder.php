@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
             AUserAndPerumahanSeeder::class,
             CostCenterSeeder::class,
             CostElementSeeder::class,
-            CostTeeSeeder::class,
+            CostTeeSeederOneForAll::class,
         ]);
         $this->call([
             DayWorkSeeder::class,
@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             BlokSeeder::class,
             UnitSeeder::class,
             UserPerumahanSeeder::class,
-            TransaksiSeeder::class
+            TransaksiSeeder::class,
+            TransaksiKasTahunanSeeder::class
         ]);
     }
 }
