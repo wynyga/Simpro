@@ -23,6 +23,9 @@ class Sttb extends Model
         'diserahkan_oleh',
         'mengetahui',
     ];
+    protected $casts = [
+        'jumlah' => 'float'
+    ];    
 
     public function gudangIn()
     {

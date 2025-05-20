@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             BlokSeeder::class,
             UnitSeeder::class,
             UserPerumahanSeeder::class,
-            TransaksiSeeder::class,
+            // TransaksiSeeder::class,
             TransaksiKasTahunanSeeder::class
         ]);
     }

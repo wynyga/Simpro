@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LapBulanan;
 use App\Models\CostTee;
 use Illuminate\Http\Request;
+use App\Helpers\LapBulananService;
 
 class LapBulananController extends Controller
 {
@@ -212,37 +213,35 @@ class LapBulananController extends Controller
     public function getLaporanTahunan($tahun)
     {
         $user = auth()->user();
-    
+
         $laporans = LapBulanan::with('costTee.costElement.costCentre')
             ->where('perumahan_id', $user->perumahan_id)
             ->where('tahun', $tahun)
             ->get();
-    
-        $rekap = [];
-    
-        foreach ($laporans as $laporan) {
-            $bulan = $laporan->bulan;
-            $kategori = optional($laporan->costTee)->description ?? 'Tidak Diketahui';
-            $jenis = optional($laporan->costTee->costElement->costCentre)->cost_code ?? '-';
-            $jumlah = $laporan->jumlah;
-    
-            $rekap[$bulan][] = [
-                'kategori' => $kategori,
-                'jenis' => $jenis,
-                'jumlah' => $jumlah,
-            ];
-        }
-    
-        $totalKasMasuk = $laporans->filter(function ($laporan) {
-            return optional($laporan->costTee->costElement->costCentre)->cost_code === 'KASIN';
-        })->sum('jumlah');
-    
-        $totalKasKeluar = $laporans->filter(function ($laporan) {
-            return optional($laporan->costTee->costElement->costCentre)->cost_code === 'KASOUT';
-        })->sum('jumlah');
-    
+
+        $totalKasMasuk = $laporans->where('jenis_transaksi', 'KASIN')->sum('jumlah');
+        $totalKasKeluar = $laporans->where('jenis_transaksi', 'KASOUT')->sum('jumlah');
         $sisaKas = $totalKasMasuk - $totalKasKeluar;
-    
+
+        $rekap = $laporans->groupBy('bulan')->map(function ($bulanItems, $bulan) {
+            return [
+                'bulan' => (int) $bulan,
+                'item' => $bulanItems->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'bulan' => $item->bulan,
+                        'tahun' => $item->tahun,
+                        'jumlah' => number_format($item->jumlah, 2, ',', '.'),
+                        'jumlah_raw' => $item->jumlah, 
+                        'code_account' => $item->code_account,
+                        'kategori' => optional($item->costTee)->description,
+                        'cost_code' => optional($item->costTee->costElement->costCentre)->cost_code,
+                        'jenis_transaksi' => $item->jenis_transaksi,
+                    ];
+                })->values()
+            ];
+        })->values();
+
         return response()->json([
             'tahun' => $tahun,
             'total_kas_masuk' => [
