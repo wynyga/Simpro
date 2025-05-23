@@ -23,7 +23,7 @@ return new class extends Migration
             $table->enum('kpr_disetujui', ['Ya', 'Tidak'])->default('Tidak');
             $table->decimal('minimum_dp', 15, 2);
             $table->decimal('plafon_kpr', 15, 2);
-            $table->decimal('biaya_booking', 15, 2)->nullable(); // Booking fee optional
+            $table->decimal('biaya_booking', 15, 2)->nullable();
             $table->timestamps();
         });
     }

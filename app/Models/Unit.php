@@ -15,7 +15,7 @@ class Unit extends Model
         'blok_id',
         'tipe_rumah_id',
         'nomor_unit',
-        'status' // Menambahkan status jika diperlukan
+        'status' 
     ];
 
     public function blok()
@@ -30,6 +30,6 @@ class Unit extends Model
 
     public function transaksi()
     {
-        return $this->hasMany(Transaksi::class, 'id_unit'); // Sesuaikan foreign key jika perlu
+        return $this->hasMany(Transaksi::class, 'id_unit'); 
     }
 }

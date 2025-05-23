@@ -39,6 +39,5 @@ class Kwitansi extends Model
     {
         return $this->belongsTo(GudangIn::class, 'gudang_in_id');
     }
-
 }
 

@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->decimal('jumlah', 15, 2); 
             $table->string('jenis_transaksi')->nullable();
             $table->string('code_account')->index(); 
-
             $table->timestamps();
         });
     }

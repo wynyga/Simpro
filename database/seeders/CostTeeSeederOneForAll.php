@@ -11,7 +11,7 @@ class CostTeeSeederOneForAll extends Seeder
     public function run()
     {
         $data = [
-            ['code' => 'KI010101', 'description' => 'Peneriaan Booking Fee'],
+            ['code' => 'KI010101', 'description' => 'Penerimaan Booking Fee'],
             ['code' => 'KI020101', 'description' => 'Penerimaan dari Down Payment'],
             ['code' => 'KI030101', 'description' => 'Biaya Kelebihan Tanah'],
             ['code' => 'KI030201', 'description' => 'Biaya Penambahan Spek bangunan'],

@@ -18,8 +18,6 @@ class Perumahan extends Model
         'lokasi',
         'inisial'
     ];
-
-        // Mendefinisikan relasi dengan tabel stock
     public function day_work()
     {
         return $this->hasMany(DayWork::class, 'perumahan_id');
@@ -100,25 +98,21 @@ class Perumahan extends Model
         return $this->hasMany(Log::class, 'perumahan_id');
     }
 
-    // Relasi dengan tabel gudang_in
     public function gudangIns()
     {
         return $this->hasMany(GudangIn::class, 'perumahan_id');
     }
 
-    // Relasi dengan tabel gudang_out
     public function gudangOuts()
     {
         return $this->hasMany(GudangOut::class, 'perumahan_id');
     }
 
-    // Relasi dengan tabel transaksi_kas
     public function transaksiKas()
     {
         return $this->hasMany(TransaksiKas::class, 'perumahan_id');
     }
 
-    // Relasi ke tipe_rumah
     public function tipeRumah()
     {
         return $this->hasMany(TipeRumah::class, 'id_perumahan');

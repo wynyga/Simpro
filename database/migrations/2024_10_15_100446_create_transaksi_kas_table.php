@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('transaksi_kas', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggal'); // Tanggal transaksi
-            $table->enum('kode', ['101', '102']); // 101 untuk cash in, 102 untuk cash out
+            $table->date('tanggal');
+            $table->enum('kode', ['101', '102']); 
             $table->string('status')->default('pending');
-            $table->decimal('jumlah', 18, 2); // Jumlah dalam Rupiah
-            $table->decimal('saldo_setelah_transaksi', 15, 2)->nullable(); // Saldo setelah transaksi
+            $table->decimal('jumlah', 18, 2); 
+            $table->decimal('saldo_setelah_transaksi', 15, 2)->nullable(); 
             $table->enum('metode_pembayaran', ['Cash', 'Transfer Bank', 'Giro', 'Cek', 'Draft'])->default('Cash');
-            $table->string('dibuat_oleh'); // Nama user
-            $table->text('keterangan_objek_transaksi')->nullable(); // Keterangan objek transaksi
+            $table->string('dibuat_oleh'); 
+            $table->text('keterangan_objek_transaksi')->nullable(); 
             $table->timestamps();
         });
     }

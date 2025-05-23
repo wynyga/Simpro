@@ -25,5 +25,4 @@ class LandStoneSand extends Model
     {
         return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
-
 }

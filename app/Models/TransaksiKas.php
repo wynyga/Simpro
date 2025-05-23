@@ -22,22 +22,24 @@ class TransaksiKas extends Model
         'keterangan_transaksi_id' 
     ];
 
-    // Pastikan nilai jumlah dan saldo selalu dalam bentuk float
     protected $casts = [
         'jumlah' => 'float',
         'saldo_setelah_transaksi' => 'float',
         'keterangan_transaksi_id' => 'float',
     ];
 
-    // Relasi balik ke Perumahan
     public function perumahan()
     {
         return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
 
-        public function kwitansi()
+    public function kwitansi()
     {
         return $this->hasOne(Kwitansi::class, 'transaksi_kas_id');
     }
 
+    public function costTee()
+    {
+        return $this->belongsTo(CostTee::class, 'keterangan_transaksi_id');
+    }
 }

@@ -12,9 +12,8 @@ return new class extends Migration {
             $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
             $table->string('cost_element_code')->index();
             $table->string('cost_centre_code')->index(); 
-            $table->string('description'); // Biaya Marketing
+            $table->string('description'); 
             $table->timestamps();
-
             $table->foreign('cost_centre_code')->references('cost_centre_code')->on('cost_centres')->onDelete('cascade');
         });
     }

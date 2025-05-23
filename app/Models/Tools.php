@@ -19,11 +19,8 @@ class Tools extends Model
     {
         return 'EQT30-';
     }
-
-    // Relasi balik ke Perumahan
     public function perumahan()
     {
         return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
-
 }

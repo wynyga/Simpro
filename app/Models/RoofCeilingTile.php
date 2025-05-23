@@ -19,12 +19,9 @@ class RoofCeilingTile extends Model
     {
         return 'RCT80-';
     }
-
-    // Relasi balik ke Perumahan
     public function perumahan()
     {
         return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
-
 }
 

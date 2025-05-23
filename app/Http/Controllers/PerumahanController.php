@@ -18,7 +18,6 @@ class PerumahanController extends Controller
     {
         $perumahans = Perumahan::all(); 
         return response()->json($perumahans);
-        //return view('perumahan.index', compact('perumahans'));  // Mengirim data ke view
     }
     
     public function store(Request $request)
@@ -34,10 +33,8 @@ class PerumahanController extends Controller
             'messages'=>'Perumahan berhasil ditambahkan',
             'data'=>$perumahan
         ]);
-        //return redirect()->route('perumahan.index')->with('success', 'Perumahan berhasil ditambahkan.');
     }
 
-    // Menambahkan fungsi untuk pemilihan perumahan
     public function selectPerumahan(Request $request)
     {
         $perumahanId = $request->input('perumahan_id');

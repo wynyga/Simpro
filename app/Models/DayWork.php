@@ -21,11 +21,9 @@ class DayWork extends Model
         return 'MDW10-';
     }
 
-    // Relasi balik ke Perumahan
     public function perumahan()
     {
         return $this->belongsTo(Perumahan::class, 'perumahan_id');
     }
-
 }
 

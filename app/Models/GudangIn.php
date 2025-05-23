@@ -36,5 +36,4 @@ class GudangIn extends Model
     {
         return $this->hasOne(Kwitansi::class, 'gudang_in_id')->where('no_doc', 'like', '%/CO-%');
     }
-    
 }

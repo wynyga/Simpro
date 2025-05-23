@@ -32,7 +32,6 @@ class KwitansiController extends Controller
         $perumahan = Perumahan::findOrFail($transaksiKas->perumahan_id);
         $kodeJenis = $transaksiKas->kode === '101' ? 'CI' : 'CO';
 
-        // 🔁 Gunakan helper shared
         $no_doc = KwitansiService::generateNoDoc($perumahan->id, $kodeJenis);
 
         $untukPembayaran = null;
@@ -126,6 +125,5 @@ class KwitansiController extends Controller
 
         return response()->json($kwitansis);
     }
-
 
 }

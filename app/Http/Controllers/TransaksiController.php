@@ -274,4 +274,16 @@ class TransaksiController extends Controller
         $transaksi->delete();
         return response()->json(['message' => 'Transaksi berhasil dihapus'], 204);
     }
+
+    public function listAll()
+    {
+        $user = auth()->user();
+
+        $transaksi = Transaksi::with('unit', 'userPerumahan')
+            ->where('perumahan_id', $user->perumahan_id)
+            ->get();
+
+        return response()->json($transaksi);
+    }
+
 }

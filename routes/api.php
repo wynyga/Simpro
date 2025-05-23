@@ -120,6 +120,7 @@ Route::prefix('penjualan')->group(function () {
         Route::post('/store', [TransaksiController::class, 'store']);
         Route::patch('/{id}', [TransaksiController::class, 'update']);
         Route::delete('/{id}', [TransaksiController::class, 'destroy']);
+        Route::get('/list/all', [TransaksiController::class, 'listAll']);
     });
 });
 
@@ -191,7 +192,7 @@ Route::prefix('lap_bulanan')->middleware('auth')->group(function () {
 });
 
 Route::prefix('kwitansi')->middleware('auth')->group(function () {
-    Route::get('/', [KwitansiController::class, 'index']); // <--- GET paginated
+    Route::get('/', [KwitansiController::class, 'index']); // <--- Memisahkan Halaman
     Route::get('/all', [KwitansiController::class, 'all']); 
     Route::post('store', [KwitansiController::class, 'store']); // simpan kwitansi
     Route::get('/{id}', [KwitansiController::class, 'show']); // detail kwitansi

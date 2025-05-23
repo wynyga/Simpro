@@ -108,5 +108,4 @@ class UnitController extends Controller
 
         return response()->json($units);
     }
-
 }

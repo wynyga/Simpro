@@ -189,66 +189,66 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-/**
- * Get all users.
- *
- * @return \Illuminate\Http\JsonResponse
- */
-public function getUsers()
-{
-    $users = User::all(['id', 'name', 'email', 'role', 'perumahan_id', 'created_at']);
+    /**
+     * Get all users.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUsers()
+    {
+        $users = User::all(['id', 'name', 'email', 'role', 'perumahan_id', 'created_at']);
 
-    return $this->sendResponse($users, 'Daftar pengguna berhasil diambil.');
-}
-
-/**
- * Reset user password.
- *
- * @return \Illuminate\Http\JsonResponse
- */
-public function resetUserPassword(Request $request, $id)
-{
-    $validator = FacadesValidator::make($request->all(), [
-        'new_password' => 'required|min:6',
-        'confirm_password' => 'required|same:new_password',
-    ]);
-
-    if ($validator->fails()) {
-        return $this->sendError('Validation Error.', $validator->errors());
+        return $this->sendResponse($users, 'Daftar pengguna berhasil diambil.');
     }
 
-    $user = User::find($id);
-    if (!$user) {
-        return $this->sendError('User not found.', [], 404);
+    /**
+     * Reset user password.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resetUserPassword(Request $request, $id)
+    {
+        $validator = FacadesValidator::make($request->all(), [
+            'new_password' => 'required|min:6',
+            'confirm_password' => 'required|same:new_password',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+
+        $user = User::find($id);
+        if (!$user) {
+            return $this->sendError('User not found.', [], 404);
+        }
+
+        $user->password = bcrypt($request->new_password);
+        $user->save();
+
+        return $this->sendResponse([], 'Password pengguna berhasil direset.');
     }
 
-    $user->password = bcrypt($request->new_password);
-    $user->save();
+    public function deleteUser($id)
+    {
+        $authUser = auth()->user();
 
-    return $this->sendResponse([], 'Password pengguna berhasil direset.');
-}
+        // Cek apakah user yang login adalah direktur
+        if ($authUser->role !== 'Direktur') {
+            return $this->sendError('Hanya direktur yang dapat menghapus pengguna.', [], 403);
+        }
 
-public function deleteUser($id)
-{
-    $authUser = auth()->user();
+        $user = User::find($id);
 
-    // Cek apakah user yang login adalah direktur
-    if ($authUser->role !== 'Direktur') {
-        return $this->sendError('Hanya direktur yang dapat menghapus pengguna.', [], 403);
+        if (!$user) {
+            return $this->sendError('User tidak ditemukan.', [], 404);
+        }
+
+        if ($user->id === $authUser->id) {
+            return $this->sendError('Tidak dapat menghapus akun sendiri.', [], 403);
+        }
+
+        $user->delete();
+
+        return $this->sendResponse([], 'User berhasil dihapus.');
     }
-
-    $user = User::find($id);
-
-    if (!$user) {
-        return $this->sendError('User tidak ditemukan.', [], 404);
-    }
-
-    if ($user->id === $authUser->id) {
-        return $this->sendError('Tidak dapat menghapus akun sendiri.', [], 403);
-    }
-
-    $user->delete();
-
-    return $this->sendResponse([], 'User berhasil dihapus.');
-}
 }

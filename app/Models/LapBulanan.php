@@ -23,17 +23,11 @@ class LapBulanan extends Model
         'jumlah' => 'float'
     ];
 
-    /**
-     * Relasi ke CostTee
-     */
     public function costTee()
     {
         return $this->belongsTo(CostTee::class, 'cost_tee_id');
     }
 
-    /**
-     * Relasi shortcut ke CostCentre via CostTee -> CostElement -> CostCentre
-     */
     public function costCentre()
     {
         return $this->hasOneThrough(
@@ -46,9 +40,6 @@ class LapBulanan extends Model
         );
     }
 
-    /**
-     * Generate kode akun otomatis sebelum disimpan
-     */
     protected static function boot()
     {
         parent::boot();

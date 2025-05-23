@@ -26,6 +26,7 @@ class TransaksiKasController extends Controller
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
 
+        // Hitung total kas masuk (101) dan keluar (102) yang sudah disetujui
         $totalCashIn = TransaksiKas::where('kode', '101')
             ->where('perumahan_id', $perumahanId)
             ->where('status', 'approved')
@@ -38,21 +39,25 @@ class TransaksiKasController extends Controller
 
         $saldoKas = $totalCashIn - $totalCashOut;
 
-        $transaksiKas = TransaksiKas::where('perumahan_id', $perumahanId)->get()->map(function ($transaksi) {
-            return [
-                'id' => $transaksi->id,
-                'tanggal' => $transaksi->tanggal,
-                'kode' => $transaksi->kode,
-                'jumlah' => $transaksi->jumlah ?? 0,
-                'keterangan_objek_transaksi' => $transaksi->keterangan_objek_transaksi ?? "-",
-                'metode_pembayaran' => $transaksi->metode_pembayaran ?? "Cash",
-                'saldo_setelah_transaksi' => $transaksi->saldo_setelah_transaksi ?? 0,
-                'dibuat_oleh' => $transaksi->dibuat_oleh ?? "Admin",
-                'status' => $transaksi->status,
-                'sumber_transaksi' => $transaksi->sumber_transaksi ?? null,
-                'keterangan_transaksi_id' => $transaksi->keterangan_transaksi_id ?? null,
-            ];
-        });
+        // Ambil transaksi dengan relasi ke cost_tees
+        $transaksiKas = TransaksiKas::with('costTee')
+            ->where('perumahan_id', $perumahanId)
+            ->get()
+            ->map(function ($transaksi) {
+                return [
+                    'id' => $transaksi->id,
+                    'tanggal' => $transaksi->tanggal,
+                    'kode' => $transaksi->kode,
+                    'jumlah' => $transaksi->jumlah ?? 0,
+                    'keterangan_transaksi' => $transaksi->costTee->description ?? '-', // Ambil dari relasi cost_tees
+                    'metode_pembayaran' => $transaksi->metode_pembayaran ?? "Cash",
+                    'saldo_setelah_transaksi' => $transaksi->saldo_setelah_transaksi ?? 0,
+                    'dibuat_oleh' => $transaksi->dibuat_oleh ?? "Admin",
+                    'status' => $transaksi->status,
+                    'sumber_transaksi' => $transaksi->sumber_transaksi ?? null,
+                    'keterangan_transaksi_id' => $transaksi->keterangan_transaksi_id ?? null,
+                ];
+            });
 
         return response()->json([
             'totalCashIn' => $totalCashIn,
@@ -61,8 +66,7 @@ class TransaksiKasController extends Controller
             'transaksiKas' => $transaksiKas
         ]);
     }
-    
-    
+ 
     public function getJournalSummary($bulan, $tahun)
     {
         $user = auth()->user();
@@ -97,8 +101,6 @@ class TransaksiKasController extends Controller
         ]);
     }
 
-    
-
     public function store(Request $request)
     {
         $user = auth()->user();
@@ -132,7 +134,6 @@ class TransaksiKasController extends Controller
 
         ]);
         
-
         return response()->json([
             'message' => 'Transaksi KAS berhasil disimpan dan menunggu persetujuan.',
             'data' => $transaksi

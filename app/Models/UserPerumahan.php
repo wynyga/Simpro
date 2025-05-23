@@ -18,7 +18,6 @@ class UserPerumahan extends Model
         'perumahan_id'
     ];
 
-    // Relasi ke transaksi
     public function transaksi()
     {
         return $this->hasMany(Transaksi::class, 'id_user');

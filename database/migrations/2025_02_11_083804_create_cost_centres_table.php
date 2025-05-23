@@ -10,12 +10,11 @@ return new class extends Migration {
         Schema::create('cost_centres', function (Blueprint $table) {
             $table->id();
             $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
-            $table->string('cost_centre_code')->index(); // tambahkan index di sini
+            $table->string('cost_centre_code')->index(); 
             $table->string('description');
             $table->string('cost_code');
             $table->timestamps();
         });
-        
     }
 
     public function down()

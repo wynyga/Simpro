@@ -15,17 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transaksi_kas_id')->constrained('transaksi_kas')->onDelete('cascade');
             $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
-            $table->string('no_doc')->unique(); // contoh: 22/CI-GBA/THN 2024
+            $table->string('no_doc')->unique(); 
             $table->date('tanggal');
-    
-            $table->string('dari'); // nama pembayar
+            $table->string('dari'); 
             $table->decimal('jumlah', 20, 2);
             $table->text('untuk_pembayaran');
             $table->enum('metode_pembayaran', ['Cash', 'Transfer Bank','Giro','Cek','Draft']);
             $table->string('dibuat_oleh')->nullable();
             $table->string('disetor_oleh')->nullable();
             $table->string('mengetahui')->nullable();
-    
             $table->timestamps();
         });
     }
