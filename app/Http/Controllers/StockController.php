@@ -226,38 +226,36 @@ class StockController extends Controller
         return response()->json(['message' => 'Stock berhasil dihapus'], 204);
     }
 
-    public function getStockInventory($bulan, $tahun)
+    public function getStockInventory()
     {
         $user = auth()->user();
         $perumahanId = $user->perumahan_id;
-    
+
         if (empty($perumahanId)) {
             return response()->json(['error' => 'User does not have a perumahan_id.'], 403);
         }
-    
-        // Mengambil total nilai bahan/material (harga_satuan * stock_bahan) berdasarkan bulan dan tahun
+
         $totalStockValue = 0;
-    
+
         $models = [
             DayWork::class, Equipment::class, Tools::class, LandStoneSand::class, Cement::class,
             Rebar::class, Wood::class, RoofCeilingTile::class, KeramikFloor::class, PaintGlassWallpaper::class,
             Others::class, OilChemicalPerekat::class, Sanitary::class, PipingPump::class, Lighting::class
         ];
-    
+
         foreach ($models as $model) {
             $totalStockValue += $model::where('perumahan_id', $perumahanId)
-                ->whereYear('updated_at', $tahun) // Filter berdasarkan tahun
-                ->whereMonth('updated_at', $bulan) // Filter berdasarkan bulan
-                ->sum(DB::raw('harga_satuan * stock_bahan')); // Menghitung total nilai stok
+                ->sum(DB::raw('harga_satuan * stock_bahan'));
         }
-    
+
         return response()->json([
             'persediaan_bahan' => [
-                'code_account' => 'GD0102', // Sesuai dengan laporan bulanan
-                'total_rp' => round($totalStockValue, 2) // Mengembalikan float, bukan string
+                'code_account' => 'GD0102',
+                'total_rp' => round($totalStockValue, 2)
             ]
         ]);
     }
+
     
     
     public function searchStock(Request $request)

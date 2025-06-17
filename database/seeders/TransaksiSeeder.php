@@ -17,27 +17,24 @@ class TransaksiSeeder extends Seeder
         $booking_fee = 2_000_000;
 
         for ($i = 1; $i <= 10; $i++) {
-            // Hitung komponen harga tambahan
+            // Komponen tambahan harga
             $kelebihan_tanah = rand(0, 5_000_000);
             $penambahan_luas_bangunan = rand(0, 10_000_000);
             $perubahan_spek_bangunan = rand(0, 5_000_000);
 
             $total_harga_jual = $harga_standar + $kelebihan_tanah + $penambahan_luas_bangunan + $perubahan_spek_bangunan;
 
-            // Penentuan status: LUNAS untuk 5 transaksi pertama
+            // 5 data pertama dianggap lunas
             $isLunas = $i <= 5;
 
             $minimum_dp = $isLunas
-                ? $total_harga_jual      // Jika lunas, DP = total harga jual
-                : (int) ($total_harga_jual * 0.3); // Jika hutang, DP hanya 30%
+                ? $total_harga_jual
+                : (int) ($total_harga_jual * 0.3);
 
-            $plafon_kpr = $isLunas
-                ? 0                     // Tidak ada KPR kalau lunas
-                : $total_harga_jual - $minimum_dp;
-
+            $sisa_hutang = $total_harga_jual - $minimum_dp;
             $kpr_disetujui = $isLunas ? 'Tidak' : 'Ya';
 
-            // Buat data transaksi
+            // Simpan transaksi
             $transaksi = Transaksi::create([
                 'unit_id' => $i,
                 'user_id' => $i,
@@ -47,18 +44,15 @@ class TransaksiSeeder extends Seeder
                 'perubahan_spek_bangunan' => $perubahan_spek_bangunan,
                 'total_harga_jual' => $total_harga_jual,
                 'minimum_dp' => $minimum_dp,
-                'plafon_kpr' => $plafon_kpr,
+                'sisa_hutang' => $sisa_hutang,
                 'kpr_disetujui' => $kpr_disetujui,
                 'biaya_booking' => $booking_fee,
                 'perumahan_id' => 1,
             ]);
 
-            // Tentukan jumlah yang akan dibayarkan di TransaksiKas
-            $jumlah_pembayaran = $isLunas
-                ? $total_harga_jual      // Bayar full
-                : $minimum_dp;           // Hanya bayar DP
+            // Transaksi kas
+            $jumlah_pembayaran = $isLunas ? $total_harga_jual : $minimum_dp;
 
-            // Buat transaksi kas
             $kas = TransaksiKas::create([
                 'tanggal' => Carbon::now(),
                 'kode' => '101',
@@ -73,7 +67,7 @@ class TransaksiSeeder extends Seeder
                 'keterangan_transaksi_id' => $transaksi->id,
             ]);
 
-            // Buat kwitansi atas transaksi kas tersebut
+            // Kwitansi
             $no_doc = KwitansiService::generateNoDoc(1, 'CI');
 
             Kwitansi::create([

@@ -22,7 +22,8 @@ return new class extends Migration
             $table->decimal('total_harga_jual', 15, 2);
             $table->enum('kpr_disetujui', ['Ya', 'Tidak'])->default('Tidak');
             $table->decimal('minimum_dp', 15, 2);
-            $table->decimal('plafon_kpr', 15, 2);
+            $table->decimal('plafon_kpr', 15, 2)->nullable();
+            $table->decimal('sisa_hutang', 15, 2);
             $table->decimal('biaya_booking', 15, 2)->nullable();
             $table->timestamps();
         });

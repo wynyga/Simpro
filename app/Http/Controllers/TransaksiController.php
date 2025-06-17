@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaksi;
 use App\Models\Unit;
 use App\Models\UserPerumahan;
+use App\Models\TransaksiKas;
 use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
@@ -65,6 +66,7 @@ class TransaksiController extends Controller
         $data['kelebihan_tanah'] = $data['kelebihan_tanah'] ?? 0;
         $data['penambahan_luas_bangunan'] = $data['penambahan_luas_bangunan'] ?? 0;
         $data['perubahan_spek_bangunan'] = $data['perubahan_spek_bangunan'] ?? 0;
+        $data['biaya_booking'] = $data['biaya_booking'] ?? 0;
 
         // Hitung total harga jual
         $data['total_harga_jual'] =
@@ -79,21 +81,23 @@ class TransaksiController extends Controller
         }
 
         // Cegah duplikasi penjualan untuk unit yang sama
-        if (\App\Models\Transaksi::where('unit_id', $data['unit_id'])->exists()) {
+        if (Transaksi::where('unit_id', $data['unit_id'])->exists()) {
             return response()->json(['error' => 'Unit ini sudah memiliki transaksi penjualan.'], 409);
         }
 
-        // Tambahan metadata
-        $data['plafon_kpr'] = $data['total_harga_jual'] - $data['minimum_dp'];
+        // Hitung dan simpan sisa hutang (total harga jual - DP)
+        $data['sisa_hutang'] = $data['total_harga_jual'] - $data['minimum_dp'];
+
+        // Metadata tambahan
         $data['perumahan_id'] = $user->perumahan_id;
         $data['dibuat_oleh'] = $user->name;
 
         // Simpan transaksi penjualan
-        $transaksi = \App\Models\Transaksi::create($data);
+        $transaksi = Transaksi::create($data);
 
-        // Jika ada DP, simpan ke transaksi kas dan buat kwitansi
+        // Jika ada DP, buat transaksi kas dan kwitansi
         if ($data['minimum_dp'] > 0) {
-            $kas = \App\Models\TransaksiKas::create([
+            $kas = TransaksiKas::create([
                 'tanggal' => now(),
                 'kode' => '101', // Kas Masuk
                 'jumlah' => $data['minimum_dp'],
@@ -130,7 +134,6 @@ class TransaksiController extends Controller
             'data' => $transaksi
         ], 201);
     }
-
 
     public function storeLama(Request $request)
     {
@@ -189,6 +192,7 @@ class TransaksiController extends Controller
         $validated['kelebihan_tanah'] = $validated['kelebihan_tanah'] ?? 0;
         $validated['penambahan_luas_bangunan'] = $validated['penambahan_luas_bangunan'] ?? 0;
         $validated['perubahan_spek_bangunan'] = $validated['perubahan_spek_bangunan'] ?? 0;
+        $validated['biaya_booking'] = $validated['biaya_booking'] ?? 0;
 
         $validated['total_harga_jual'] =
             $validated['harga_jual_standar'] +
@@ -200,7 +204,8 @@ class TransaksiController extends Controller
             return response()->json(['error' => 'DP tidak boleh melebihi total harga jual.'], 422);
         }
 
-        $validated['plafon_kpr'] = $validated['total_harga_jual'] - $validated['minimum_dp'];
+        // Update field sisa hutang (total harga - DP)
+        $validated['sisa_hutang'] = $validated['total_harga_jual'] - $validated['minimum_dp'];
 
         // Perbarui transaksi penjualan
         $transaksi->update($validated);
@@ -264,6 +269,7 @@ class TransaksiController extends Controller
             'data' => $transaksi
         ], 200);
     }
+
    
     public function destroy($id)
     {

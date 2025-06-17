@@ -116,29 +116,44 @@ class TransaksiKasController extends Controller
             'jumlah' => 'required|numeric|min:0',
             'metode_pembayaran' => 'required|in:Cash,Transfer Bank,Cek,Giro,Draft',
             'sumber_transaksi' => 'required|in:cost_code,penjualan',
-            'keterangan_transaksi_id' => 'required|numeric', // sekarang ini yang wajib
+            'keterangan_transaksi_id' => 'required|numeric',
+            'keterangan_objek_transaksi' => 'nullable|string',
         ]);
 
-        $transaksi = TransaksiKas::create([
+        // Tentukan default keterangan_objek_transaksi jika tidak diisi dan sumbernya cost_code
+        $keteranganObjek = $validated['keterangan_objek_transaksi'] ?? null;
+
+        if (!$keteranganObjek && $validated['sumber_transaksi'] === 'cost_code') {
+            $costTee = \App\Models\CostTee::find($validated['keterangan_transaksi_id']);
+            if ($costTee) {
+                $jenisLabel = $validated['kode'] === '101' ? 'Penerimaan' : 'Pengeluaran';
+                $keteranganObjek = "{$jenisLabel} - {$costTee->description}";
+            }
+        }
+
+        // Simpan transaksi kas
+        $transaksi = \App\Models\TransaksiKas::create([
             'tanggal' => $validated['tanggal'],
             'kode' => $validated['kode'],
             'jumlah' => $validated['jumlah'],
             'saldo_setelah_transaksi' => null,
             'metode_pembayaran' => $validated['metode_pembayaran'],
             'dibuat_oleh' => $user->name,
-            'keterangan_objek_transaksi' => $validated['keterangan_objek_transaksi'] ?? null,
+            'keterangan_objek_transaksi' => $keteranganObjek,
             'perumahan_id' => $perumahanId,
             'status' => 'pending',
             'sumber_transaksi' => $validated['sumber_transaksi'],
             'keterangan_transaksi_id' => $validated['keterangan_transaksi_id'],
-
+            'jenis_transaksi' => $validated['kode'] === '101' ? 'KASIN' : 'KASOUT',
         ]);
-        
+
         return response()->json([
             'message' => 'Transaksi KAS berhasil disimpan dan menunggu persetujuan.',
             'data' => $transaksi
         ], 201);
     }
+
+
     public function approveTransaction($id)
     {
         $transaksi = TransaksiKas::find($id);
@@ -167,27 +182,31 @@ class TransaksiKasController extends Controller
             'saldo_setelah_transaksi' => $saldoSetelahTransaksi
         ]);
 
-        // === Tambahan === Auto-insert ke laporan bulanan jika sumber_transaksi adalah cost_code
+        // === Auto-insert/update ke laporan bulanan jika dari cost_code
         if ($transaksi->sumber_transaksi === 'cost_code') {
-            $bulan = date('n', strtotime($transaksi->tanggal));
-            $tahun = date('Y', strtotime($transaksi->tanggal));
+            $bulan = (int) date('n', strtotime($transaksi->tanggal));
+            $tahun = (int) date('Y', strtotime($transaksi->tanggal));
+            $jenisTransaksi = $transaksi->kode === '101' ? 'KASIN' : 'KASOUT';
 
-            // Gunakan updateOrInsert atau updateOrCreate agar tidak dobel
-            LapBulanan::updateOrCreate(
-                [
-                    'perumahan_id' => $transaksi->perumahan_id,
-                    'cost_tee_id' => $transaksi->keterangan_transaksi_id,
-                    'bulan' => $bulan,
-                    'tahun' => $tahun,
-                ],
-                [
-                    // Jika update, tambahkan jumlah
-                    'jumlah' => DB::raw("jumlah + {$transaksi->jumlah}")
-                ]
-            );
+            // Cek apakah sudah ada entri lap_bulanan
+            $lap = LapBulanan::firstOrNew([
+                'perumahan_id' => $transaksi->perumahan_id,
+                'cost_tee_id' => $transaksi->keterangan_transaksi_id,
+                'bulan' => $bulan,
+                'tahun' => $tahun,
+            ]);
+
+            // Update field dan jumlah akumulatif
+            $lap->jenis_transaksi = $jenisTransaksi;
+            $lap->code_account = $transaksi->kode;
+            $lap->jumlah = ($lap->exists ? $lap->jumlah : 0) + $transaksi->jumlah;
+            $lap->save();
         }
 
-        return response()->json(['message' => 'Transaksi berhasil disetujui.', 'data' => $transaksi]);
+        return response()->json([
+            'message' => 'Transaksi berhasil disetujui.',
+            'data' => $transaksi
+        ]);
     }
 
     

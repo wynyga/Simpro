@@ -46,6 +46,18 @@ class AUserAndPerumahanSeeder extends Seeder
                 'role' => 'Manager',
                 'password' => Hash::make('123456')
             ],
+                        [
+                'name' => 'Wayan',
+                'email' => 'Admin@gmail.com',
+                'role' => 'Admin',
+                'password' => Hash::make('123456')
+            ],
+            [
+                'name' => 'Wayan',
+                'email' => 'Manager@gmail.com',
+                'role' => 'Manager',
+                'password' => Hash::make('123456')
+            ],
             [
                 'name' => 'Komang',
                 'email' => 'Direktur@gmail.com',

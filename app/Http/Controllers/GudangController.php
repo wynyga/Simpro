@@ -34,6 +34,7 @@ class GudangController extends Controller
                 'tanggal_barang_masuk' => $item->tanggal_barang_masuk,
                 'jumlah' => $item->jumlah,
                 'status' => $item->status,
+                'sistem_pembayaran' => $item->sistem_pembayaran,
                 'sttb' => $item->sttb ? [
                     'id' => $item->sttb->id,
                     'no_doc' => $item->sttb->no_doc,
@@ -48,7 +49,26 @@ class GudangController extends Controller
         });
     
     
-        $gudangOuts = GudangOut::where('perumahan_id', $perumahanId)->get();
+        $gudangOuts = GudangOut::with('costTee')
+        ->where('perumahan_id', $perumahanId)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'kode_barang' => $item->kode_barang,
+                'nama_barang' => $item->nama_barang,
+                'tanggal' => $item->tanggal,
+                'peruntukan' => $item->costTee->description ?? '-', // gunakan description
+                'status' => $item->status,
+                'jumlah' => $item->jumlah,
+                'satuan' => $item->satuan,
+                'jumlah_harga' => $item->jumlah_harga,
+                'keterangan' => $item->keterangan,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
+            ];
+        });
+
     
         return response()->json([
             'gudang_in' => $gudangIns,

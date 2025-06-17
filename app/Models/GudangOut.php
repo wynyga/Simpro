@@ -19,4 +19,8 @@ class GudangOut extends Model
         'keterangan',
         'perumahan_id'
     ];
+    public function costTee()
+    {
+        return $this->belongsTo(\App\Models\CostTee::class, 'peruntukan');
+    }
 }

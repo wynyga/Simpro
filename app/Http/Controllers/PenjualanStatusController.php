@@ -33,30 +33,20 @@ class PenjualanStatusController extends Controller
                     ->where('status', 'approved')
                     ->sum('jumlah');
 
-                // Penentuan target pembayaran berdasarkan jenis transaksi
-                $isLunasLangsung = $transaksi->plafon_kpr == 0;
-                $targetBayar = $isLunasLangsung
-                    ? $transaksi->total_harga_jual
-                    : $transaksi->plafon_kpr;
-
+                $targetBayar = $transaksi->total_harga_jual; // bayar total, bukan hanya sisa
                 $sisaHutang = max(0, $targetBayar - $totalBayar);
 
-                // Status pembayaran
-                if ($isLunasLangsung) {
-                    $statusBayar = $totalBayar >= $transaksi->total_harga_jual ? 'lunas'
-                        : ($totalBayar > 0 ? 'cicil' : 'utang');
-                } else {
-                    $statusBayar = $totalBayar >= $transaksi->plafon_kpr ? 'lunas'
-                        : ($totalBayar > 0 ? 'cicil' : 'utang');
-                }
+                $statusBayar = $totalBayar >= $targetBayar ? 'lunas'
+                    : ($totalBayar > 0 ? 'cicil' : 'utang');
+
 
                 return [
                     'id' => $transaksi->id,
                     'unit_id' => $transaksi->unit_id,
                     'user_id' => $transaksi->user_id,
                     'total_harga_jual' => $transaksi->total_harga_jual,
-                    'plafon_kpr' => $transaksi->plafon_kpr,
                     'minimum_dp' => $transaksi->minimum_dp,
+                    'sisa_hutang_awal' => $transaksi->sisa_hutang,
                     'total_bayar' => (float) $totalBayar,
                     'sisa_hutang' => $sisaHutang,
                     'status_bayar' => $statusBayar,
@@ -72,4 +62,5 @@ class PenjualanStatusController extends Controller
 
         return response()->json($transaksiList);
     }
+
 }

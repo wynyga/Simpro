@@ -22,6 +22,7 @@ class Transaksi extends Model
         'kpr_disetujui',
         'minimum_dp',
         'plafon_kpr',
+        'sisa_hutang',
         'biaya_booking',
         'perumahan_id'
     ];
@@ -50,6 +51,7 @@ class Transaksi extends Model
         'minimum_dp' => 'float',
         'plafon_kpr' => 'float',
         'biaya_booking' => 'float',
+        'sisa_hutang' => 'float',
         
     ];
 }

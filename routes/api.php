@@ -51,11 +51,11 @@ Route::prefix('/stock')->group(function () {
 // Gudang Routes
 Route::prefix('/gudang')->group(function () {
     Route::post('/in', [GudangInController::class, 'store']);
-    Route::post('/in/verify/{id}', [GudangInController::class, 'verify'])->middleware('role:Manager'); 
-    Route::post('/in/reject/{id}', [GudangInController::class, 'reject'])->middleware('role:Manager'); 
+    Route::post('/in/verify/{id}', [GudangInController::class, 'verify']); //->middleware('role:Manager'); 
+    Route::post('/in/reject/{id}', [GudangInController::class, 'reject']); 
     Route::post('/out', [GudangOutController::class, 'store']);
-    Route::post('/out/verify/{id}', [GudangOutController::class, 'verify'])->middleware('role:Manager'); 
-    Route::post('/out/reject/{id}', [GudangOutController::class, 'reject'])->middleware('role:Manager'); 
+    Route::post('/out/verify/{id}', [GudangOutController::class, 'verify']); 
+    Route::post('/out/reject/{id}', [GudangOutController::class, 'reject']); 
     Route::get('/all', [GudangController::class, 'index']); 
     Route::get('/in/{id}', [GudangInController::class, 'show']);
 });
@@ -65,9 +65,9 @@ Route::prefix('/transaksi')->group(function () {
     Route::get('/kas', [TransaksiKasController::class, 'index']);
     Route::post('/kas', [TransaksiKasController::class, 'store']);
     Route::get('/kas/ringkasan/{tahun?}', [TransaksiKasController::class, 'getRingkasanKasPerTahun']);
-    Route::post('/kas/{id}/verify', [TransaksiKasController::class, 'approveTransaction'])->middleware('role:Manager');
-    Route::post('/kas/{id}/reject', [TransaksiKasController::class, 'rejectTransaction'])->middleware('role:Manager');
-    Route::get('/kas/history', [TransaksiKasController::class, 'getHistory'])->middleware('role:Manager');
+    Route::post('/kas/{id}/verify', [TransaksiKasController::class, 'approveTransaction']);
+    Route::post('/kas/{id}/reject', [TransaksiKasController::class, 'rejectTransaction']);
+    Route::get('/kas/history', [TransaksiKasController::class, 'getHistory']);
 });
 
 // Perumahan Routes
