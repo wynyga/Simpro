@@ -10,9 +10,14 @@ return new class extends Migration {
         Schema::create('cost_elements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
-            $table->string('cost_element_code')->index();
-            $table->string('cost_centre_code')->index(); 
-            $table->string('description'); 
+
+            // --- THIS IS THE KEY CHANGE ---
+            // Change ->index() to ->unique() if it's not the primary key,
+            // or to ->primary() if it is the primary key for cost_elements.
+            $table->string('cost_element_code')->unique(); // Make it unique
+
+            $table->string('cost_centre_code')->index();
+            $table->string('description');
             $table->timestamps();
             $table->foreign('cost_centre_code')->references('cost_centre_code')->on('cost_centres')->onDelete('cascade');
         });
