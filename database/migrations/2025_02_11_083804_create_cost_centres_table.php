@@ -8,11 +8,16 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('cost_centres', function (Blueprint $table) {
-            $table->id();
+            // Remove $table->id(); if cost_centre_code is the primary key
+            // $table->id();
+
             $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
-            $table->string('cost_centre_code')->index(); 
+
+            // --- THIS IS THE KEY CHANGE ---
+            $table->string('cost_centre_code')->primary(); // Make it the primary key
+
             $table->string('description');
-            $table->string('cost_code');
+            $table->string('cost_code'); // Assuming 'cost_code' is another column
             $table->timestamps();
         });
     }
@@ -22,4 +27,3 @@ return new class extends Migration {
         Schema::dropIfExists('cost_centres');
     }
 };
-
