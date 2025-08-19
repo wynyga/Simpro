@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('cost_tees', function (Blueprint $table) {
             $table->id();
             $table->foreignId('perumahan_id')->constrained('perumahan')->onDelete('cascade');
-            $table->string('cost_tee_code')->index(); 
+            $table->string('cost_tee_code')->unique(); 
             $table->string('cost_element_code')->index();            
             $table->string('description'); 
             $table->timestamps();
