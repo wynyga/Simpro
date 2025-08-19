@@ -47,7 +47,7 @@
 <body>
 
     <div class="header">
-        <img src="{{ asset('images/BumiAsih.png') }}" alt="Logo">
+        {{-- <img src="{{ public_path('images/BumiAsih.png') }}" alt="Logo"> --}}
         <h2>
             @if ($kwitansi->transaksiKas->kode === '101')
                 BUKTI PENERIMAAN KAS / BANK <br> KWITANSI
