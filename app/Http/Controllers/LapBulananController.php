@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LapBulanan;
 use App\Models\CostTee;
+use App\Models\TransaksiKas;
 use Illuminate\Http\Request;
 
 class LapBulananController extends Controller
@@ -273,5 +274,91 @@ class LapBulananController extends Controller
         return response()->json($laporans);
     }
 
-    
+    public function getLaporanKas($bulan, $tahun)
+    {
+        $user = auth()->user();
+        $perumahan = $user->perumahan;
+
+        if (!$perumahan) {
+            return response()->json(['error' => 'Perumahan tidak ditemukan untuk pengguna ini.'], 404);
+        }
+
+        // Hitung saldo awal (saldo kumulatif dari semua bulan sebelum bulan yang diminta)
+        $startingBalance = LapBulanan::where('perumahan_id', $user->perumahan_id)
+            ->where(function ($query) use ($tahun, $bulan) {
+                $query->where('tahun', '<', $tahun)
+                    ->orWhere(function ($q) use ($tahun, $bulan) {
+                        $q->where('tahun', $tahun)
+                            ->where('bulan', '<', $bulan);
+                    });
+            })
+            ->get()
+            ->sum(function ($item) {
+                $isKasIn = optional($item->costTee->costElement->costCentre)->cost_code == 'KASIN';
+                return $isKasIn ? $item->jumlah : -$item->jumlah;
+            });
+
+        // Ambil semua transaksi di bulan dan tahun yang diminta
+        $transactions = LapBulanan::with('costTee.costElement.costCentre')
+            ->where('perumahan_id', $user->perumahan_id)
+            ->where('bulan', $bulan)
+            ->where('tahun', $tahun)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        // Inisialisasi variabel untuk ringkasan laporan
+        $totalTransactionDebitCount = 0;
+        $totalTransactionCreditCount = 0;
+        $totalTransactionDebitAmount = 0;
+        $totalTransactionCreditAmount = 0;
+        
+        $currentBalance = $startingBalance;
+        $formattedTransactions = [];
+
+        // Iterasi untuk memformat data, menghitung jumlah & nilai transaksi, serta saldo berjalan
+        foreach ($transactions as $index => $item) {
+            $debit = 0;
+            $credit = 0;
+            
+            $costCode = optional($item->costTee->costElement->costCentre)->cost_code;
+
+            if ($costCode == 'KASOUT') {
+                $debit = $item->jumlah;
+                $totalTransactionDebitCount++;
+                $totalTransactionDebitAmount += $debit;
+            } elseif ($costCode == 'KASIN') {
+                $credit = $item->jumlah;
+                $totalTransactionCreditCount++;
+                $totalTransactionCreditAmount += $credit;
+            }
+
+            $currentBalance += ($credit - $debit);
+
+            $formattedTransactions[] = [
+                'no' => $index + 1,
+                'postingDate' => $item->created_at->format('d/m/Y'),
+                'postingTime' => $item->created_at->format('H:i:s'),
+                'effDate' => $item->created_at->format('d/m/Y'),
+                'effTime' => $item->created_at->format('H:i:s'),
+                'description' => optional($item->costTee)->description,
+                'debit' => 0,
+                'credit' => 0,
+                'balance' => 0
+            ];
+        }
+        
+        // Saldo akhir adalah saldo berjalan terakhir dari loop
+        $endingBalance = $currentBalance;
+
+        return response()->json([
+            'company' => 'PT BUMI ASIH',
+            'accountOrganizationUnit' => optional($perumahan)->nama_perumahan,
+            'period' => "Bulan " . $bulan . " Tahun " . $tahun,
+            'startingBalance' => 0,
+            'endingBalance' => 0,
+            'totalTransactionDebit' => $totalTransactionDebitCount, 
+            'totalTransactionCredit' => $totalTransactionCreditCount,
+            'transactions' => $formattedTransactions
+        ]);
+    }
 }

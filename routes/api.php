@@ -188,7 +188,7 @@ Route::prefix('lap_bulanan')->middleware('auth')->group(function () {
     });
     Route::get('/tahunan/{tahun}', [LapBulananController::class, 'getLaporanTahunan']);
     Route::get('/{bulan}/{tahun}', [LapBulananController::class, 'getByBulanTahun'])->name('lap_bulanan.filter');
-
+    Route::get('getLaporanKas/{bulan}/{tahun}', [LapBulananController::class, 'getLaporanKas']);
 });
 
 Route::prefix('kwitansi')->middleware('auth')->group(function () {
