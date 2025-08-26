@@ -306,16 +306,13 @@ class LapBulananController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
 
-        // Inisialisasi variabel untuk ringkasan laporan
+        $formattedTransactions = [];
+        $currentBalance = $startingBalance;
         $totalTransactionDebitCount = 0;
         $totalTransactionCreditCount = 0;
         $totalTransactionDebitAmount = 0;
         $totalTransactionCreditAmount = 0;
-        
-        $currentBalance = $startingBalance;
-        $formattedTransactions = [];
 
-        // Iterasi untuk memformat data, menghitung jumlah & nilai transaksi, serta saldo berjalan
         foreach ($transactions as $index => $item) {
             $debit = 0;
             $credit = 0;
@@ -341,24 +338,25 @@ class LapBulananController extends Controller
                 'effDate' => $item->created_at->format('d/m/Y'),
                 'effTime' => $item->created_at->format('H:i:s'),
                 'description' => optional($item->costTee)->description,
-                'debit' => 0,
-                'credit' => 0,
-                'balance' => 0
+                'debit' => $debit,
+                'credit' => $credit,
+                'balance' => $currentBalance, // Ini adalah output Balance yang Anda inginkan
             ];
         }
         
-        // Saldo akhir adalah saldo berjalan terakhir dari loop
-        $endingBalance = $currentBalance;
+        $endingBalance = $startingBalance + $totalTransactionCreditAmount - $totalTransactionDebitAmount;
 
         return response()->json([
             'company' => 'PT BUMI ASIH',
             'accountOrganizationUnit' => optional($perumahan)->nama_perumahan,
             'period' => "Bulan " . $bulan . " Tahun " . $tahun,
-            'startingBalance' => 0,
-            'endingBalance' => 0,
+            'startingBalance' => $startingBalance,
+            'endingBalance' => $endingBalance,
             'totalTransactionDebit' => $totalTransactionDebitCount, 
             'totalTransactionCredit' => $totalTransactionCreditCount,
-            'transactions' => $formattedTransactions
+            'transactions_list' => $formattedTransactions,
+            'total_debit' => $totalTransactionDebitAmount,
+            'total_credit' => $totalTransactionCreditAmount,
         ]);
     }
 }
