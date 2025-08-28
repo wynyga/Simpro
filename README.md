@@ -88,3 +88,15 @@ composer install
 Buat file .env lalu sesuaikan konfigurasi database & JWT.
 ```
 
+### 4. Jalankan migrasi
+```bash
+php artisan migrate
+```
+
+### 5. Start Server
+```bash
+php artisan serve
+```
+
+```
+
