@@ -73,14 +73,18 @@ Alasan pemilihan Laravel pada proyek ini:
 
 ## 📖 Getting Started  
 
-### 1 Clone Repository  
+### 1. Clone Repository  
 ```bash
 git clone (https://github.com/wynyga/Simpro.git)
 cd Simpro
 ```
 
-### 2 Install Dependencies
+### 2. Install Dependencies
 ```bash
 composer install
+```
+### 3. Setup Environment
+```bash
+Buat file .env lalu sesuaikan konfigurasi database & JWT.
 ```
 
