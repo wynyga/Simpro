@@ -96,7 +96,6 @@ php artisan migrate
 ### 5. Start Server
 ```bash
 php artisan serve
-```
 
 ```
 
