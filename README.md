@@ -10,14 +10,14 @@
 API Sistem Informasi Properti Perumahan
 This is a RESTful API built for a comprehensive housing property information system. It's designed to manage various aspects of a real estate business, including property sales, inventory monitoring, financial reporting, and user management. This API provides a secure and scalable backend to support a web or mobile application.
 
-##Why Laravel?
+## Why Laravel?
 Laravel is a powerful and elegant Model-View-Controller (MVC) framework for building web applications in PHP. We chose Laravel for this project because it significantly streamlines development and offers several key advantages:
 Robust Security Features: Laravel comes with built-in security features that protect against common web vulnerabilities, making it an excellent choice for an application that handles sensitive data like user accounts and financial transactions.
 Scalability: Its modular and organized structure makes it easy to add new features and handle increasing user loads as the project grows.
 Developer-Friendly Tools: Laravel provides a rich ecosystem of tools and libraries that simplify common tasks, such as routing, database management, and authentication, which speeds up the development process without sacrificing quality.
 Clean and Maintainable Code: By enforcing the MVC pattern, Laravel helps maintain a clear separation of concerns, resulting in code that is easy to read, debug, and maintain over time.
 
-##Key Features
+## Key Features
 JSON Web Token (JWT) based Account Security: Ensures secure user authentication and authorization.
 Role-Based Access Control (RBAC): Manages user permissions to restrict access to specific features based on their roles.
 Real-time Transactions: Facilitates live updates and processing of financial transactions.
