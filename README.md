@@ -18,13 +18,13 @@ Developer-Friendly Tools: Laravel provides a rich ecosystem of tools and librari
 Clean and Maintainable Code: By enforcing the MVC pattern, Laravel helps maintain a clear separation of concerns, resulting in code that is easy to read, debug, and maintain over time.
 
 ## Key Features
-JSON Web Token (JWT) based Account Security: Ensures secure user authentication and authorization.
-Role-Based Access Control (RBAC): Manages user permissions to restrict access to specific features based on their roles.
-Real-time Transactions: Facilitates live updates and processing of financial transactions.
-Receipt Printing: Generates and allows for the printing of transaction receipts.
-Inventory Monitoring: Tracks the status and availability of properties in the warehouse/stock.
-Monthly & Annual Reporting: Generates detailed reports to monitor sales performance and financial health.
-New Branch Management: Allows for the seamless addition of new housing property branches.
-Property Sales Management: Comprehensive system for managing the sales process of properties.
-Customer Data Monitoring: Tracks and manages data related to property buyers.
-Sales Status Monitoring: Provides real-time updates on the sales status of properties ("Installment" or "Paid Off").
+JSON Web Token (JWT) based Account Security: Ensures secure user authentication and authorization. <br>
+Role-Based Access Control (RBAC): Manages user permissions to restrict access to specific features based on their roles. <br>
+Real-time Transactions: Facilitates live updates and processing of financial transactions. <br>
+Receipt Printing: Generates and allows for the printing of transaction receipts. <br>
+Inventory Monitoring: Tracks the status and availability of properties in the warehouse/stock. <br>
+Monthly & Annual Reporting: Generates detailed reports to monitor sales performance and financial health. <br>
+New Branch Management: Allows for the seamless addition of new housing property branches. <br>
+Property Sales Management: Comprehensive system for managing the sales process of properties. <br>
+Customer Data Monitoring: Tracks and manages data related to property buyers. <br>
+Sales Status Monitoring: Provides real-time updates on the sales status of properties ("Installment" or "Paid Off"). <br>
