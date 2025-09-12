@@ -14,12 +14,16 @@ class CostElement extends Model
         'cost_centre_code',
         'perumahan_id',
         'description'
-        
     ];
 
     public function costCentre()
     {
         return $this->belongsTo(CostCentre::class, 'cost_centre_code', 'cost_centre_code');
     }
-}
 
+    // relasi ke CostTee
+    public function costTees()
+    {
+        return $this->hasMany(CostTee::class, 'cost_element_code', 'cost_element_code');
+    }
+}

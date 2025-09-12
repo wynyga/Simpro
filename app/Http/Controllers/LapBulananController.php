@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\LapBulanan;
 use App\Models\CostTee;
-use App\Models\TransaksiKas;
 use Illuminate\Http\Request;
 
 class LapBulananController extends Controller

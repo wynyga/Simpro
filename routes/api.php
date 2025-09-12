@@ -22,6 +22,7 @@ use App\Http\Controllers\{
     PenjualanStatusController,
     KwitansiController,
     STTBController,
+    LaporanTahunanController
 };
 
 // Authentication Routes
@@ -152,7 +153,7 @@ Route::prefix('cost_element')->middleware('auth')->group(function () {
 // Routes untuk Cost Tee
 Route::prefix('cost_tee')->middleware('auth')->group(function () {
     Route::get('/', [CostTeeController::class, 'index'])->name('cost_tee.index');
-    Route::get('/{id}', [CostStructureController::class, 'show'])->name('cost_structure.index');
+    Route::get('/{id}', [CostTeeController::class, 'show']);
     Route::post('/create', [CostTeeController::class, 'store'])->name('cost_tee.store');
     Route::put('/update/{id}', [CostTeeController::class, 'update'])->name('cost_tee.update');
     Route::delete('/delete/{id}', [CostTeeController::class, 'destroy'])->name('cost_tee.delete');
@@ -189,6 +190,11 @@ Route::prefix('lap_bulanan')->middleware('auth')->group(function () {
     Route::get('/tahunan/{tahun}', [LapBulananController::class, 'getLaporanTahunan']);
     Route::get('/{bulan}/{tahun}', [LapBulananController::class, 'getByBulanTahun'])->name('lap_bulanan.filter');
     Route::get('getLaporanKas/{bulan}/{tahun}', [LapBulananController::class, 'getLaporanKas']);
+});
+
+// Routes untuk Laporan Tahunan
+Route::prefix('laporan_tahunan')->middleware('auth')->group(function () {
+    Route::get('/{tahun}', [LaporanTahunanController::class, 'getLaporanTahunan'])->name('laporan_tahunan.tahun');  
 });
 
 Route::prefix('kwitansi')->middleware('auth')->group(function () {

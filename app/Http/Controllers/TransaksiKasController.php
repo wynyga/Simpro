@@ -153,7 +153,6 @@ class TransaksiKasController extends Controller
         ], 201);
     }
 
-
     public function approveTransaction($id)
     {
         $transaksi = TransaksiKas::find($id);

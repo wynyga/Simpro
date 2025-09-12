@@ -15,4 +15,10 @@ class CostCentre extends Model
         'perumahan_id',
         'cost_code',
     ];
+
+    // relasi ke CostElement
+    public function costElements()
+    {
+        return $this->hasMany(CostElement::class, 'cost_centre_code', 'cost_centre_code');
+    }
 }

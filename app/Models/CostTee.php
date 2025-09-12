@@ -21,4 +21,3 @@ class CostTee extends Model
         return $this->belongsTo(CostElement::class, 'cost_element_code', 'cost_element_code');
     }
 }
-
