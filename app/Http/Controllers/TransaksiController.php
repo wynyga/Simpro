@@ -50,9 +50,9 @@ class TransaksiController extends Controller
     {
         $user = auth()->user();
 
+        // Validasi transaksi
         $data = $request->validate([
             'unit_id' => 'required|exists:unit,id',
-            'user_id' => 'required|exists:user_perumahan,id',
             'harga_jual_standar' => 'required|numeric',
             'kelebihan_tanah' => 'nullable|numeric',
             'penambahan_luas_bangunan' => 'nullable|numeric',
@@ -60,7 +60,23 @@ class TransaksiController extends Controller
             'kpr_disetujui' => 'required|in:Ya,Tidak',
             'minimum_dp' => 'required|numeric|min:0',
             'biaya_booking' => 'nullable|numeric',
+
+            // ✅ Validasi data user baru
+            'nama_user' => 'required|string|max:255',
+            'alamat_user' => 'required|string|max:255',
+            'no_telepon' => 'required|digits_between:10,15',
         ]);
+
+        // Buat user baru di tabel UserPerumahan
+        $userPerumahan = \App\Models\UserPerumahan::create([
+            'nama_user' => $data['nama_user'],
+            'alamat_user' => $data['alamat_user'],
+            'no_telepon' => $data['no_telepon'],
+            'perumahan_id' => $user->perumahan_id,
+        ]);
+
+        // Masukkan user_id ke data transaksi
+        $data['user_id'] = $userPerumahan->id;
 
         // Default nilai nullable
         $data['kelebihan_tanah'] = $data['kelebihan_tanah'] ?? 0;
@@ -80,26 +96,26 @@ class TransaksiController extends Controller
             return response()->json(['error' => 'DP tidak boleh lebih besar dari total harga jual.'], 422);
         }
 
-        // Cegah duplikasi penjualan untuk unit yang sama
-        if (Transaksi::where('unit_id', $data['unit_id'])->exists()) {
+        // Cegah duplikasi penjualan unit
+        if (\App\Models\Transaksi::where('unit_id', $data['unit_id'])->exists()) {
             return response()->json(['error' => 'Unit ini sudah memiliki transaksi penjualan.'], 409);
         }
 
-        // Hitung dan simpan sisa hutang (total harga jual - DP)
+        // Hitung sisa hutang
         $data['sisa_hutang'] = $data['total_harga_jual'] - $data['minimum_dp'];
 
         // Metadata tambahan
         $data['perumahan_id'] = $user->perumahan_id;
         $data['dibuat_oleh'] = $user->name;
 
-        // Simpan transaksi penjualan
-        $transaksi = Transaksi::create($data);
+        // Simpan transaksi
+        $transaksi = \App\Models\Transaksi::create($data);
 
-        // Jika ada DP, buat transaksi kas dan kwitansi
+        // Jika ada DP, catat kas & kwitansi
         if ($data['minimum_dp'] > 0) {
-            $kas = TransaksiKas::create([
+            $kas = \App\Models\TransaksiKas::create([
                 'tanggal' => now(),
-                'kode' => '101', // Kas Masuk
+                'kode' => '101',
                 'jumlah' => $data['minimum_dp'],
                 'saldo_setelah_transaksi' => null,
                 'metode_pembayaran' => 'Cash',
@@ -130,44 +146,14 @@ class TransaksiController extends Controller
         }
 
         return response()->json([
-            'message' => 'Transaksi penjualan berhasil disimpan',
-            'data' => $transaksi
+            'message' => 'Transaksi dan user baru berhasil disimpan',
+            'data' => [
+                'transaksi' => $transaksi,
+                'user' => $userPerumahan,
+            ]
         ], 201);
     }
 
-    public function storeLama(Request $request)
-    {
-        $user = auth()->user();
-        $data = $request->validate([
-            'unit_id' => 'required|exists:unit,id',
-            'user_id' => 'required|exists:user_perumahan,id',
-            'harga_jual_standar' => 'required|numeric',
-            'kelebihan_tanah' => 'nullable|numeric',
-            'penambahan_luas_bangunan' => 'nullable|numeric',
-            'perubahan_spek_bangunan' => 'nullable|numeric',
-            'kpr_disetujui' => 'required|in:Ya,Tidak',
-            'minimum_dp' => 'required|numeric',
-            'biaya_booking' => 'nullable|numeric',
-        ]);
-    
-        $data['kelebihan_tanah'] = $data['kelebihan_tanah'] ?? 0;
-        $data['penambahan_luas_bangunan'] = $data['penambahan_luas_bangunan'] ?? 0;
-        $data['perubahan_spek_bangunan'] = $data['perubahan_spek_bangunan'] ?? 0;
-    
-        $data['total_harga_jual'] = 
-            $data['harga_jual_standar'] + 
-            $data['kelebihan_tanah'] + 
-            $data['penambahan_luas_bangunan'] + 
-            $data['perubahan_spek_bangunan'];
-    
-        $data['plafon_kpr'] = $data['total_harga_jual'] - $data['minimum_dp'];
-        $data['perumahan_id'] = $user->perumahan_id;
-    
-        $transaksi = Transaksi::create($data);
-    
-        return response()->json(['message' => 'Transaksi berhasil ditambahkan', 'data' => $transaksi], 201);
-    }
-    
     public function update(Request $request, $id)
     {
         $user = auth()->user();
@@ -178,7 +164,6 @@ class TransaksiController extends Controller
 
         $validated = $request->validate([
             'unit_id' => 'required|exists:unit,id',
-            'user_id' => 'required|exists:user_perumahan,id',
             'harga_jual_standar' => 'required|numeric',
             'kelebihan_tanah' => 'nullable|numeric',
             'penambahan_luas_bangunan' => 'nullable|numeric',
@@ -186,7 +171,31 @@ class TransaksiController extends Controller
             'kpr_disetujui' => 'required|in:Ya,Tidak',
             'minimum_dp' => 'required|numeric|min:0',
             'biaya_booking' => 'nullable|numeric',
+
+            // ✅ Tambahkan validasi user
+            'user_id' => 'nullable|exists:user_perumahan,id',
+            'nama_user' => 'nullable|string|max:255',
+            'alamat_user' => 'nullable|string|max:255',
+            'no_telepon' => 'nullable|digits_between:10,15',
         ]);
+
+        /**
+         * Jika `user_id` dikirim → pakai user itu.
+         * Jika tidak, tapi ada data user → buat user baru.
+         */
+        if (!empty($validated['user_id'])) {
+            $validated['user_id'] = $validated['user_id'];
+        } elseif (!empty($validated['nama_user']) && !empty($validated['alamat_user']) && !empty($validated['no_telepon'])) {
+            $userPerumahan = \App\Models\UserPerumahan::create([
+                'nama_user' => $validated['nama_user'],
+                'alamat_user' => $validated['alamat_user'],
+                'no_telepon' => $validated['no_telepon'],
+                'perumahan_id' => $user->perumahan_id,
+            ]);
+            $validated['user_id'] = $userPerumahan->id;
+        } else {
+            return response()->json(['error' => 'User harus dipilih atau data user baru harus lengkap.'], 422);
+        }
 
         // Nilai default
         $validated['kelebihan_tanah'] = $validated['kelebihan_tanah'] ?? 0;
@@ -194,6 +203,7 @@ class TransaksiController extends Controller
         $validated['perubahan_spek_bangunan'] = $validated['perubahan_spek_bangunan'] ?? 0;
         $validated['biaya_booking'] = $validated['biaya_booking'] ?? 0;
 
+        // Hitung total harga jual
         $validated['total_harga_jual'] =
             $validated['harga_jual_standar'] +
             $validated['kelebihan_tanah'] +
@@ -204,13 +214,13 @@ class TransaksiController extends Controller
             return response()->json(['error' => 'DP tidak boleh melebihi total harga jual.'], 422);
         }
 
-        // Update field sisa hutang (total harga - DP)
+        // Hitung sisa hutang
         $validated['sisa_hutang'] = $validated['total_harga_jual'] - $validated['minimum_dp'];
 
-        // Perbarui transaksi penjualan
+        // Update transaksi
         $transaksi->update($validated);
 
-        // Sync transaksi_kas untuk DP
+        // Sinkronisasi DP ke TransaksiKas + Kwitansi
         if ($validated['minimum_dp'] > 0) {
             $kas = \App\Models\TransaksiKas::where('sumber_transaksi', 'penjualan')
                 ->where('keterangan_transaksi_id', $transaksi->id)
@@ -237,7 +247,7 @@ class TransaksiController extends Controller
                 ]);
             }
 
-            // Sync atau buat kwitansi
+            // Kwitansi
             $kwitansi = \App\Models\Kwitansi::where('transaksi_kas_id', $kas->id)->first();
             $no_doc = \App\Helpers\KwitansiService::generateNoDoc($kas->perumahan_id, 'CI');
 
@@ -245,6 +255,10 @@ class TransaksiController extends Controller
                 $kwitansi->update([
                     'jumlah' => $kas->jumlah,
                     'untuk_pembayaran' => "DP Penjualan Unit ID: {$transaksi->unit_id}",
+                    'metode_pembayaran' => $kas->metode_pembayaran,
+                    'tanggal' => now(),
+                    'dari' => $kas->dibuat_oleh,
+                    'disetor_oleh' => $kas->dibuat_oleh,
                 ]);
             } else {
                 \App\Models\Kwitansi::create([
@@ -269,16 +283,43 @@ class TransaksiController extends Controller
             'data' => $transaksi
         ], 200);
     }
-
    
     public function destroy($id)
     {
         $user = auth()->user();
-        $transaksi = Transaksi::where('id', $id)
-                              ->where('perumahan_id', $user->perumahan_id)
-                              ->firstOrFail();
+
+        $transaksi = \App\Models\Transaksi::where('id', $id)
+            ->where('perumahan_id', $user->perumahan_id)
+            ->firstOrFail();
+
+        $userId = $transaksi->user_id;
+
+        // Cari transaksi kas terkait
+        $kas = \App\Models\TransaksiKas::where('sumber_transaksi', 'penjualan')
+            ->where('keterangan_transaksi_id', $transaksi->id)
+            ->first();
+
+        if ($kas) {
+            // Hapus kwitansi yang terkait transaksi kas ini
+            \App\Models\Kwitansi::where('transaksi_kas_id', $kas->id)->delete();
+
+            // Hapus transaksi kas
+            $kas->delete();
+        }
+
+        // Hapus transaksi
         $transaksi->delete();
-        return response()->json(['message' => 'Transaksi berhasil dihapus'], 204);
+
+        // Cek apakah user masih dipakai di transaksi lain
+        $isUsed = \App\Models\Transaksi::where('user_id', $userId)->exists();
+
+        if (!$isUsed) {
+            \App\Models\UserPerumahan::where('id', $userId)->delete();
+        }
+
+        return response()->json([
+            'message' => 'Transaksi, transaksi kas, kwitansi, dan user terkait (jika tidak digunakan lagi) berhasil dihapus'
+        ], 200);
     }
 
     public function listAll()
